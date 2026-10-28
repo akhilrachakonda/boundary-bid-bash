@@ -304,6 +304,29 @@ export type Database = {
           },
         ]
       }
+      room_updates: {
+        Row: {
+          revision: number
+          room_id: string
+        }
+        Insert: {
+          revision?: number
+          room_id: string
+        }
+        Update: {
+          revision?: number
+          room_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_updates_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: true
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rooms: {
         Row: {
           accel_done: boolean
@@ -655,6 +678,7 @@ export type Database = {
         }
         Returns: string
       }
+      my_rooms: { Args: never; Returns: Json }
       next_bid_amount: {
         Args: { p_base: number; p_current: number; p_settings: Json }
         Returns: number
@@ -679,6 +703,7 @@ export type Database = {
         Args: { p_action: string; p_trade: string }
         Returns: undefined
       }
+      room_projection: { Args: { p_room: string }; Returns: Json }
       server_now: { Args: never; Returns: string }
       set_pool: {
         Args: { p_player_ids: string[]; p_room: string }

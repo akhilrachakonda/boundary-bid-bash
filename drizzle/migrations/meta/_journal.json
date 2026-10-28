@@ -43,6 +43,13 @@
       "when": 1793231093048,
       "tag": "0005_confirmed_pool_random_sequence",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793231892692,
+      "tag": "0006_private_queue_projection_and_sales",
+      "breakpoints": true
     }
   ]
 }
