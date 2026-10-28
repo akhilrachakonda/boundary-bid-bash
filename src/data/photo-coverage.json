@@ -1,0 +1,13 @@
+{
+  "distinct_identities_matched": 150,
+  "expected_distinct_identities": 150,
+  "format_rows_covered": 450,
+  "expected_format_rows": 450,
+  "missing": [],
+  "failed": [],
+  "placeholder_images_counted": 0,
+  "visually_reviewed": 150,
+  "reuse_rights": "Most provider images editorial, permission not established; Josh Inglis CC BY 3.0.",
+  "source_metadata": "player-photos.json",
+  "verification": "Every cached WebP decoded locally; live CDN verification in browser validation."
+}
