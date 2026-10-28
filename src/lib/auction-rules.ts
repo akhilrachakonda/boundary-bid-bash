@@ -273,7 +273,7 @@ export function generateBalancedPool(all: Player[], s: Settings, seed = 1): Pool
     }
     notes.push(`Added ${have - before} ${label} so every team can meet the minimum (${need} needed).`);
   };
-  for (const role of ROLES) bump((i) => subs[i]!.role === role, req[role], ROLE_LABEL[role].toLowerCase() + "s");
+  for (const role of ROLES) bump((i) => subs[i]!.role === role, req[role], (ROLE_LABEL[role] ?? role).toLowerCase() + "s");
   bump((i) => /spin/i.test(subs[i]!.sub), req.spin, "spinners");
   bump((i) => /(pace|medium)/i.test(subs[i]!.sub) && subs[i]!.role !== "WK" && subs[i]!.role !== "BAT", req.pace, "pacers");
 
