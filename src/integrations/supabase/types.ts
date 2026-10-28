@@ -14,16 +14,678 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bids: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          participant_id: string
+          room_id: string
+          room_player_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          participant_id: string
+          room_id: string
+          room_player_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          participant_id?: string
+          room_id?: string
+          room_player_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bids_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bids_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bids_room_player_id_fkey"
+            columns: ["room_player_id"]
+            isOneToOne: false
+            referencedRelation: "room_players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      participants: {
+        Row: {
+          color: string
+          id: string
+          is_ready: boolean
+          joined_at: string
+          last_seen: string
+          nickname: string
+          purse: number
+          room_id: string
+          team_name: string
+          user_id: string
+        }
+        Insert: {
+          color?: string
+          id?: string
+          is_ready?: boolean
+          joined_at?: string
+          last_seen?: string
+          nickname: string
+          purse: number
+          room_id: string
+          team_name: string
+          user_id: string
+        }
+        Update: {
+          color?: string
+          id?: string
+          is_ready?: boolean
+          joined_at?: string
+          last_seen?: string
+          nickname?: string
+          purse?: number
+          room_id?: string
+          team_name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "participants_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      players: {
+        Row: {
+          age_group: string
+          base_price: number
+          batting_hand: string
+          bowling_style: string
+          country: string
+          created_at: string
+          format: string
+          id: string
+          image_placeholder: string | null
+          name: string
+          nationality_type: string
+          rating: number
+          role: string
+          sub_role: string
+          tier: string
+        }
+        Insert: {
+          age_group?: string
+          base_price: number
+          batting_hand?: string
+          bowling_style?: string
+          country: string
+          created_at?: string
+          format: string
+          id?: string
+          image_placeholder?: string | null
+          name: string
+          nationality_type: string
+          rating: number
+          role: string
+          sub_role: string
+          tier: string
+        }
+        Update: {
+          age_group?: string
+          base_price?: number
+          batting_hand?: string
+          bowling_style?: string
+          country?: string
+          created_at?: string
+          format?: string
+          id?: string
+          image_placeholder?: string | null
+          name?: string
+          nationality_type?: string
+          rating?: number
+          role?: string
+          sub_role?: string
+          tier?: string
+        }
+        Relationships: []
+      }
+      private_notes: {
+        Row: {
+          id: string
+          notes: string
+          room_id: string
+          targets: Json
+          updated_at: string
+          user_id: string
+          xi: Json
+        }
+        Insert: {
+          id?: string
+          notes?: string
+          room_id: string
+          targets?: Json
+          updated_at?: string
+          user_id: string
+          xi?: Json
+        }
+        Update: {
+          id?: string
+          notes?: string
+          room_id?: string
+          targets?: Json
+          updated_at?: string
+          user_id?: string
+          xi?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "private_notes_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_events: {
+        Row: {
+          created_at: string
+          id: number
+          kind: string
+          message: string
+          room_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          kind: string
+          message: string
+          room_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          kind?: string
+          message?: string
+          room_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_events_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_players: {
+        Row: {
+          id: string
+          lot_order: number
+          player_id: string
+          room_id: string
+          round: number
+          set_name: string
+          sold_price: number | null
+          sold_to: string | null
+          status: string
+        }
+        Insert: {
+          id?: string
+          lot_order: number
+          player_id: string
+          room_id: string
+          round?: number
+          set_name: string
+          sold_price?: number | null
+          sold_to?: string | null
+          status?: string
+        }
+        Update: {
+          id?: string
+          lot_order?: number
+          player_id?: string
+          room_id?: string
+          round?: number
+          set_name?: string
+          sold_price?: number | null
+          sold_to?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_players_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "room_players_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "room_players_sold_to_fkey"
+            columns: ["sold_to"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rooms: {
+        Row: {
+          accel_done: boolean
+          code: string
+          created_at: string
+          current_bid: number | null
+          current_bidder: string | null
+          current_rp: string | null
+          format: string
+          host_id: string
+          id: string
+          lot_ends_at: string | null
+          name: string
+          paused_remaining_ms: number | null
+          review_ends_at: string | null
+          settings: Json
+          status: string
+          trade_ends_at: string | null
+        }
+        Insert: {
+          accel_done?: boolean
+          code: string
+          created_at?: string
+          current_bid?: number | null
+          current_bidder?: string | null
+          current_rp?: string | null
+          format: string
+          host_id: string
+          id?: string
+          lot_ends_at?: string | null
+          name: string
+          paused_remaining_ms?: number | null
+          review_ends_at?: string | null
+          settings: Json
+          status?: string
+          trade_ends_at?: string | null
+        }
+        Update: {
+          accel_done?: boolean
+          code?: string
+          created_at?: string
+          current_bid?: number | null
+          current_bidder?: string | null
+          current_rp?: string | null
+          format?: string
+          host_id?: string
+          id?: string
+          lot_ends_at?: string | null
+          name?: string
+          paused_remaining_ms?: number | null
+          review_ends_at?: string | null
+          settings?: Json
+          status?: string
+          trade_ends_at?: string | null
+        }
+        Relationships: []
+      }
+      sales: {
+        Row: {
+          created_at: string
+          id: string
+          participant_id: string | null
+          price: number | null
+          room_id: string
+          room_player_id: string
+          undone: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          participant_id?: string | null
+          price?: number | null
+          room_id: string
+          room_player_id: string
+          undone?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          participant_id?: string | null
+          price?: number | null
+          room_id?: string
+          room_player_id?: string
+          undone?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_room_player_id_fkey"
+            columns: ["room_player_id"]
+            isOneToOne: false
+            referencedRelation: "room_players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      squads: {
+        Row: {
+          acquired_via: string
+          created_at: string
+          id: string
+          participant_id: string
+          player_id: string
+          price: number
+          room_id: string
+          room_player_id: string
+        }
+        Insert: {
+          acquired_via?: string
+          created_at?: string
+          id?: string
+          participant_id: string
+          player_id: string
+          price: number
+          room_id: string
+          room_player_id: string
+        }
+        Update: {
+          acquired_via?: string
+          created_at?: string
+          id?: string
+          participant_id?: string
+          player_id?: string
+          price?: number
+          room_id?: string
+          room_player_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "squads_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "squads_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "squads_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "squads_room_player_id_fkey"
+            columns: ["room_player_id"]
+            isOneToOne: false
+            referencedRelation: "room_players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trades: {
+        Row: {
+          cash: number
+          created_at: string
+          from_participant: string
+          id: string
+          offer_players: string[]
+          parent_trade_id: string | null
+          request_players: string[]
+          resolved_at: string | null
+          room_id: string
+          status: string
+          to_participant: string
+        }
+        Insert: {
+          cash?: number
+          created_at?: string
+          from_participant: string
+          id?: string
+          offer_players?: string[]
+          parent_trade_id?: string | null
+          request_players?: string[]
+          resolved_at?: string | null
+          room_id: string
+          status?: string
+          to_participant: string
+        }
+        Update: {
+          cash?: number
+          created_at?: string
+          from_participant?: string
+          id?: string
+          offer_players?: string[]
+          parent_trade_id?: string | null
+          request_players?: string[]
+          resolved_at?: string | null
+          room_id?: string
+          status?: string
+          to_participant?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trades_from_participant_fkey"
+            columns: ["from_participant"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trades_parent_trade_id_fkey"
+            columns: ["parent_trade_id"]
+            isOneToOne: false
+            referencedRelation: "trades"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trades_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trades_to_participant_fkey"
+            columns: ["to_participant"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      _advance_lot: { Args: { p_room: string }; Returns: undefined }
+      _check_after_trade: {
+        Args: { p_before: Json; p_part: string; p_settings: Json }
+        Returns: undefined
+      }
+      _is_pacer: { Args: { p_role: string; p_sub: string }; Returns: boolean }
+      _is_spinner: { Args: { p_sub: string }; Returns: boolean }
+      _log: {
+        Args: { p_kind: string; p_msg: string; p_room: string }
+        Returns: undefined
+      }
+      _max_bid: {
+        Args: {
+          p_counts: Json
+          p_purse: number
+          p_role: string
+          p_settings: Json
+        }
+        Returns: number
+      }
+      _me: {
+        Args: { p_room: string }
+        Returns: {
+          color: string
+          id: string
+          is_ready: boolean
+          joined_at: string
+          last_seen: string
+          nickname: string
+          purse: number
+          room_id: string
+          team_name: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "participants"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      _resolve_lot: {
+        Args: { p_force_unsold: boolean; p_room: string }
+        Returns: undefined
+      }
+      _squad_counts: { Args: { p_part: string }; Returns: Json }
+      create_room: {
+        Args: {
+          p_color: string
+          p_format: string
+          p_name: string
+          p_nickname: string
+          p_settings: Json
+          p_team: string
+        }
+        Returns: Json
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      heartbeat: { Args: { p_room: string }; Returns: undefined }
+      host_control: {
+        Args: { p_action: string; p_room: string }
+        Returns: undefined
+      }
+      is_room_member: { Args: { p_room: string }; Returns: boolean }
+      join_room: {
+        Args: {
+          p_code: string
+          p_color: string
+          p_nickname: string
+          p_team: string
+        }
+        Returns: string
+      }
+      next_bid_amount: {
+        Args: { p_base: number; p_current: number; p_settings: Json }
+        Returns: number
+      }
+      open_trades: {
+        Args: { p_minutes: number; p_room: string }
+        Returns: undefined
+      }
+      place_bid: { Args: { p_amount: number; p_room: string }; Returns: number }
+      propose_trade: {
+        Args: {
+          p_cash: number
+          p_offer: string[]
+          p_parent?: string
+          p_request: string[]
+          p_room: string
+          p_to: string
+        }
+        Returns: string
+      }
+      respond_trade: {
+        Args: { p_action: string; p_trade: string }
+        Returns: undefined
+      }
+      set_pool: {
+        Args: { p_player_ids: string[]; p_room: string }
+        Returns: number
+      }
+      start_review: { Args: { p_room: string }; Returns: undefined }
+      tick: { Args: { p_room: string }; Returns: string }
+      transfer_host: {
+        Args: { p_participant: string; p_room: string }
+        Returns: undefined
+      }
+      update_my_team: {
+        Args: {
+          p_color: string
+          p_ready: boolean
+          p_room: string
+          p_team: string
+        }
+        Returns: undefined
+      }
+      update_room_settings: {
+        Args: { p_room: string; p_settings: Json }
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +812,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
