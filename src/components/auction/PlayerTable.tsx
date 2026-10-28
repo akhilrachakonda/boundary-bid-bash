@@ -11,7 +11,7 @@ import { PlayerProfile } from "./PlayerProfile";
 export interface PoolRow {
   player: Player;
   set?: string;
-  order?: number;
+  order?: number | undefined;
   round?: number;
   status?: string;
   owner?: { name: string; color: string } | null;
