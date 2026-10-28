@@ -23,9 +23,9 @@ import { getSoundPref, setSoundPref } from "@/lib/sound";
 export const Route = createFileRoute("/_authenticated/room/$roomId")({
   head: () => ({
     meta: [
-      { title: "Auction room — Gavel" },
+      { title: "Live room — Cricket Auction" },
       { name: "description", content: "Live cricket player auction room." },
-      { property: "og:title", content: "Auction room — Gavel" },
+      { property: "og:title", content: "Live room — Cricket Auction" },
       { property: "og:description", content: "Live cricket player auction room." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

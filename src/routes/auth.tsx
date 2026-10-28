@@ -31,9 +31,9 @@ export const Route = createFileRoute("/auth")({
   }),
   head: () => ({
     meta: [
-      { title: "Sign in — Gavel Cricket Auction" },
+      { title: "Sign in — Cricket Auction" },
       { name: "description", content: "Jump in as a guest with a nickname, or use your email to keep your rooms across devices." },
-      { property: "og:title", content: "Sign in — Gavel Cricket Auction" },
+      { property: "og:title", content: "Sign in — Cricket Auction" },
       { property: "og:description", content: "Play as a guest or sign in with email." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

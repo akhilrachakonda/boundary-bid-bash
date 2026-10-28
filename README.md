@@ -1,4 +1,4 @@
-# Gavel — Multiplayer Cricket Player Auction
+# Cricket Auction
 
 Real-time IPL-style auction for friends: create a room, share the 6-character code, review a balanced player pool, bid live, trade, and compare teams.
 
