@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SUB_ROLES, type Player, type Role } from "@/lib/auction-rules";
 import { PlayerPortrait } from "@/components/auction/PlayerPortrait";
+import { withCanonicalPhoto } from "@/lib/player-photos";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -37,7 +38,7 @@ function AdminPage() {
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("players").select("*").eq("format", format).order("role").order("rating", { ascending: false });
-    setRows((data ?? []) as Player[]);
+    setRows(((data ?? []) as Player[]).map(withCanonicalPhoto));
     setDirty({});
   }, [format]);
   useEffect(() => { load(); }, [load]);
