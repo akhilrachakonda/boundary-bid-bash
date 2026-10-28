@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 import { bidBlockReason, formatMoney, nextBidAmount } from "@/lib/auction-rules";
-import { unseenEvents, resolvedLot, bidChange } from "@/lib/auction-presentation";
+import { unseenEvents, resolvedLot, bidChange, pendingLots } from "@/lib/auction-presentation";
 import { playHammer, playBid } from "@/lib/sound";
 import { AuctionStage } from "@/components/auction/AuctionStage";
 import { SaleReveal, type SaleSnapshot } from "@/components/auction/SaleReveal";
@@ -78,7 +78,7 @@ export function Auction({ data, d, now, sound }: { data: RoomData; d: Derived; n
     finally {pending.current=false;setBusy(false);}
   };
   const toggleStar=()=>{if(!player)return;const targets={...data.notes.targets};if(targets[player.id])delete targets[player.id];else targets[player.id]={};data.saveNotes({...data.notes,targets});};
-  const upcoming=data.pool.filter(x=>x.status==="pending").slice(0,6);
+  const upcoming=pendingLots(data.pool).slice(0,6);
   const done=data.pool.filter(x=>x.status==="sold"||x.status==="unsold").length;
   return <div className="auction-room space-y-5">
     <div className="flex flex-wrap items-center justify-between gap-2"><div className="flex items-center gap-3"><span className="live-indicator"/><h1 className="text-xl font-bold uppercase">Live auction</h1><span className="text-xs text-muted-foreground">{done+1} / {data.pool.length} lots</span></div><Button variant="outline" size="sm" onClick={()=>setStrategy(true)}><Lock className="h-3.5 w-3.5"/>My strategy<ChevronRight className="h-3.5 w-3.5"/></Button></div>

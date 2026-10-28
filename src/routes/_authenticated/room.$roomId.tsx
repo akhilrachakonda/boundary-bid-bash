@@ -35,8 +35,6 @@ export const Route = createFileRoute("/_authenticated/room/$roomId")({
   component: RoomPage,
 });
 
-const SETS = ["Marquee", "Wicketkeepers", "Batsmen", "All-rounders", "Bowlers", "Accelerated (unsold)"];
-
 function RoomPage() {
   const { roomId } = Route.useParams();
   const { user } = useAuth();
@@ -65,13 +63,14 @@ function RoomPage() {
         return {
           player: rp.player,
           set: rp.round === 2 ? "Accelerated" : rp.set_name,
-          order: rp.lot_order,
+          order: data.room?.status === "lobby" || data.room?.status === "review" ? undefined : rp.lot_order,
+          round: rp.round,
           status: rp.status,
           owner: owner ? { name: owner.team_name, color: owner.color } : null,
           price: rp.sold_price != null ? Number(rp.sold_price) : null,
         };
       }),
-    [data.pool, d],
+    [data.pool, data.room?.status, d],
   );
 
   if (data.error)
@@ -113,10 +112,7 @@ function RoomPage() {
             </span>
             {d.isHost && <Button onClick={() => rpc("host_control", { p_room: room.id, p_action: "skip_review" })}>Skip review & start</Button>}
           </div>
-          <div className="flex flex-wrap gap-1 text-xs">
-            <span className="text-muted-foreground">Auction order:</span>
-            {SETS.map((x, i) => <span key={x} className="rounded bg-secondary px-2 py-0.5">{i + 1}. {x}</span>)}
-          </div>
+          <p className="text-sm text-muted-foreground">Auction order is randomized when bidding starts</p>
           <PlayerTable rows={poolRows} currency={s.currency} starred={starred} onStar={toggleStar} />
         </div>
         <PrivatePanel data={data} d={d} />
@@ -150,7 +146,7 @@ function RoomPage() {
         {hostAway && !d.isHost && (
           <div className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 p-3 text-sm">
             <Crown className="h-4 w-4 text-primary" /> The host seems to have disconnected.
-            <Button size="sm" className="ml-auto" onClick={() => rpc("transfer_host", { p_room: room.id, p_participant: d.me!.id })}>Become host</Button>
+            <Button size="sm" className="ml-auto" onClick={() => { if (d.me) rpc("transfer_host", { p_room: room.id, p_participant: d.me.id }); }}>Become host</Button>
           </div>
         )}
         {room.status !== "lobby" && (
