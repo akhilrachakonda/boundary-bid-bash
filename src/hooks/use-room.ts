@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Player, Settings } from "@/lib/auction-rules";
+import { withCanonicalPhoto } from "@/lib/player-photos";
 
 export interface Room {
   id: string;
@@ -117,7 +118,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
             .eq("room_id", roomId)
             .order("round")
             .order("lot_order");
-          setPool((data ?? []) as unknown as RoomPlayer[]);
+          setPool(((data ?? []) as unknown as RoomPlayer[]).map(rp=>({...rp,player:withCanonicalPhoto(rp.player)})));
           return;
         }
         case "bids": {
