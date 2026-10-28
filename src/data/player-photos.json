@@ -964,12 +964,13 @@
   {
     "name": "Pathum Nissanka",
     "country": "Sri Lanka",
-    "url": "/__l5e/assets-v1/3dfb2f78-9cd9-4669-be2f-732cfdcdb158/pathum-nissanka.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/pathum-nissanka-1028655",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/pathum-nissanka.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/6fa53a32-6f81-4fcb-91f4-624cbcb87047/pathum-nissanka-portrait.webp",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c847160/pathum-nissanka.jpg?d=low&p=gthumb",
+    "source": "https://www.cricbuzz.com/profiles/13682/pathum-nissanka",
+    "credit": "Cricbuzz / Times Internet; photographer unspecified",
+    "pointer": "src/assets/players/pathum-nissanka-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Phil Salt",
@@ -1031,24 +1032,24 @@
   {
     "name": "Rachin Ravindra",
     "country": "New Zealand",
-    "url": "/__l5e/assets-v1/165b9fc9-782b-453d-adf8-73f8cb862270/rachin-ravindra.webp",
+    "url": "/__l5e/assets-v1/b1bab417-cdc7-4a8f-8314-d24416537423/rachin-ravindra-portrait.webp",
     "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c845519/rachin-ravindra.jpg?d=low&p=gthumb",
     "source": "https://www.cricbuzz.com/profiles/11177/rachin-ravindra",
     "credit": "Cricbuzz / Times Internet; photographer unspecified",
-    "pointer": "src/assets/players/rachin-ravindra.webp.asset.json",
+    "pointer": "src/assets/players/rachin-ravindra-portrait.webp.asset.json",
     "verified_identity": true,
-    "license": null,
-    "rights": "Editorial provider image; no open reuse license verified. Permission required for reuse."
+    "visually_verified": true
   },
   {
     "name": "Rahmanullah Gurbaz",
     "country": "Afghanistan",
-    "url": "/__l5e/assets-v1/bba65ce1-6054-48c3-929e-b0832ecf1563/rahmanullah-gurbaz.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/rahmanullah-gurbaz-974087",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/rahmanullah-gurbaz.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/bf4946d3-d1c3-4174-8029-13e5462b4b2e/rahmanullah-gurbaz-portrait.webp",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c616556/rahmanullah-gurbaz.jpg?d=low&p=gthumb",
+    "source": "https://www.cricbuzz.com/profiles/13213/rahmanullah-gurbaz",
+    "credit": "Cricbuzz / Times Internet; photographer unspecified",
+    "pointer": "src/assets/players/rahmanullah-gurbaz-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Rahul Chahar",
@@ -1088,12 +1089,13 @@
   {
     "name": "Ramandeep Singh",
     "country": "India",
-    "url": "/__l5e/assets-v1/5507f882-d1b9-4cc3-af8b-6e5b3c67c72c/ramandeep-singh.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/ramandeep-singh-1079470",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/ramandeep-singh.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/89bcbd57-1139-4ade-8dd3-37ec5eac593a/ramandeep-singh-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F1873%252F65478.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/5f0f62e2-0346-4282-b19f-1ebf34ae4a4f/ramandeep-singh",
+    "credit": "IPL / BCCI; photographer unspecified",
+    "pointer": "src/assets/players/ramandeep-singh-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Rashid Khan",
