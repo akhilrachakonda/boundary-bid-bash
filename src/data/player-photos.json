@@ -1,0 +1,782 @@
+[
+  {
+    "name": "Jos Buttler",
+    "country": "England",
+    "url": "/__l5e/assets-v1/d87e81aa-309d-424c-85e4-6a95ad94051b/jos-buttler.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/308967.png",
+    "source": "https://www.espncricinfo.com/cricketers/jos-buttler-308967",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/jos-buttler.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "KL Rahul",
+    "country": "India",
+    "url": "/__l5e/assets-v1/ea955fc7-97af-47c8-807b-89a07b17bc08/kl-rahul.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/422108.png",
+    "source": "https://www.espncricinfo.com/cricketers/kl-rahul-422108",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/kl-rahul.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Quinton de Kock",
+    "country": "South Africa",
+    "url": "/__l5e/assets-v1/01f54a28-1205-4831-a041-c5a897ecc2d7/quinton-de-kock.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/379143.png",
+    "source": "https://www.espncricinfo.com/cricketers/quinton-de-kock-379143",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/quinton-de-kock.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Devon Conway",
+    "country": "New Zealand",
+    "url": "/__l5e/assets-v1/e00bbc7f-c495-4334-aadd-3a5c959a4825/devon-conway.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/devon-conway-379140",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/devon-conway.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Rahmanullah Gurbaz",
+    "country": "Afghanistan",
+    "url": "/__l5e/assets-v1/bba65ce1-6054-48c3-929e-b0832ecf1563/rahmanullah-gurbaz.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/rahmanullah-gurbaz-974087",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/rahmanullah-gurbaz.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Abishek Porel",
+    "country": "India",
+    "url": "/__l5e/assets-v1/c79397b0-41e3-4a8e-8446-286a046a799a/abishek-porel.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/abishek-porel-1277545",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/abishek-porel.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Heinrich Klaasen",
+    "country": "South Africa",
+    "url": "/__l5e/assets-v1/eeaa4ad4-0814-4962-895d-3ce743e046d1/heinrich-klaasen.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/436757.png",
+    "source": "https://www.espncricinfo.com/cricketers/heinrich-klaasen-436757",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/heinrich-klaasen.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Jamie Smith",
+    "country": "England",
+    "url": "/__l5e/assets-v1/68e9081d-397d-4823-afd3-6ca70d3ac37d/jamie-smith.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/jamie-smith-1096092",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/jamie-smith.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "MS Dhoni",
+    "country": "India",
+    "url": "/__l5e/assets-v1/fcc2b8cb-dc7d-42af-9923-e0e9153f5035/ms-dhoni.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/ms-dhoni-28081",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/ms-dhoni.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Kusal Mendis",
+    "country": "Sri Lanka",
+    "url": "/__l5e/assets-v1/8cb38566-16c5-47e2-92e5-5929ffaf3247/kusal-mendis.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/629074.png",
+    "source": "https://www.espncricinfo.com/cricketers/kusal-mendis-629074",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/kusal-mendis.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Tom Latham",
+    "country": "New Zealand",
+    "url": "/__l5e/assets-v1/d3500ffc-c3c2-4d51-94ae-692427b2e924/tom-latham.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/388802.png",
+    "source": "https://www.espncricinfo.com/cricketers/tom-latham-388802",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/tom-latham.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Dinesh Karthik",
+    "country": "India",
+    "url": "/__l5e/assets-v1/bd7afefe-70e8-4e95-938d-601886086144/dinesh-karthik.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/30045.png",
+    "source": "https://www.espncricinfo.com/cricketers/dinesh-karthik-30045",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/dinesh-karthik.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Virat Kohli",
+    "country": "India",
+    "url": "/__l5e/assets-v1/a089bda2-e133-462f-9193-d682b5659517/virat-kohli.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/253802.png",
+    "source": "https://www.espncricinfo.com/cricketers/virat-kohli-253802",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/virat-kohli.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Rohit Sharma",
+    "country": "India",
+    "url": "/__l5e/assets-v1/1a1f08f1-1c25-4118-9fd8-618916a11ab5/rohit-sharma.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/34102.png",
+    "source": "https://www.espncricinfo.com/cricketers/rohit-sharma-34102",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/rohit-sharma.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Travis Head",
+    "country": "Australia",
+    "url": "/__l5e/assets-v1/e997bf27-cc04-4f41-9ba8-d08c39a81fe7/travis-head.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/530011.png",
+    "source": "https://www.espncricinfo.com/cricketers/travis-head-530011",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/travis-head.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Shubman Gill",
+    "country": "India",
+    "url": "/__l5e/assets-v1/3884a6f6-f4a7-4a5d-adea-0aa29a7b83a0/shubman-gill.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/1070173.png",
+    "source": "https://www.espncricinfo.com/cricketers/shubman-gill-1070173",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/shubman-gill.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Babar Azam",
+    "country": "Pakistan",
+    "url": "/__l5e/assets-v1/02444c7d-7607-4147-b2cd-7bcf873b1973/babar-azam.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/348144.png",
+    "source": "https://www.espncricinfo.com/cricketers/babar-azam-348144",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/babar-azam.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Kane Williamson",
+    "country": "New Zealand",
+    "url": "/__l5e/assets-v1/c07d9d2a-c67c-49be-a1e4-bca51ca5651f/kane-williamson.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/277906.png",
+    "source": "https://www.espncricinfo.com/cricketers/kane-williamson-277906",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/kane-williamson.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "David Warner",
+    "country": "Australia",
+    "url": "/__l5e/assets-v1/c717db19-98bf-4d7a-b234-84e295afa554/david-warner.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/219889.png",
+    "source": "https://www.espncricinfo.com/cricketers/david-warner-219889",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/david-warner.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Sai Sudharsan",
+    "country": "India",
+    "url": "/__l5e/assets-v1/bf78d730-dbec-4c6c-bbbe-9c8049404a94/sai-sudharsan.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/sai-sudharsan-1151288",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/sai-sudharsan.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Pathum Nissanka",
+    "country": "Sri Lanka",
+    "url": "/__l5e/assets-v1/3dfb2f78-9cd9-4669-be2f-732cfdcdb158/pathum-nissanka.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/pathum-nissanka-1028655",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/pathum-nissanka.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Priyansh Arya",
+    "country": "India",
+    "url": "/__l5e/assets-v1/4c570f7a-60c4-47ba-bc69-14f64a53ba3f/priyansh-arya.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/priyansh-arya-1175456",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/priyansh-arya.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Joe Root",
+    "country": "England",
+    "url": "/__l5e/assets-v1/3381cde8-8fd6-4d7a-bd99-808b4e9260df/joe-root.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/303669.png",
+    "source": "https://www.espncricinfo.com/cricketers/joe-root-303669",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/joe-root.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Steve Smith",
+    "country": "Australia",
+    "url": "/__l5e/assets-v1/22ffbd95-9cf2-41de-8038-1deae0a57e5f/steve-smith.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/267192.png",
+    "source": "https://www.espncricinfo.com/cricketers/steven-smith-267192",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/steve-smith.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Daryl Mitchell",
+    "country": "New Zealand",
+    "url": "/__l5e/assets-v1/94236d43-de02-41a9-97d4-e17bf5ae6898/daryl-mitchell.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/daryl-mitchell-381743",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/daryl-mitchell.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Aiden Markram",
+    "country": "South Africa",
+    "url": "/__l5e/assets-v1/2d628ffa-c48f-4d41-8b91-c53ab49e6390/aiden-markram.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/600498.png",
+    "source": "https://www.espncricinfo.com/cricketers/aiden-markram-600498",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/aiden-markram.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Rajat Patidar",
+    "country": "India",
+    "url": "/__l5e/assets-v1/eb4ef8e9-4807-4d84-a9c9-fd1e91ba6152/rajat-patidar.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/rajat-patidar-823703/matches",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/rajat-patidar.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Ajinkya Rahane",
+    "country": "India",
+    "url": "/__l5e/assets-v1/74270f26-00e4-45c7-9011-278d75b77464/ajinkya-rahane.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/277916.png",
+    "source": "https://www.espncricinfo.com/cricketers/ajinkya-rahane-277916",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/ajinkya-rahane.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "David Miller",
+    "country": "South Africa",
+    "url": "/__l5e/assets-v1/c593f6fc-8a36-4b67-8e99-6d5da1daae01/david-miller.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/321777.png",
+    "source": "https://www.espncricinfo.com/cricketers/david-miller-321777/matches",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/david-miller.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Glenn Phillips",
+    "country": "New Zealand",
+    "url": "/__l5e/assets-v1/8d3bc93a-389a-4196-8bd7-5a42f7a2f531/glenn-phillips.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/glenn-phillips-823509",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/glenn-phillips.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Shashank Singh",
+    "country": "India",
+    "url": "/__l5e/assets-v1/6188493b-ac7d-4da3-9ab0-8782487182dd/shashank-singh.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/shashank-singh-1277535",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/shashank-singh.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Ramandeep Singh",
+    "country": "India",
+    "url": "/__l5e/assets-v1/5507f882-d1b9-4cc3-af8b-6e5b3c67c72c/ramandeep-singh.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/ramandeep-singh-1079470",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/ramandeep-singh.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Hardik Pandya",
+    "country": "India",
+    "url": "/__l5e/assets-v1/0afa780a-cacf-4016-a89a-f3b5909111a3/hardik-pandya.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/625371.png",
+    "source": "https://www.espncricinfo.com/cricketers/hardik-pandya-625371",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/hardik-pandya.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Andre Russell",
+    "country": "West Indies",
+    "url": "/__l5e/assets-v1/4cb4cac6-1515-4e45-9701-950c831cded5/andre-russell.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/276298.png",
+    "source": "https://www.espncricinfo.com/cricketers/andre-russell-276298",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/andre-russell.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Sam Curran",
+    "country": "England",
+    "url": "/__l5e/assets-v1/6cbc7d10-1ee1-40f3-9509-856e9b9ccf68/sam-curran.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/662973.png",
+    "source": "https://www.espncricinfo.com/cricketers/sam-curran-662973",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/sam-curran.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Mitchell Marsh",
+    "country": "Australia",
+    "url": "/__l5e/assets-v1/e21375e0-8e89-42cb-a296-ab8371eed3af/mitchell-marsh.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/272450.png",
+    "source": "https://www.espncricinfo.com/cricketers/mitchell-marsh-272450",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/mitchell-marsh.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Marcus Stoinis",
+    "country": "Australia",
+    "url": "/__l5e/assets-v1/923ed1df-17e3-4f10-a39f-75aee8816c96/marcus-stoinis.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/325012.png",
+    "source": "https://www.espncricinfo.com/cricketers/marcus-stoinis-325012",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/marcus-stoinis.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Nitish Kumar Reddy",
+    "country": "India",
+    "url": "/__l5e/assets-v1/039e6013-f9ce-4b3a-9dca-9e9640a4cfd7/nitish-kumar-reddy.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/nitish-kumar-reddy-1175496",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/nitish-kumar-reddy.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Glenn Maxwell",
+    "country": "Australia",
+    "url": "/__l5e/assets-v1/3ec88554-dd68-4f2b-bc23-62a4bb4648aa/glenn-maxwell.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/325026.png",
+    "source": "https://www.espncricinfo.com/cricketers/glenn-maxwell-325026",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/glenn-maxwell.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Will Jacks",
+    "country": "England",
+    "url": "/__l5e/assets-v1/7a93f733-f6dc-46a7-aef5-d8950bba6bf3/will-jacks.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/will-jacks-897549",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/will-jacks.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Sikandar Raza",
+    "country": "Zimbabwe",
+    "url": "/__l5e/assets-v1/f3a3a856-244d-4dd9-b3c0-c3a79466f31e/sikandar-raza.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/299572.png",
+    "source": "https://www.espncricinfo.com/cricketers/sikandar-raza-299572",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/sikandar-raza.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Kamindu Mendis",
+    "country": "Sri Lanka",
+    "url": "/__l5e/assets-v1/47ba5833-1fe0-469a-8c21-3388ed5ed0d1/kamindu-mendis.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/kamindu-mendis-784373",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/kamindu-mendis.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Mohammad Nabi",
+    "country": "Afghanistan",
+    "url": "/__l5e/assets-v1/228cebec-623e-4dcb-98cc-cfadc77435e7/mohammad-nabi.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/25913.png",
+    "source": "https://www.espncricinfo.com/cricketers/mohammad-nabi-25913",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/mohammad-nabi.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Pat Cummins",
+    "country": "Australia",
+    "url": "/__l5e/assets-v1/56fc1e50-ae3f-4c59-a084-837696bd44bf/pat-cummins.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/489889.png",
+    "source": "https://www.espncricinfo.com/cricketers/pat-cummins-489889",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/pat-cummins.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Chris Woakes",
+    "country": "England",
+    "url": "/__l5e/assets-v1/209be5e5-dee0-4768-96d7-a7f772783efc/chris-woakes.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/247235.png",
+    "source": "https://www.espncricinfo.com/cricketers/chris-woakes-247235",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/chris-woakes.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Kyle Jamieson",
+    "country": "New Zealand",
+    "url": "/__l5e/assets-v1/c2265cea-c112-4fde-875b-89e129af9b82/kyle-jamieson.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/kyle-jamieson-625960",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/kyle-jamieson.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Aamer Jamal",
+    "country": "Pakistan",
+    "url": "/__l5e/assets-v1/c97885c2-842c-41ff-a9e8-1f4d5a2e7f8b/aamer-jamal.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/aamer-jamal-793441",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/aamer-jamal.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Rashid Khan",
+    "country": "Afghanistan",
+    "url": "/__l5e/assets-v1/f5d700e7-895d-4054-8bdd-eda77c473625/rashid-khan.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/793463.png",
+    "source": "https://www.espncricinfo.com/cricketers/rashid-khan-793463",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/rashid-khan.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Ravindra Jadeja",
+    "country": "India",
+    "url": "/__l5e/assets-v1/eea7fa2f-da3f-4536-a402-85a57bcdb208/ravindra-jadeja.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/234675.png",
+    "source": "https://www.espncricinfo.com/cricketers/ravindra-jadeja-234675",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/ravindra-jadeja.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Axar Patel",
+    "country": "India",
+    "url": "/__l5e/assets-v1/2678d3e0-d19e-43e8-a3e5-db78a109be8f/axar-patel.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/554691.png",
+    "source": "https://www.espncricinfo.com/cricketers/axar-patel-554691",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/axar-patel.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Ravichandran Ashwin",
+    "country": "India",
+    "url": "/__l5e/assets-v1/3b3fbc7d-77e0-4d09-ba25-4d83b9317c76/ravichandran-ashwin.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/26421.png",
+    "source": "https://www.espncricinfo.com/cricketers/ravichandran-ashwin-26421",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/ravichandran-ashwin.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Mitchell Santner",
+    "country": "New Zealand",
+    "url": "/__l5e/assets-v1/9a7421c8-8a51-4316-aab8-2a13e1ede183/mitchell-santner.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/502714.png",
+    "source": "https://www.espncricinfo.com/cricketers/mitchell-santner-502714",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/mitchell-santner.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Shakib Al Hasan",
+    "country": "Bangladesh",
+    "url": "/__l5e/assets-v1/1b07be8c-1090-4e79-9c31-4b4f74353eb3/shakib-al-hasan.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/56143.png",
+    "source": "https://www.espncricinfo.com/cricketers/shakib-al-hasan-56143",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/shakib-al-hasan.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Moeen Ali",
+    "country": "England",
+    "url": "/__l5e/assets-v1/7be5b8a3-7834-4765-83e7-721278942cab/moeen-ali.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/8917.png",
+    "source": "https://www.espncricinfo.com/cricketers/moeen-ali-8917",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/moeen-ali.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Jasprit Bumrah",
+    "country": "India",
+    "url": "/__l5e/assets-v1/7b38db07-4f96-40b4-98f4-2e6913fef395/jasprit-bumrah.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/625383.png",
+    "source": "https://www.espncricinfo.com/cricketers/jasprit-bumrah-625383",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/jasprit-bumrah.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Mitchell Starc",
+    "country": "Australia",
+    "url": "/__l5e/assets-v1/649346fe-980b-4afb-abd6-4b5b9ad49744/mitchell-starc.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/311592.png",
+    "source": "https://www.espncricinfo.com/cricketers/mitchell-starc-311592",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/mitchell-starc.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Kagiso Rabada",
+    "country": "South Africa",
+    "url": "/__l5e/assets-v1/eb5e3451-974c-4c72-b747-9814138b5bee/kagiso-rabada.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/550215.png",
+    "source": "https://www.espncricinfo.com/cricketers/kagiso-rabada-550215",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/kagiso-rabada.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Josh Hazlewood",
+    "country": "Australia",
+    "url": "/__l5e/assets-v1/2c99cdb8-fb04-4270-8dbf-cb208c2add38/josh-hazlewood.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/288284.png",
+    "source": "https://www.espncricinfo.com/cricketers/josh-hazlewood-288284",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/josh-hazlewood.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Trent Boult",
+    "country": "New Zealand",
+    "url": "/__l5e/assets-v1/28cbfcd0-4433-49ac-aeae-3f66ee13371a/trent-boult.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/277912.png",
+    "source": "https://www.espncricinfo.com/cricketers/trent-boult-277912",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/trent-boult.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Mohammed Siraj",
+    "country": "India",
+    "url": "/__l5e/assets-v1/49435d9e-d750-40b6-b3c6-bea129632fca/mohammed-siraj.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/940973.png",
+    "source": "https://www.espncricinfo.com/cricketers/mohammed-siraj-940973",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/mohammed-siraj.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Mark Wood",
+    "country": "England",
+    "url": "/__l5e/assets-v1/4b3d794a-1e7c-4367-9f30-1320ec6967f3/mark-wood.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/351588.png",
+    "source": "https://www.espncricinfo.com/cricketers/mark-wood-351588",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/mark-wood.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Lockie Ferguson",
+    "country": "New Zealand",
+    "url": "/__l5e/assets-v1/72dd25ca-7092-47b6-9b2b-dc34de0f75a6/lockie-ferguson.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/lockie-ferguson-493773",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/lockie-ferguson.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Bhuvneshwar Kumar",
+    "country": "India",
+    "url": "/__l5e/assets-v1/a87670bf-440a-498c-a7ce-f245188f6ae9/bhuvneshwar-kumar.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/326016.png",
+    "source": "https://www.espncricinfo.com/cricketers/bhuvneshwar-kumar-326016",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/bhuvneshwar-kumar.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Matheesha Pathirana",
+    "country": "Sri Lanka",
+    "url": "/__l5e/assets-v1/e0d5b538-4719-4680-b36d-25820d9c5609/matheesha-pathirana.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/matheesha-pathirana-1194795",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/matheesha-pathirana.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Mustafizur Rahman",
+    "country": "Bangladesh",
+    "url": "/__l5e/assets-v1/4650da16-c6f3-4d7e-91c4-a81d2ef196be/mustafizur-rahman.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/330902.png",
+    "source": "https://www.espncricinfo.com/cricketers/mustafizur-rahman-330902",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/mustafizur-rahman.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Khaleel Ahmed",
+    "country": "India",
+    "url": "/__l5e/assets-v1/65ceca81-54f4-4679-af44-e7ec3cdbd185/khaleel-ahmed.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/942645.png",
+    "source": "https://www.espncricinfo.com/cricketers/khaleel-ahmed-942645",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/khaleel-ahmed.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Yash Dayal",
+    "country": "India",
+    "url": "/__l5e/assets-v1/153fb6d9-c746-44a7-a5d9-92130345d749/yash-dayal.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/yash-dayal-1159720",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/yash-dayal.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Vyshak Vijaykumar",
+    "country": "India",
+    "url": "/__l5e/assets-v1/28b93790-e267-462a-8ae0-9510d5082f26/vyshak-vijaykumar.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/vijaykumar-vyshak-777815",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/vyshak-vijaykumar.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Kuldeep Yadav",
+    "country": "India",
+    "url": "/__l5e/assets-v1/39aa4eb8-8dd5-4a23-aa31-e825fadd20c4/kuldeep-yadav.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/559235.png",
+    "source": "https://www.espncricinfo.com/cricketers/kuldeep-yadav-559235",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/kuldeep-yadav.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Yuzvendra Chahal",
+    "country": "India",
+    "url": "/__l5e/assets-v1/0b6623e1-ab2c-4892-8042-3760791ccd8c/yuzvendra-chahal.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/430246.png",
+    "source": "https://www.espncricinfo.com/cricketers/yuzvendra-chahal-430246",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/yuzvendra-chahal.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Adam Zampa",
+    "country": "Australia",
+    "url": "/__l5e/assets-v1/367c424e-12be-4247-8fb8-b58d017ef25f/adam-zampa.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/379504.png",
+    "source": "https://www.espncricinfo.com/cricketers/adam-zampa-379504",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/adam-zampa.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Adil Rashid",
+    "country": "England",
+    "url": "/__l5e/assets-v1/32abbc18-0b8c-4d3b-8087-dc8f3f1f8290/adil-rashid.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/244497.png",
+    "source": "https://www.espncricinfo.com/cricketers/adil-rashid-244497",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/adil-rashid.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Keshav Maharaj",
+    "country": "South Africa",
+    "url": "/__l5e/assets-v1/46938d3f-a083-495d-8002-cae719013a05/keshav-maharaj.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/267724.png",
+    "source": "https://www.espncricinfo.com/cricketers/keshav-maharaj-267724",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/keshav-maharaj.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Noor Ahmad",
+    "country": "Afghanistan",
+    "url": "/__l5e/assets-v1/bf9c6d2e-a943-41db-9008-69b234481c84/noor-ahmad.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/noor-ahmad-1182529",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/noor-ahmad.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Tabraiz Shamsi",
+    "country": "South Africa",
+    "url": "/__l5e/assets-v1/09bfb588-ad2d-4b86-9579-f9d549b75ac9/tabraiz-shamsi.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/379145.png",
+    "source": "https://www.espncricinfo.com/cricketers/tabraiz-shamsi-379145",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/tabraiz-shamsi.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Mujeeb Ur Rahman",
+    "country": "Afghanistan",
+    "url": "/__l5e/assets-v1/6d431495-41f5-4139-b5ac-e6504f558a28/mujeeb-ur-rahman.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/974109.png",
+    "source": "https://www.espncricinfo.com/cricketers/mujeeb-ur-rahman-974109",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/mujeeb-ur-rahman.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Ish Sodhi",
+    "country": "New Zealand",
+    "url": "/__l5e/assets-v1/347d6661-aa58-4351-8e1d-e8a198fab283/ish-sodhi.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/559066.png",
+    "source": "https://www.espncricinfo.com/cricketers/ish-sodhi-559066",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/ish-sodhi.webp.asset.json",
+    "verified_identity": true
+  },
+  {
+    "name": "Sai Kishore",
+    "country": "India",
+    "url": "/__l5e/assets-v1/abcbd3af-8373-427a-a8fd-d2262a41ff2f/sai-kishore.webp",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
+    "source": "https://www.espncricinfo.com/cricketers/sai-kishore-1048739",
+    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
+    "pointer": "src/assets/players/sai-kishore.webp.asset.json",
+    "verified_identity": true
+  }
+]
