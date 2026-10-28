@@ -660,6 +660,7 @@ export type Database = {
         Args: { p_action: string; p_trade: string }
         Returns: undefined
       }
+      server_now: { Args: never; Returns: string }
       set_pool: {
         Args: { p_player_ids: string[]; p_room: string }
         Returns: number
