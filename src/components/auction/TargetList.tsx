@@ -33,7 +33,7 @@ export function TargetList({
             : rp.status === "unsold"
               ? "Unsold"
               : "Available";
-        const t = notes.targets[id];
+        const t = notes.targets[id] ?? {};
         return (
           <li key={id} className="rounded-lg border bg-secondary/40 p-2">
             <div className="flex items-center gap-2">

@@ -33,7 +33,7 @@ export function XIBuilder({
     if (to < 0 || to >= order.length) return;
     const o = [...order];
     const [x] = o.splice(from, 1);
-    o.splice(to, 0, x);
+    if (x) o.splice(to, 0, x);
     setOrder(o);
   };
   const setOv = (id: string, v: number) =>

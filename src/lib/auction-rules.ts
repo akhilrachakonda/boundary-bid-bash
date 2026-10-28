@@ -210,7 +210,7 @@ function allocate(total: number, weights: number[]) {
   const order = raw.map((r, i) => [r - Math.floor(r), i] as const).sort((a, b) => b[0] - a[0]);
   for (const [, i] of order) {
     if (left <= 0) break;
-    out[i]++;
+    out[i] = out[i]! + 1;
     left--;
   }
   return out;
@@ -229,7 +229,7 @@ function pickFromGroup(group: Player[], q: number, rand: () => number) {
   const remaining = q - top;
   for (let i = 0; i < remaining; i++) {
     const idx = Math.floor(((i + 0.5) * rest.length) / remaining);
-    chosen.push(rest[Math.min(idx, rest.length - 1)]);
+    chosen.push(rest[Math.min(idx, rest.length - 1)]!);
   }
   return chosen;
 }
@@ -256,7 +256,7 @@ export function generateBalancedPool(all: Player[], s: Settings, seed = 1): Pool
     }
   // Proportional quotas per sub-role
   let quotas = allocate(size, subs.map((x) => x.list.length));
-  quotas = quotas.map((q, i) => Math.min(q, subs[i].list.length));
+  quotas = quotas.map((q, i) => Math.min(q, subs[i]!.list.length));
 
   // Enforce role minimums by raising the largest under-filled sub of that role
   const bump = (pred: (i: number) => boolean, need: number, label: string) => {
@@ -266,19 +266,19 @@ export function generateBalancedPool(all: Player[], s: Settings, seed = 1): Pool
     while (have < need) {
       let best = -1;
       for (let i = 0; i < subs.length; i++)
-        if (pred(i) && quotas[i] < subs[i].list.length && (best < 0 || quotas[i] < quotas[best])) best = i;
+        if (pred(i) && quotas[i]! < subs[i]!.list.length && (best < 0 || quotas[i]! < quotas[best]!)) best = i;
       if (best < 0) break;
-      quotas[best]++;
+      quotas[best] = quotas[best]! + 1;
       have++;
     }
     notes.push(`Added ${have - before} ${label} so every team can meet the minimum (${need} needed).`);
   };
-  for (const role of ROLES) bump((i) => subs[i].role === role, req[role], ROLE_LABEL[role].toLowerCase() + "s");
-  bump((i) => /spin/i.test(subs[i].sub), req.spin, "spinners");
-  bump((i) => /(pace|medium)/i.test(subs[i].sub) && subs[i].role !== "WK" && subs[i].role !== "BAT", req.pace, "pacers");
+  for (const role of ROLES) bump((i) => subs[i]!.role === role, req[role], (ROLE_LABEL[role] ?? role).toLowerCase() + "s");
+  bump((i) => /spin/i.test(subs[i]!.sub), req.spin, "spinners");
+  bump((i) => /(pace|medium)/i.test(subs[i]!.sub) && subs[i]!.role !== "WK" && subs[i]!.role !== "BAT", req.pace, "pacers");
 
   const rand = rng(seed);
-  const players = subs.flatMap((g, i) => pickFromGroup(g.list, quotas[i], rand));
+  const players = subs.flatMap((g, i) => pickFromGroup(g.list, quotas[i]!, rand));
   const c = squadCounts(players);
   const feasible =
     feasibleBase &&
