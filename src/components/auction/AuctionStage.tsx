@@ -7,6 +7,7 @@ import { TeamCrest } from "./TeamCrest";
 import { TimerRing } from "./TimerRing";
 import { formatMoney, ROLE_LABEL, type Player, type Settings } from "@/lib/auction-rules";
 import { cn } from "@/lib/utils";
+import { useEffect, useRef } from "react";
 
 export interface StageBid { id: string; amount: number; team: string; color: string; time?: string }
 export function AuctionStage({ player, currency, price, leader, remaining, total, paused, connection = "connected", bids, pulse, increment, starred, onStar, label, children }: {
@@ -14,6 +15,8 @@ export function AuctionStage({ player, currency, price, leader, remaining, total
   remaining: number; total: number; paused?: boolean; connection?: string; bids: StageBid[]; pulse?: string; increment?: number;
   starred?: boolean; onStar?: () => void; label: string; children?: React.ReactNode;
 }) {
+  const priceRef=useRef<HTMLElement>(null);
+  useEffect(()=>{if(!pulse || window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;priceRef.current?.animate([{opacity:.4,transform:"translateY(10px)"},{opacity:1,transform:"translateY(0)"}],{duration:300,easing:"ease-out"});},[pulse]);
   return <div className="auction-broadcast">
     <div className="broadcast-stage">
       <div className="stage-topline"><span className="flex items-center gap-2"><Radio className="h-3.5 w-3.5 text-electric"/>{label}</span><span>{paused ? "PAUSED" : connection !== "connected" ? "RECONNECTING" : "ON THE BLOCK"}</span></div>
@@ -29,8 +32,8 @@ export function AuctionStage({ player, currency, price, leader, remaining, total
         {onStar && <Button variant="ghost" size="icon" className="absolute right-3 top-12" onClick={onStar} aria-label={starred ? "Remove from targets" : "Add to my targets"}><Star className={cn("h-5 w-5",starred && "fill-primary text-primary")}/></Button>}
       </div>
       <div className={cn("price-desk",pulse && "price-desk-active")}>
-        <div className="min-w-0 flex-1"><span className="stat-label">{leader ? "Current highest bid" : "Opening bid"}</span><div className="flex items-center gap-3"><strong key={pulse || "initial"} className={cn("broadcast-price tabular",pulse && "price-raise")}>{formatMoney(price,currency)}</strong>{!!increment && <span key={pulse} className="increment-rise text-sm font-bold text-success"><ArrowUp className="inline h-3 w-3"/>{formatMoney(increment,currency)}</span>}</div>
-        <div key={`${pulse}-leader`} className={cn("leading-team",pulse && "team-sweep")} style={leader ? {"--team-color":leader.color} as React.CSSProperties : undefined}>{leader ? <><TeamCrest name={leader.name} color={leader.color} className="h-8 w-8"/><span>{leader.name}</span><TrendingUp className="ml-auto h-4 w-4"/></> : <span className="text-sm text-muted-foreground">The floor is open</span>}</div></div>
+        <div className="min-w-0 flex-1"><span className="stat-label">{leader ? "Current highest bid" : "Opening bid"}</span><div className="flex items-center gap-3"><strong ref={priceRef} className="broadcast-price tabular">{formatMoney(price,currency)}</strong>{!!increment && <span className="increment-rise text-sm font-bold text-success"><ArrowUp className="inline h-3 w-3"/>{formatMoney(increment,currency)}</span>}</div>
+        <div className={cn("leading-team",pulse && "team-sweep")} style={leader ? {"--team-color":leader.color} as React.CSSProperties : undefined}>{leader ? <><TeamCrest name={leader.name} color={leader.color} className="h-8 w-8"/><span>{leader.name}</span><TrendingUp className="ml-auto h-4 w-4"/></> : <span className="text-sm text-muted-foreground">The floor is open</span>}</div></div>
         <TimerRing remainingMs={remaining} totalMs={total} paused={paused}/>
       </div>
       {children}
