@@ -1,0 +1,174 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import { Crown, Volume2, VolumeX } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AppHeader } from "@/components/AppHeader";
+import { useAuth } from "@/hooks/use-auth";
+import { useNow, useRoom } from "@/hooks/use-room";
+import { derive } from "@/components/auction/derive";
+import { PlayerTable } from "@/components/auction/PlayerTable";
+import { TeamPurseBar } from "@/components/auction/TeamPurseBar";
+import { Lobby } from "@/components/room/Lobby";
+import { Auction, AuctionLog } from "@/components/room/Auction";
+import { PrivatePanel } from "@/components/room/PrivatePanel";
+import { Trades } from "@/components/room/Trades";
+import { Results } from "@/components/room/Results";
+import { rpc } from "@/components/room/rpc";
+import { getSoundPref, setSoundPref } from "@/lib/sound";
+
+export const Route = createFileRoute("/_authenticated/room/$roomId")({
+  head: () => ({
+    meta: [
+      { title: "Auction room — Gavel" },
+      { name: "description", content: "Live cricket player auction room." },
+      { property: "og:title", content: "Auction room — Gavel" },
+      { property: "og:description", content: "Live cricket player auction room." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
+  component: RoomPage,
+});
+
+const SETS = ["Marquee", "Wicketkeepers", "Batsmen", "All-rounders", "Bowlers", "Accelerated (unsold)"];
+
+function RoomPage() {
+  const { roomId } = Route.useParams();
+  const { user } = useAuth();
+  const data = useRoom(roomId, user?.id);
+  const now = useNow(data.offset);
+  const d = useMemo(() => derive(data, user?.id), [data, user?.id]);
+  const [sound, setSound] = useState(false);
+  useEffect(() => setSound(getSoundPref()), []);
+
+  const room = data.room;
+  const hostPart = room ? data.participants.find((p) => p.user_id === room.host_id) : null;
+  const hostAway = hostPart ? now - new Date(hostPart.last_seen).getTime() > 30000 : false;
+
+  const starred = useMemo(() => new Set(Object.keys(data.notes.targets)), [data.notes.targets]);
+  const toggleStar = (id: string) => {
+    const t = { ...data.notes.targets };
+    if (t[id]) delete t[id];
+    else t[id] = {};
+    data.saveNotes({ ...data.notes, targets: t });
+  };
+  const poolRows = useMemo(
+    () =>
+      data.pool.map((rp) => {
+        const owner = d.ownerOf(rp.player_id);
+        return {
+          player: rp.player,
+          set: rp.round === 2 ? "Accelerated" : rp.set_name,
+          order: rp.lot_order,
+          status: rp.status,
+          owner: owner ? { name: owner.team_name, color: owner.color } : null,
+          price: rp.sold_price != null ? Number(rp.sold_price) : null,
+        };
+      }),
+    [data.pool, d],
+  );
+
+  if (data.error)
+    return (
+      <div className="min-h-screen">
+        <AppHeader />
+        <div className="mx-auto max-w-md px-4 py-20 text-center">
+          <h1 className="text-4xl font-bold uppercase">Room unavailable</h1>
+          <p className="mt-2 text-muted-foreground">{data.error}</p>
+          <Button asChild className="mt-4"><Link to="/join" search={{ code: "" }}>Join with a code</Link></Button>
+        </div>
+      </div>
+    );
+  if (!data.loaded || !room || !d.me)
+    return (
+      <div className="min-h-screen">
+        <AppHeader />
+        <div className="grid h-[60vh] place-items-center text-muted-foreground">Loading room…</div>
+      </div>
+    );
+
+  const s = room.settings;
+  const live = room.status === "auction" || room.status === "paused";
+  const reviewLeft = room.review_ends_at ? Math.max(0, new Date(room.review_ends_at).getTime() - now) : 0;
+
+  const main =
+    room.status === "lobby" ? (
+      <Lobby data={data} d={d} now={now} />
+    ) : room.status === "review" ? (
+      <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
+        <div className="space-y-4">
+          <div className="panel flex flex-wrap items-center gap-3 p-4">
+            <div>
+              <h2 className="text-3xl font-extrabold uppercase">Review the pool</h2>
+              <p className="text-sm text-muted-foreground">Star your targets. Bidding starts when the clock hits zero.</p>
+            </div>
+            <span className="ml-auto font-display text-5xl font-bold text-gold tabular">
+              {Math.floor(reviewLeft / 60000)}:{String(Math.floor((reviewLeft % 60000) / 1000)).padStart(2, "0")}
+            </span>
+            {d.isHost && <Button onClick={() => rpc("host_control", { p_room: room.id, p_action: "skip_review" })}>Skip review & start</Button>}
+          </div>
+          <div className="flex flex-wrap gap-1 text-xs">
+            <span className="text-muted-foreground">Auction order:</span>
+            {SETS.map((x, i) => <span key={x} className="rounded bg-secondary px-2 py-0.5">{i + 1}. {x}</span>)}
+          </div>
+          <PlayerTable rows={poolRows} currency={s.currency} starred={starred} onStar={toggleStar} />
+        </div>
+        <PrivatePanel data={data} d={d} />
+      </div>
+    ) : live ? (
+      <Auction data={data} d={d} now={now} sound={sound} />
+    ) : room.status === "completed" || room.status === "trade" ? (
+      <Trades data={data} d={d} now={now} />
+    ) : (
+      <Results data={data} d={d} />
+    );
+
+  return (
+    <div className="min-h-screen pb-10">
+      <AppHeader>
+        <div className="min-w-0">
+          <div className="truncate text-sm font-semibold">{room.name}</div>
+          <div className="text-xs text-muted-foreground">{room.format} · {room.code}</div>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="ml-auto"
+          aria-label={sound ? "Mute sounds" : "Turn on sounds"}
+          onClick={() => { setSound(!sound); setSoundPref(!sound); }}
+        >
+          {sound ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+        </Button>
+      </AppHeader>
+      <main className="mx-auto max-w-7xl space-y-4 px-3 py-4 sm:px-4">
+        {hostAway && !d.isHost && (
+          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 p-3 text-sm">
+            <Crown className="h-4 w-4 text-primary" /> The host seems to have disconnected.
+            <Button size="sm" className="ml-auto" onClick={() => rpc("transfer_host", { p_room: room.id, p_participant: d.me!.id })}>Become host</Button>
+          </div>
+        )}
+        {room.status !== "lobby" && (
+          <TeamPurseBar participants={data.participants} squadCount={(id) => data.squads.filter((x) => x.participant_id === id).length} settings={s} highlight={room.current_bidder} now={now} />
+        )}
+        {room.status === "lobby" ? (
+          main
+        ) : (
+          <Tabs defaultValue="main">
+            <TabsList>
+              <TabsTrigger value="main">{live ? "Auction" : room.status === "review" ? "Pool" : room.status === "results" ? "Results" : "Trades"}</TabsTrigger>
+              {room.status !== "review" && <TabsTrigger value="pool">Player pool</TabsTrigger>}
+              <TabsTrigger value="log">Log</TabsTrigger>
+            </TabsList>
+            <TabsContent value="main">{main}</TabsContent>
+            <TabsContent value="pool">
+              <PlayerTable rows={poolRows} currency={s.currency} starred={starred} onStar={toggleStar} />
+            </TabsContent>
+            <TabsContent value="log"><AuctionLog data={data} /></TabsContent>
+          </Tabs>
+        )}
+      </main>
+    </div>
+  );
+}
