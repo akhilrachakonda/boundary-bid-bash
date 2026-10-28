@@ -12,9 +12,9 @@ export const Route = createFileRoute("/_authenticated/join")({
   validateSearch: (s: Record<string, unknown>) => ({ code: typeof s["code"] === "string" ? s["code"] : "" }),
   head: () => ({
     meta: [
-      { title: "Join an auction room — Gavel" },
+      { title: "Join a room — Cricket Auction" },
       { name: "description", content: "Enter a 6-character room code to join your friends' cricket auction." },
-      { property: "og:title", content: "Join an auction room — Gavel" },
+      { property: "og:title", content: "Join a room — Cricket Auction" },
       { property: "og:description", content: "You've been invited to a live cricket auction." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

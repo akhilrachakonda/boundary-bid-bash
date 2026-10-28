@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Gavel, LogOut, Shield } from "lucide-react";
+import { LogOut, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -9,10 +9,10 @@ export function AppHeader({ children }: { children?: React.ReactNode }) {
   const navigate = useNavigate();
   return (
     <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-7xl items-center gap-3 px-4">
-        <Link to="/" className="flex items-center gap-2 font-display text-xl font-bold uppercase tracking-wide">
-          <Gavel className="h-5 w-5 text-primary" />
-          <span className="text-gold">Gavel</span>
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4">
+        <Link to="/" className="flex shrink-0 items-center gap-2 font-display text-xl font-bold uppercase" aria-label="Cricket Auction home">
+          <img src="/favicon.svg" className="h-8 w-8" alt="" />
+          <span className="leading-[0.9]">Cricket<br/><span className="text-primary">Auction</span></span>
         </Link>
         <div className="flex min-w-0 flex-1 items-center gap-2">{children}</div>
         {user ? (

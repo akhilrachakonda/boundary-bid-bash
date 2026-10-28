@@ -1,160 +1,95 @@
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play, SkipForward, Square, Undo2 } from "lucide-react";
+import { Check, Loader2, Pause, Play, SkipForward, Square, Undo2, Lock, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 import { bidBlockReason, formatMoney, nextBidAmount } from "@/lib/auction-rules";
-import { playHammer } from "@/lib/sound";
-import { PlayerCard } from "@/components/auction/PlayerCard";
-import { TimerRing } from "@/components/auction/TimerRing";
-import { TeamDot } from "@/components/auction/TeamPurseBar";
+import { unseenEvents, resolvedLot, bidChange } from "@/lib/auction-presentation";
+import { playHammer, playBid } from "@/lib/sound";
+import { AuctionStage } from "@/components/auction/AuctionStage";
+import { SaleReveal, type SaleSnapshot } from "@/components/auction/SaleReveal";
+import { PlayerPortrait } from "@/components/auction/PlayerPortrait";
+import { PlayerProfile } from "@/components/auction/PlayerProfile";
 import type { RoomData, Derived } from "@/components/auction/derive";
 import { PrivatePanel } from "./PrivatePanel";
 import { rpc } from "./rpc";
 
 export function Auction({ data, d, now, sound }: { data: RoomData; d: Derived; now: number; sound: boolean }) {
-  const room = data.room!;
-  const s = room.settings;
-  const rp = data.pool.find((x) => x.id === room.current_rp);
+  const room = data.room;
+  const me = d.me;
+  const [busy,setBusy] = useState(false);
+  const pending = useRef(false);
+  const [accepted,setAccepted] = useState(false);
+  const [strategy,setStrategy] = useState(false);
+  const [sale,setSale] = useState<SaleSnapshot|null>(null);
+  const [pulse,setPulse] = useState("");
+  const [increment,setIncrement] = useState(0);
+  const bidSeen = useRef(new Set<string|number>());
+  const eventSeen = useRef(new Set<string|number>());
+  const initialized = useRef(false);
+  const previousPrice = useRef<number|null>(null);
+  const previousConnection = useRef(data.connection);
+  const rp = data.pool.find(x=>x.id===room?.current_rp);
   const player = rp?.player;
-  const paused = room.status === "paused";
-  const remaining = paused ? room.paused_remaining_ms ?? 0 : room.lot_ends_at ? new Date(room.lot_ends_at).getTime() - now : 0;
-  const leader = room.current_bidder ? d.partById.get(room.current_bidder) : null;
-  const amount = player ? nextBidAmount(s, room.current_bid != null ? Number(room.current_bid) : null, Number(player.base_price)) : 0;
-  const me = d.me!;
-  const block = player ? bidBlockReason(s, Number(me.purse), d.myCounts, player, amount, room.current_bidder === me.id) : "No player";
-  const [busy, setBusy] = useState(false);
-  const [flash, setFlash] = useState<{ kind: "sold" | "unsold"; text: string } | null>(null);
-  const lastEvent = useRef<number | null>(null);
-  const starred = player ? data.notes.targets[player.id] : undefined;
-
-  // Sold / unsold stamp animation from the server's event log
   useEffect(() => {
-    const ev = data.events.find((e) => e.kind === "sold" || e.kind === "unsold");
-    if (!ev) return;
-    if (lastEvent.current === null) {
-      lastEvent.current = ev.id;
+    if (!data.loaded) return;
+    const reconnect = previousConnection.current !== "connected" && data.connection === "connected";
+    previousConnection.current = data.connection;
+    if (!initialized.current || reconnect) {
+      unseenEvents(data.events,eventSeen.current,false);
+      unseenEvents(data.bids,bidSeen.current,false);
+      previousPrice.current = room?.current_bid == null ? null : Number(room.current_bid);
+      initialized.current = true;
       return;
     }
-    if (ev.id === lastEvent.current) return;
-    lastEvent.current = ev.id;
-    setFlash({ kind: ev.kind as "sold" | "unsold", text: ev.message });
-    if (ev.kind === "sold" && sound) playHammer();
-    const t = setTimeout(() => setFlash(null), 2200);
-    return () => clearTimeout(t);
-  }, [data.events, sound]);
-
-  const bid = async () => {
-    if (block || busy) return;
-    setBusy(true);
-    await rpc("place_bid", { p_room: room.id, p_amount: amount });
-    setBusy(false);
+    const fresh = unseenEvents(data.bids,bidSeen.current,true);
+    const bid = fresh[0];
+    if (bid && bid.room_player_id===room?.current_rp) {
+      setIncrement(bidChange(bid,previousPrice.current));
+      previousPrice.current=Number(bid.amount); setPulse(bid.id);
+      if(sound)playBid();
+    }
+    const event = data.events.find(e => (e.kind === "sold" || e.kind === "unsold") && !eventSeen.current.has(e.id));
+    if (event) {
+      const lot = resolvedLot(event,data.pool);
+      if (lot) {
+        eventSeen.current.add(event.id);
+        const buyer=lot.sold_to ? d.partById.get(lot.sold_to) : null;
+        setSale({id:event.id,kind:event.kind as "sold"|"unsold",player:{...lot.player},price:lot.sold_price == null ? null : Number(lot.sold_price),...(buyer ? {team:{name:buyer.team_name,color:buyer.color}} : {})});
+        if(event.kind === "sold" && sound) playHammer();
+      }
+    }
+  },[data.bids,data.events,data.pool,data.loaded,data.connection,d.partById,room?.current_bid,room?.current_rp,sound]);
+  useEffect(()=>{if(!sale)return;const t=setTimeout(()=>setSale(null),3200);return()=>clearTimeout(t);},[sale]);
+  useEffect(()=>{if(!pulse)return;const t=setTimeout(()=>{setPulse("");setIncrement(0);},1400);return()=>clearTimeout(t);},[pulse]);
+  useEffect(()=>{previousPrice.current=null;},[room?.current_rp]);
+  if(!room || !me) return null;
+  const s=room.settings;
+  const paused=room.status === "paused";
+  const remaining=paused ? room.paused_remaining_ms ?? 0 : room.lot_ends_at ? new Date(room.lot_ends_at).getTime()-now : 0;
+  const leader=room.current_bidder ? d.partById.get(room.current_bidder) : null;
+  const amount=player ? nextBidAmount(s,room.current_bid == null ? null : Number(room.current_bid),Number(player.base_price)) : 0;
+  const block=player ? bidBlockReason(s,Number(me.purse),d.myCounts,player,amount,room.current_bidder===me.id) : "Waiting for a player";
+  const bid=async()=>{
+    if(block || pending.current || paused || remaining<=0 || data.connection!=="connected")return;
+    pending.current=true;setBusy(true);
+    try { const result=await rpc("place_bid",{p_room:room.id,p_amount:amount}); if(result!==undefined){setAccepted(true);setTimeout(()=>setAccepted(false),700);} }
+    finally {pending.current=false;setBusy(false);}
   };
-
-  const toggleStar = () => {
-    if (!player) return;
-    const t = { ...data.notes.targets };
-    if (t[player.id]) delete t[player.id];
-    else t[player.id] = {};
-    data.saveNotes({ ...data.notes, targets: t });
-  };
-
-  return (
-    <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
-      <div className="space-y-4">
-        <div className="relative">
-          {player ? (
-            <PlayerCard
-              big
-              player={player}
-              currency={s.currency}
-              starred={!!starred}
-              onStar={toggleStar}
-              footer={
-                <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                  <span className="rounded bg-secondary px-2 py-0.5">{rp!.set_name}{rp!.round === 2 ? " · Accelerated" : ""}</span>
-                  {starred?.max != null && <span className="rounded bg-primary/15 px-2 py-0.5 text-primary">Your max {formatMoney(starred.max, s.currency)}</span>}
-                </div>
-              }
-            />
-          ) : (
-            <div className="panel grid h-40 place-items-center text-muted-foreground">Waiting for the next player…</div>
-          )}
-          {flash && (
-            <div className="pointer-events-none absolute inset-0 grid place-items-center rounded-xl bg-background/70">
-              <div className="text-center">
-                <div className={cn("animate-stamp rounded-lg border-4 px-6 py-2 font-display text-6xl font-extrabold uppercase", flash.kind === "sold" ? "border-success text-success" : "border-destructive text-destructive")}>
-                  {flash.kind}
-                </div>
-                <p className="mt-3 text-sm font-semibold">{flash.text}</p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="panel flex items-center gap-4 p-4 sm:p-5">
-          <TimerRing remainingMs={remaining} totalMs={s.bid_timer * 1000} paused={paused} />
-          <div className="min-w-0 flex-1">
-            <p className="text-xs uppercase text-muted-foreground">{leader ? "Highest bid" : "Opening at base price"}</p>
-            <p key={room.current_bid ?? "base"} className="animate-bid-pop font-display text-5xl font-extrabold tabular sm:text-6xl">
-              {formatMoney(room.current_bid != null ? Number(room.current_bid) : player ? Number(player.base_price) : null, s.currency)}
-            </p>
-            {leader ? (
-              <p className="flex items-center gap-2 truncate text-lg font-semibold" style={{ color: leader.color }}>
-                <TeamDot color={leader.color} /> {leader.team_name}
-              </p>
-            ) : (
-              <p className="text-sm text-muted-foreground">No bids yet</p>
-            )}
-          </div>
-        </div>
-
-        <Button
-          onClick={bid}
-          disabled={!!block || busy || paused || remaining <= 0}
-          className="h-20 w-full bg-gold text-2xl font-extrabold uppercase text-primary-foreground shadow-glow disabled:opacity-50 sm:h-24 sm:text-3xl"
-        >
-          {paused ? "Paused" : block ?? `Bid ${formatMoney(amount, s.currency)}`}
-        </Button>
-
-        {d.isHost && (
-          <div className="flex flex-wrap gap-2">
-            {paused ? (
-              <Button variant="outline" onClick={() => rpc("host_control", { p_room: room.id, p_action: "resume" })}><Play className="h-4 w-4" /> Resume</Button>
-            ) : (
-              <Button variant="outline" onClick={() => rpc("host_control", { p_room: room.id, p_action: "pause" })}><Pause className="h-4 w-4" /> Pause</Button>
-            )}
-            <Button variant="outline" onClick={() => rpc("host_control", { p_room: room.id, p_action: "skip" })}><SkipForward className="h-4 w-4" /> Skip player</Button>
-            <Confirm label="Undo last sale" icon={<Undo2 className="h-4 w-4" />} desc="The last sold player goes back into the auction and the buyer gets their money back." onYes={() => rpc("host_control", { p_room: room.id, p_action: "undo" })} />
-            <Confirm label="End auction" icon={<Square className="h-4 w-4" />} desc="All remaining players will be marked unsold." onYes={() => rpc("host_control", { p_room: room.id, p_action: "end" })} />
-          </div>
-        )}
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="panel p-4">
-            <h4 className="mb-2 text-lg font-bold uppercase">Bids on this player</h4>
-            <ul className="max-h-56 space-y-1 overflow-y-auto text-sm">
-              {data.bids.length === 0 && <li className="text-muted-foreground">No bids yet.</li>}
-              {data.bids.map((b) => {
-                const t = d.partById.get(b.participant_id);
-                return (
-                  <li key={b.id} className="flex items-center gap-2">
-                    <TeamDot color={t?.color ?? "#888"} />
-                    <span className="flex-1 truncate">{t?.team_name}</span>
-                    <span className="font-semibold tabular">{formatMoney(Number(b.amount), s.currency)}</span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-          <AuctionLog data={data} />
-        </div>
-      </div>
-      <PrivatePanel data={data} d={d} />
-    </div>
-  );
+  const toggleStar=()=>{if(!player)return;const targets={...data.notes.targets};if(targets[player.id])delete targets[player.id];else targets[player.id]={};data.saveNotes({...data.notes,targets});};
+  const upcoming=data.pool.filter(x=>x.status==="pending").slice(0,6);
+  const done=data.pool.filter(x=>x.status==="sold"||x.status==="unsold").length;
+  return <div className="auction-room space-y-5">
+    <div className="flex flex-wrap items-center justify-between gap-2"><div className="flex items-center gap-3"><span className="live-indicator"/><h1 className="text-xl font-bold uppercase">Live auction</h1><span className="text-xs text-muted-foreground">{done+1} / {data.pool.length} lots</span></div><Button variant="outline" size="sm" onClick={()=>setStrategy(true)}><Lock className="h-3.5 w-3.5"/>My strategy<ChevronRight className="h-3.5 w-3.5"/></Button></div>
+    {player && <AuctionStage player={player} currency={s.currency} price={room.current_bid == null ? Number(player.base_price):Number(room.current_bid)} leader={leader ? {name:leader.team_name,color:leader.color}:null} remaining={remaining} total={s.bid_timer*1000} paused={paused} connection={data.connection} label={`${room.format} / ${rp?.set_name ?? ""} ${rp?.round===2 ? " / Accelerated" : ""}`} bids={data.bids.filter(b=>b.room_player_id===room.current_rp).map(b=>({id:b.id,amount:Number(b.amount),team:d.partById.get(b.participant_id)?.team_name??"Team",color:d.partById.get(b.participant_id)?.color??"var(--electric)",time:new Date(b.created_at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"})}))} pulse={pulse} increment={increment} starred={!!data.notes.targets[player.id]} onStar={toggleStar}>
+      <div className="bid-bar"><div className="hidden text-xs text-muted-foreground sm:block">Your purse<strong className="ml-2 font-display text-lg text-foreground tabular">{formatMoney(Number(me.purse),s.currency)}</strong></div><Button onClick={bid} disabled={!!block||busy||paused||remaining<=0||data.connection!=="connected"} className={cn("bid-action h-16 flex-1 bg-gold font-display text-2xl font-bold uppercase text-primary-foreground",accepted&&"bid-accepted")} aria-busy={busy}>{busy ? <><Loader2 className="h-5 w-5 animate-spin"/>Confirming bid…</> : accepted ? <><Check className="h-5 w-5"/>Bid accepted</> : paused ? "Auction paused" : data.connection!=="connected" ? "Reconnecting…" : remaining<=0 ? "Hammer falling…" : block ?? `Bid ${formatMoney(amount,s.currency)}`}</Button></div>
+    </AuctionStage>}
+    {d.isHost && <div className="flex flex-wrap gap-2 border-b pb-4"><span className="mr-2 self-center text-xs uppercase text-muted-foreground">Host desk</span><Button variant="outline" size="sm" onClick={()=>rpc("host_control",{p_room:room.id,p_action:paused?"resume":"pause"})}>{paused?<Play className="h-3.5 w-3.5"/>:<Pause className="h-3.5 w-3.5"/>}{paused?"Resume":"Pause"}</Button><Button variant="outline" size="sm" onClick={()=>rpc("host_control",{p_room:room.id,p_action:"skip"})}><SkipForward className="h-3.5 w-3.5"/>Skip player</Button><Confirm label="Undo last sale" icon={<Undo2 className="h-3.5 w-3.5"/>} desc="Return the last sold player and refund their buyer." onYes={()=>rpc("host_control",{p_room:room.id,p_action:"undo"})}/><Confirm label="End auction" icon={<Square className="h-3.5 w-3.5"/>} desc="Mark all remaining players unsold?" onYes={()=>rpc("host_control",{p_room:room.id,p_action:"end"})}/></div>}
+    <section><div className="mb-3 flex items-center justify-between"><h3 className="text-lg font-bold uppercase">Coming up next</h3><span className="text-xs text-muted-foreground">{upcoming.length ? "Next on the block" : "Final lot"}</span></div><div className="upcoming-strip">{upcoming.map(x=><PlayerProfile key={x.id} player={x.player} currency={s.currency}><div className="upcoming-player"><PlayerPortrait player={x.player} priority className="h-20 w-16 shrink-0 rounded-md"/><div className="min-w-0"><p className="truncate font-display text-lg font-semibold uppercase">{x.player.name}</p><p className="text-xs text-muted-foreground">{x.player.sub_role}</p><p className="mt-1 text-xs text-primary">{formatMoney(Number(x.player.base_price),s.currency)}</p></div></div></PlayerProfile>)}</div></section>
+    <Sheet open={strategy} onOpenChange={setStrategy}><SheetContent className="w-full overflow-y-auto sm:max-w-lg"><SheetTitle className="font-display text-3xl uppercase">My strategy</SheetTitle><SheetDescription>{me.team_name} · Private team desk</SheetDescription><div className="mt-5"><PrivatePanel data={data} d={d}/></div></SheetContent></Sheet>
+    {sale && <SaleReveal key={sale.id} sale={sale} currency={s.currency}/>}
+  </div>;
 }
 
 export function AuctionLog({ data }: { data: RoomData }) {

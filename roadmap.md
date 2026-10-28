@@ -1,0 +1,9 @@
+# Cricket Auction upgrade
+- [x] Inspect desktop/mobile live auction and supplied references (first image returned 422; second image and bid trail inspected).
+- [x] Match and cache all 150 actual portraits; populate 450 rows with canonical credits and reproducible backfill.
+- [x] Rebrand and redesign landing, auction, player profiles and strategy/team drawers.
+- [x] Add bid-ID animations and nonblocking, replay-safe sale reveals.
+- [x] Add owner-only photo URL/upload controls; private bucket because workspace blocks public buckets.
+- [x] Verify two-client bidding, sale states, reconnect, mobile, reduced motion and existing tests.
+- [ ] Positive owner photo upload/edit verification: requires an assigned owner admin identity.
+- [ ] Public-distribution photo reuse clearance: most editorial provider images have no verified permission.

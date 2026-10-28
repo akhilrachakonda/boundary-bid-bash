@@ -5,6 +5,8 @@ import { compareTeams, formatMoney } from "@/lib/auction-rules";
 import { RadarChart } from "@/components/auction/RadarChart";
 import { TeamDot } from "@/components/auction/TeamPurseBar";
 import type { RoomData, Derived } from "@/components/auction/derive";
+import { PlayerPortrait } from "@/components/auction/PlayerPortrait";
+import { PlayerProfile } from "@/components/auction/PlayerProfile";
 
 export function Results({ data, d }: { data: RoomData; d: Derived }) {
   const room = data.room!;
@@ -24,7 +26,7 @@ export function Results({ data, d }: { data: RoomData; d: Derived }) {
     g.fillRect(0, 0, c.width, c.height);
     g.fillStyle = css.getPropertyValue("--primary") || "gold";
     g.font = "bold 64px 'Barlow Condensed', sans-serif";
-    g.fillText(`${room.name} · ${room.format}`, 60, 110);
+    g.fillText(`Cricket Auction · ${room.format}`, 60, 110);
     g.font = "bold 40px 'Barlow Condensed', sans-serif";
     g.fillStyle = css.getPropertyValue("--foreground") || "white";
     g.fillText(`Champion: ${champ?.team_name ?? ""}`, 60, 180);
@@ -93,7 +95,7 @@ export function Results({ data, d }: { data: RoomData; d: Derived }) {
               <p className="mt-2 text-xs text-muted-foreground">Spent {formatMoney(d.spentOf(r.id), room.settings.currency)} · Squad {d.squadOf(r.id).length}</p>
               <ol className="mt-2 grid grid-cols-1 gap-0.5 text-sm sm:grid-cols-2">
                 {r.score.xiPlayers.map((x, j) => (
-                  <li key={x.id} className="truncate"><span className="mr-1 text-muted-foreground tabular">{j + 1}.</span>{x.name} <span className="text-xs text-muted-foreground">{x.rating}</span></li>
+                  <li key={x.id} className="flex items-center gap-2 py-1"><span className="w-4 text-muted-foreground tabular">{j + 1}.</span><PlayerProfile player={x} currency={room.settings.currency}><div className="flex items-center gap-2"><PlayerPortrait player={x} className="h-10 w-8 shrink-0 rounded"/><span className="truncate">{x.name}</span></div></PlayerProfile><span className="text-xs text-muted-foreground">{x.rating}</span></li>
                 ))}
               </ol>
               {r.score.strengths.length > 0 && <p className="mt-2 text-xs text-success">Strengths: {r.score.strengths.join(", ")}</p>}

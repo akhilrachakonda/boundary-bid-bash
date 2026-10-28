@@ -18,6 +18,9 @@ export interface Player {
   nationality_type: string;
   tier: string;
   age_group?: string;
+  photo_url?: string | null;
+  photo_source?: string | null;
+  photo_credit?: string | null;
 }
 
 export interface Increment {

@@ -123,6 +123,9 @@ export type Database = {
           image_placeholder: string | null
           name: string
           nationality_type: string
+          photo_credit: string | null
+          photo_source: string | null
+          photo_url: string | null
           rating: number
           role: string
           sub_role: string
@@ -140,6 +143,9 @@ export type Database = {
           image_placeholder?: string | null
           name: string
           nationality_type: string
+          photo_credit?: string | null
+          photo_source?: string | null
+          photo_url?: string | null
           rating: number
           role: string
           sub_role: string
@@ -157,6 +163,9 @@ export type Database = {
           image_placeholder?: string | null
           name?: string
           nationality_type?: string
+          photo_credit?: string | null
+          photo_source?: string | null
+          photo_url?: string | null
           rating?: number
           role?: string
           sub_role?: string
@@ -209,6 +218,7 @@ export type Database = {
           kind: string
           message: string
           room_id: string
+          room_player_id: string | null
         }
         Insert: {
           created_at?: string
@@ -216,6 +226,7 @@ export type Database = {
           kind: string
           message: string
           room_id: string
+          room_player_id?: string | null
         }
         Update: {
           created_at?: string
@@ -223,6 +234,7 @@ export type Database = {
           kind?: string
           message?: string
           room_id?: string
+          room_player_id?: string | null
         }
         Relationships: [
           {

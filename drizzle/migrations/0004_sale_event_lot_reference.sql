@@ -1,0 +1,3 @@
+ALTER TABLE public.room_events ADD COLUMN IF NOT EXISTS room_player_id uuid;
+CREATE OR REPLACE FUNCTION public.attach_sale_event_lot() RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$ BEGIN IF NEW.kind IN ('sold','unsold') THEN SELECT current_rp INTO NEW.room_player_id FROM public.rooms WHERE id = NEW.room_id; END IF; RETURN NEW; END; $$;
+CREATE TRIGGER attach_sale_event_lot BEFORE INSERT ON public.room_events FOR EACH ROW EXECUTE FUNCTION public.attach_sale_event_lot();

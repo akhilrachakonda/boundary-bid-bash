@@ -14,9 +14,9 @@ import type { Json } from "@/integrations/supabase/types";
 export const Route = createFileRoute("/_authenticated/create")({
   head: () => ({
     meta: [
-      { title: "Create an auction room — Gavel" },
+      { title: "Create a room — Cricket Auction" },
       { name: "description", content: "Pick a format, budget, squad rules and pool size for your cricket auction." },
-      { property: "og:title", content: "Create an auction room — Gavel" },
+      { property: "og:title", content: "Create a room — Cricket Auction" },
       { property: "og:description", content: "Set up an IPL, T20 or ODI player auction." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

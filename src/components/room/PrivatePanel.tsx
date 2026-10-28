@@ -6,6 +6,8 @@ import { TargetList } from "@/components/auction/TargetList";
 import { XIBuilder } from "@/components/auction/XIBuilder";
 import type { Notes } from "@/hooks/use-room";
 import type { RoomData, Derived } from "@/components/auction/derive";
+import { PlayerPortrait } from "@/components/auction/PlayerPortrait";
+import { PlayerProfile } from "@/components/auction/PlayerProfile";
 
 export function PrivatePanel({ data, d }: { data: RoomData; d: Derived }) {
   const room = data.room!;
@@ -14,7 +16,7 @@ export function PrivatePanel({ data, d }: { data: RoomData; d: Derived }) {
   const save = (n: Notes) => data.saveNotes(n).catch((e) => toast.error(e.message));
   const purse = Number(me.purse);
   return (
-    <div className="panel p-4">
+    <div className="space-y-4">
       <p className="mb-2 flex items-center gap-1 text-xs uppercase tracking-wider text-muted-foreground"><Lock className="h-3 w-3" /> Private — only you see this</p>
       <Tabs defaultValue="purse">
         <TabsList className="grid w-full grid-cols-4">
@@ -45,7 +47,7 @@ export function PrivatePanel({ data, d }: { data: RoomData; d: Derived }) {
               {data.squads.filter((x) => x.participant_id === me.id).map((x) => {
                 const p = d.playerById.get(x.player_id);
                 return p ? (
-                  <li key={x.id} className="flex justify-between gap-2"><span className="truncate">{p.name} <span className="text-xs text-muted-foreground">{p.sub_role}</span></span><span className="tabular">{formatMoney(Number(x.price), s.currency)}</span></li>
+                  <li key={x.id} className="flex items-center justify-between gap-2"><PlayerProfile player={p} currency={s.currency}><div className="flex items-center gap-2"><PlayerPortrait player={p} className="h-10 w-8 shrink-0 rounded"/><span className="truncate">{p.name}</span></div></PlayerProfile><span className="shrink-0 tabular">{formatMoney(Number(x.price), s.currency)}</span></li>
                 ) : null;
               })}
             </ul>

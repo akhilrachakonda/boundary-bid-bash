@@ -5,6 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { bestXI, isBowlingOption, overseasXILimit, xiWarnings, type Player } from "@/lib/auction-rules";
 import type { Notes } from "@/hooks/use-room";
+import { PlayerPortrait } from "./PlayerPortrait";
+import { PlayerProfile } from "./PlayerProfile";
 
 export function XIBuilder({
   squad,
@@ -66,6 +68,7 @@ export function XIBuilder({
           >
             <GripVertical className="h-4 w-4 cursor-grab text-muted-foreground" />
             <span className="w-5 font-display font-bold text-primary tabular">{i + 1}</span>
+            <PlayerProfile player={p}><PlayerPortrait player={p} className="h-10 w-8 shrink-0 rounded"/></PlayerProfile>
             <span className="min-w-0 flex-1 truncate">
               {p.name}
               <span className="ml-1 text-xs text-muted-foreground">{p.sub_role}{p.nationality_type === "Overseas" ? " ✈" : ""}</span>
@@ -94,7 +97,7 @@ export function XIBuilder({
                 onClick={() => setOrder([...order, p.id])}
                 className="rounded-full border px-2 py-1 text-xs hover:border-primary disabled:opacity-40"
               >
-                {p.name} · {p.rating}
+                <PlayerPortrait player={p} className="mr-1 inline-block h-8 w-7 rounded"/>{p.name} · {p.rating}
               </button>
             ))}
           </div>

@@ -2,6 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Crown, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { PlayerCard } from "@/components/auction/PlayerCard";
+import { formatMoney } from "@/lib/auction-rules";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AppHeader } from "@/components/AppHeader";
 import { useAuth } from "@/hooks/use-auth";
@@ -20,9 +23,9 @@ import { getSoundPref, setSoundPref } from "@/lib/sound";
 export const Route = createFileRoute("/_authenticated/room/$roomId")({
   head: () => ({
     meta: [
-      { title: "Auction room — Gavel" },
+      { title: "Live room — Cricket Auction" },
       { name: "description", content: "Live cricket player auction room." },
-      { property: "og:title", content: "Auction room — Gavel" },
+      { property: "og:title", content: "Live room — Cricket Auction" },
       { property: "og:description", content: "Live cricket player auction room." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -41,6 +44,7 @@ function RoomPage() {
   const now = useNow(data.offset);
   const d = useMemo(() => derive(data, user?.id), [data, user?.id]);
   const [sound, setSound] = useState(false);
+  const [selectedTeam,setSelectedTeam] = useState<string|null>(null);
   useEffect(() => setSound(getSoundPref()), []);
 
   const room = data.room;
@@ -142,7 +146,7 @@ function RoomPage() {
           {sound ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
         </Button>
       </AppHeader>
-      <main className="mx-auto max-w-7xl space-y-4 px-3 py-4 sm:px-4">
+      <main className="mx-auto max-w-7xl space-y-4 px-3 py-5 sm:px-6">
         {hostAway && !d.isHost && (
           <div className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 p-3 text-sm">
             <Crown className="h-4 w-4 text-primary" /> The host seems to have disconnected.
@@ -150,7 +154,7 @@ function RoomPage() {
           </div>
         )}
         {room.status !== "lobby" && (
-          <TeamPurseBar participants={data.participants} squadCount={(id) => data.squads.filter((x) => x.participant_id === id).length} settings={s} highlight={room.current_bidder} now={now} />
+          <TeamPurseBar participants={data.participants} squadCount={(id) => data.squads.filter((x) => x.participant_id === id).length} settings={s} highlight={room.current_bidder} now={now} onSelect={setSelectedTeam}/>
         )}
         {room.status === "lobby" ? (
           main
@@ -169,6 +173,7 @@ function RoomPage() {
           </Tabs>
         )}
       </main>
+      <Sheet open={!!selectedTeam} onOpenChange={open=>{if(!open)setSelectedTeam(null);}}><SheetContent className="w-full overflow-y-auto sm:max-w-lg"><SheetTitle className="font-display text-3xl uppercase">{selectedTeam ? d.partById.get(selectedTeam)?.team_name : "Team squad"}</SheetTitle><SheetDescription>{selectedTeam ? `${formatMoney(Number(d.partById.get(selectedTeam)?.purse ?? 0),s.currency)} remaining · ${d.squadOf(selectedTeam).length} players` : ""}</SheetDescription><div className="mt-5 space-y-3">{selectedTeam && d.squadOf(selectedTeam).map(player=><PlayerCard key={player.id} player={player} currency={s.currency}/>)}{selectedTeam && !d.squadOf(selectedTeam).length && <p className="text-sm text-muted-foreground">No signings yet.</p>}</div></SheetContent></Sheet>
     </div>
   );
 }

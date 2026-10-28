@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatMoney, ROLE_LABEL, SUB_ROLES, type Player, type Role, type Settings } from "@/lib/auction-rules";
 import { PlayerCard, TierBadge } from "./PlayerCard";
+import { PlayerPortrait } from "./PlayerPortrait";
+import { PlayerProfile } from "./PlayerProfile";
 
 export interface PoolRow {
   player: Player;
@@ -65,11 +67,11 @@ export function PlayerTable({
     <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
         <Input placeholder="Search name or country" value={q} onChange={(e) => setQ(e.target.value)} className="h-9 w-full sm:w-56" />
-        <select className={sel} value={role} onChange={(e) => { setRole(e.target.value); setSub(""); }} aria-label="Role">
+        <select className={`${sel} max-w-full`} value={role} onChange={(e) => { setRole(e.target.value); setSub(""); }} aria-label="Role">
           <option value="">All roles</option>
           {Object.keys(SUB_ROLES).map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
         </select>
-        <select className={sel} value={sub} onChange={(e) => setSub(e.target.value)} aria-label="Sub-role">
+        <select className={`${sel} max-w-full`} value={sub} onChange={(e) => setSub(e.target.value)} aria-label="Sub-role">
           <option value="">All sub-roles</option>
           {(role ? SUB_ROLES[role as Role] : Object.values(SUB_ROLES).flat()).map((s) => <option key={s}>{s}</option>)}
         </select>
@@ -137,8 +139,7 @@ export function PlayerTable({
                   )}
                   {r.order != null && <td className="p-2 tabular text-muted-foreground">{r.order}</td>}
                   <td className="p-2">
-                    <div className="font-semibold">{r.player.name}</div>
-                    <div className="text-xs text-muted-foreground">{r.player.country}{r.player.nationality_type === "Overseas" ? " ✈" : ""}</div>
+                    <PlayerProfile player={r.player} currency={currency}><div className="flex items-center gap-3"><PlayerPortrait player={r.player} className="h-12 w-10 shrink-0 rounded"/><div><div className="whitespace-nowrap font-semibold">{r.player.name}</div><div className="text-xs text-muted-foreground">{r.player.country}{r.player.nationality_type === "Overseas" ? " ✈" : ""}</div></div></div></PlayerProfile>
                   </td>
                   <td className="p-2 text-xs">{r.player.sub_role}</td>
                   <td className="p-2"><TierBadge tier={r.player.tier} /></td>

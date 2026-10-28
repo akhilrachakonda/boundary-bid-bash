@@ -7,9 +7,9 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/_authenticated/history")({
   head: () => ({
     meta: [
-      { title: "My auction rooms — Gavel" },
+      { title: "My rooms — Cricket Auction" },
       { name: "description", content: "Rejoin live auctions and revisit past results." },
-      { property: "og:title", content: "My auction rooms — Gavel" },
+      { property: "og:title", content: "My rooms — Cricket Auction" },
       { property: "og:description", content: "Your cricket auction room history." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

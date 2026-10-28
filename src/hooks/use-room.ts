@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Player, Settings } from "@/lib/auction-rules";
+import { withCanonicalPhoto } from "@/lib/player-photos";
 
 export interface Room {
   id: string;
@@ -67,6 +68,7 @@ export interface Trade {
 }
 export interface RoomEvent {
   id: number;
+  room_player_id?: string | null;
   kind: string;
   message: string;
   created_at: string;
@@ -91,6 +93,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
   const [error, setError] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [offset, setOffset] = useState(0);
+  const [connection, setConnection] = useState("connecting");
   const roomRef = useRef<Room | null>(null);
   roomRef.current = room;
 
@@ -116,7 +119,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
             .eq("room_id", roomId)
             .order("round")
             .order("lot_order");
-          setPool((data ?? []) as unknown as RoomPlayer[]);
+          setPool(((data ?? []) as unknown as RoomPlayer[]).map(rp=>({...rp,player:withCanonicalPhoto(rp.player)})));
           return;
         }
         case "bids": {
@@ -231,6 +234,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
       );
     }
     ch.subscribe((status) => {
+      setConnection(status === "SUBSCRIBED" ? "connected" : "reconnecting");
       // on (re)connect, resync everything so reconnects restore state
       if (status === "SUBSCRIBED") tables.forEach(queue);
     });
@@ -268,10 +272,10 @@ export function useRoom(roomId: string, userId: string | undefined) {
     };
   }, [loaded, roomId, offset, load]);
 
-  return { room, participants, pool, bids, squads, trades, events, notes, saveNotes, error, loaded, offset, reload: load };
+  return { room, participants, pool, bids, squads, trades, events, notes, saveNotes, error, loaded, offset, connection, reload: load };
 }
 
-export function useNow(offset: number, ms = 250) {
+export function useNow(offset: number, ms = 100) {
   const [now, setNow] = useState(() => Date.now() + offset);
   useEffect(() => {
     const i = setInterval(() => setNow(Date.now() + offset), ms);
