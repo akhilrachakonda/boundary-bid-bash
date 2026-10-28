@@ -56,7 +56,7 @@ export function PlayerCard({
               <span className="text-[10px] font-bold uppercase text-electric">✈ Overseas</span>
             )}
           </div>
-          <h3 className={cn("truncate font-bold uppercase leading-tight", big ? "text-3xl sm:text-4xl" : "text-lg")}>
+          <h3 className={cn("font-bold uppercase leading-tight", big ? "text-3xl sm:text-4xl" : "truncate text-lg")}>
             {player.name}
           </h3>
           <p className="truncate text-xs text-muted-foreground">
