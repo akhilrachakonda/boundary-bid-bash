@@ -51,8 +51,8 @@
 }
 
 :root {
-  --radius: 0.75rem;
-  --background: oklch(0.16 0.025 255);
+  --radius: 0.5rem;
+  --background: oklch(0.14 0.025 255);
   --foreground: oklch(0.97 0.01 90);
   --card: oklch(0.21 0.03 255);
   --card-foreground: oklch(0.97 0.01 90);
@@ -88,8 +88,10 @@
   --sidebar-border: oklch(0.32 0.035 255);
   --sidebar-ring: oklch(0.83 0.17 85);
 
-  --gradient-stage: radial-gradient(ellipse at top, oklch(0.3 0.08 240 / 0.7), transparent 60%),
-    radial-gradient(ellipse at bottom right, oklch(0.4 0.12 85 / 0.25), transparent 55%);
+  --gradient-stage: linear-gradient(150deg, oklch(0.19 0.04 250), var(--background) 52%);
+  --gradient-broadcast: linear-gradient(115deg, oklch(0.27 0.075 245), oklch(0.19 0.035 255) 58%, var(--card));
+  --gradient-vignette: linear-gradient(0deg, var(--card), transparent 42%);
+  --shadow-broadcast: 0 20px 70px oklch(0.05 0.02 255 / 0.5);
   --gradient-gold: linear-gradient(135deg, oklch(0.88 0.16 90), oklch(0.75 0.17 70));
   --shadow-glow: 0 0 40px -8px oklch(0.83 0.17 85 / 0.55);
   --shadow-electric: 0 0 32px -6px oklch(0.82 0.15 210 / 0.6);
@@ -106,7 +108,7 @@
     font-family: var(--font-sans);
     min-height: 100vh;
   }
-  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: 0.01em; }
+  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: 0; }
 }
 
 @utility font-display { font-family: var(--font-display); }
@@ -122,7 +124,7 @@
 @utility panel {
   background-color: color-mix(in oklab, var(--card) 85%, transparent);
   border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius);
   backdrop-filter: blur(8px);
 }
 @utility tabular { font-variant-numeric: tabular-nums; }
@@ -139,3 +141,85 @@
 }
 @utility animate-stamp { animation: stamp 0.55s cubic-bezier(.2,1.4,.4,1) both; }
 @utility animate-bid-pop { animation: bid-pop 0.35s ease-out; }
+
+.auction-broadcast { display:grid; grid-template-columns:minmax(0,1fr) 300px; border:1px solid var(--border); border-radius:8px; overflow:hidden; box-shadow:var(--shadow-broadcast); }
+.broadcast-stage { min-width:0; background:var(--gradient-broadcast); position:relative; }
+.stage-topline { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:16px 24px; border-bottom:1px solid var(--border); font-size:11px; font-weight:600; color:var(--muted-foreground); }
+.player-stage-body { position:relative; display:grid; grid-template-columns:42% minmax(0,1fr); min-height:310px; }
+.stage-portrait { position:relative; align-self:stretch; overflow:hidden; }
+.stage-portrait .portrait { background:transparent; }
+.stage-portrait img { object-fit:contain; object-position:center bottom; }
+.portrait-vignette { position:absolute; inset:0; background:var(--gradient-vignette); pointer-events:none; }
+.stage-player-number { position:absolute; bottom:0; left:18px; font:800 110px var(--font-display); color:var(--foreground); opacity:.06; }
+.stage-player-info { min-width:0; padding:40px 28px 28px 10px; align-self:center; }
+.stage-player-name { font-size:52px; line-height:.98; font-weight:800; text-transform:uppercase; white-space:normal; overflow-wrap:break-word; }
+.stat-label { display:block; margin-bottom:4px; font-size:10px; text-transform:uppercase; color:var(--muted-foreground); font-weight:600; }
+.price-desk { position:relative; display:flex; gap:24px; align-items:center; margin:0 24px; padding:22px 0 18px; border-top:1px solid var(--border); }
+.broadcast-price { display:block; font-family:var(--font-display); font-size:64px; font-weight:800; line-height:1.05; }
+.leading-team { display:flex; align-items:center; gap:8px; margin-top:10px; border-left:3px solid var(--team-color,var(--border)); padding:6px 12px; background:color-mix(in oklab,var(--team-color,var(--secondary)) 12%,transparent); color:var(--team-color,var(--foreground)); font-weight:600; max-width:380px; }
+.bid-timeline { display:flex; flex-direction:column; min-width:0; padding:24px 20px; background:var(--card); border-left:1px solid var(--border); }
+.timeline-list { max-height:405px; overflow:auto; margin-top:8px; }
+.timeline-entry { display:flex; gap:10px; align-items:center; position:relative; padding:14px 0; border-bottom:1px solid color-mix(in oklab,var(--border) 50%,transparent); }
+.bid-bar { display:flex; align-items:center; gap:20px; padding:0 24px 24px; }
+.bid-action { transition:transform .1s,filter .15s; box-shadow:var(--shadow-glow); }
+.bid-action:active:not(:disabled) { transform:translateY(2px) scale(.985); }
+.live-indicator { width:7px; height:7px; border-radius:50%; background:var(--success); box-shadow:0 0 0 4px color-mix(in oklab,var(--success) 12%,transparent); }
+.upcoming-strip { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(210px,1fr); gap:18px; overflow:auto; padding-bottom:6px; }
+.upcoming-player { display:flex; align-items:center; gap:12px; width:100%; }
+.sale-reveal { position:fixed; z-index:45; right:24px; bottom:28px; display:flex; align-items:center; gap:14px; padding:18px; width:460px; max-width:calc(100vw - 24px); border:1px solid var(--team-color,var(--border)); border-left:4px solid var(--team-color,var(--muted-foreground)); border-radius:8px; background:var(--card); box-shadow:var(--shadow-broadcast); animation:reveal-in .3s ease-out both; overflow:hidden; pointer-events:none; }
+.sale-unsold { border-left-color:var(--muted-foreground); }
+.sale-sold .sale-stamp { color:var(--primary); animation:stamp .4s ease-out both; }
+.sale-unsold .sale-stamp { color:var(--muted-foreground); }
+.hammer-motion { transform-origin:bottom right; animation:hammer .5s ease-in-out; }
+.sale-particles { position:absolute; inset:0; pointer-events:none; }
+.sale-particles i { position:absolute; width:3px; height:7px; background:var(--team-color,var(--primary)); right:30%; top:40%; animation:particle .8s ease-out both; }
+.sale-particles i:nth-child(2n) { right:50%; animation-delay:.1s; }
+.sale-particles i:nth-child(3n) { right:15%; animation-delay:.2s; }
+.price-raise { animation:price-raise .3s ease-out; }
+.increment-rise { animation:increment-rise 1.3s ease-out both; }
+.team-sweep { animation:team-sweep .4s ease-out; }
+.timeline-new { animation:timeline-in .3s ease-out; }
+.bid-accepted { animation:accepted .6s ease-out; }
+.player-profile-trigger { max-width:100%; white-space:normal; }
+.landing-masthead { padding:42px 0 28px; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; }
+.landing-masthead h1 { font-size:64px; font-weight:800; line-height:1; text-transform:uppercase; }
+.landing-demo-label { display:flex; align-items:center; justify-content:space-between; padding:12px 0; font-size:11px; color:var(--muted-foreground); }
+.landing-footer-strip { display:flex; justify-content:space-between; gap:20px; border-top:1px solid var(--border); padding:28px 0; margin-top:28px; }
+@keyframes price-raise { from {opacity:.4;transform:translateY(10px);} to {opacity:1;transform:translateY(0);} }
+@keyframes timeline-in { from {opacity:0;transform:translateX(16px);} to {opacity:1;transform:none;} }
+@keyframes increment-rise { 0% {opacity:0;transform:translateY(10px);} 20%,65% {opacity:1;} 100% {opacity:0;transform:translateY(-10px);} }
+@keyframes team-sweep { from {box-shadow:inset 300px 0 color-mix(in oklab,var(--team-color) 30%,transparent);} to {box-shadow:inset 0 0 transparent;} }
+@keyframes reveal-in { from {opacity:0;transform:translateY(20px);} to {opacity:1;transform:none;} }
+@keyframes hammer { 0% {transform:rotate(-35deg);} 45% {transform:rotate(15deg);} 100% {transform:rotate(0);} }
+@keyframes particle { from {opacity:.8;transform:translateY(0) rotate(0);} to {opacity:0;transform:translateY(-75px) rotate(120deg);} }
+@keyframes accepted { 50% {box-shadow:0 0 0 4px color-mix(in oklab,var(--success) 35%,transparent);} }
+@media(max-width:1023px) { .auction-broadcast {grid-template-columns:minmax(0,1fr) 260px;} .stage-player-name {font-size:42px;} .stage-player-info {padding-right:16px;} }
+@media(max-width:767px) {
+  .auction-broadcast {grid-template-columns:minmax(0,1fr);}
+  .player-stage-body {grid-template-columns:38% minmax(0,1fr);min-height:205px;}
+  .stage-topline {padding:12px;font-size:9px;}
+  .stage-player-info {padding:18px 12px 18px 8px;}
+  .stage-player-name {font-size:32px;}
+  .stage-player-info .mt-5 {margin-top:14px;gap:16px;}
+  .stage-player-info .mb-3 {margin-bottom:8px;}
+  .stage-player-info .text-sm {font-size:11px;}
+  .stage-player-info .text-2xl {font-size:20px;}
+  .price-desk {margin:0 16px;padding:16px 0;gap:12px;}
+  .broadcast-price {font-size:46px;}
+  .timer-ring {width:78px;height:78px;}
+  .leading-team {padding:4px 8px;font-size:12px;margin-top:8px;}
+  .bid-timeline {border-left:0;border-top:1px solid var(--border);padding:18px 16px;}
+  .timeline-list {max-height:250px;}
+  .bid-bar {position:fixed;z-index:40;bottom:0;left:0;right:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--background);border-top:1px solid var(--border);}
+  .auction-room {padding-bottom:85px;}
+  .sale-reveal {right:12px;bottom:100px;padding:12px;gap:10px;width:360px;}
+  .sale-reveal .text-2xl {font-size:22px;}
+  .landing-masthead {display:block;padding-top:28px;}
+  .landing-masthead h1 {font-size:46px;}
+  .landing-masthead .landing-actions {margin-top:22px;display:flex;}
+  .landing-footer-strip {flex-wrap:wrap;font-size:12px;}
+  .landing-demo .bid-bar {position:static;padding:12px 16px 18px;background:transparent;border:0;}
+  .landing-demo .bid-timeline {display:none;}
+  .landing-demo .auction-broadcast {grid-template-columns:1fr;}
+}
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after {animation:none!important;transition:none!important;scroll-behavior:auto!important;} }

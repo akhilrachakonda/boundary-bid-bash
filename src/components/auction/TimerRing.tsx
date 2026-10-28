@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export function TimerRing({ remainingMs, totalMs, paused }: { remainingMs: number; totalMs: number; paused?: boolean }) {
+export function TimerRing({ remainingMs, totalMs, paused }: { remainingMs: number; totalMs: number; paused?: boolean | undefined }) {
   const secs = Math.max(0, Math.ceil(remainingMs / 1000));
   const frac = Math.max(0, Math.min(1, remainingMs / Math.max(totalMs, 1)));
   const r = 44;

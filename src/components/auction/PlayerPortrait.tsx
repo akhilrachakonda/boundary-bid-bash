@@ -3,7 +3,7 @@ import { UserRound } from "lucide-react";
 import type { Player } from "@/lib/auction-rules";
 import { cn } from "@/lib/utils";
 
-export function PlayerPortrait({ player, className, priority = false }: { player: Player; className?: string; priority?: boolean }) {
+export function PlayerPortrait({ player, className, priority = false }: { player: Player; className?: string; priority?: boolean | undefined }) {
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const url = player.photo_url;
   return <div className={cn("portrait relative overflow-hidden bg-secondary", className)}>
