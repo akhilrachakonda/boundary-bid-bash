@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatMoney, ROLE_LABEL, SUB_ROLES, type Player, type Role, type Settings } from "@/lib/auction-rules";
 import { PlayerCard, TierBadge } from "./PlayerCard";
+import { PlayerPortrait } from "./PlayerPortrait";
+import { PlayerProfile } from "./PlayerProfile";
 
 export interface PoolRow {
   player: Player;
@@ -137,8 +139,7 @@ export function PlayerTable({
                   )}
                   {r.order != null && <td className="p-2 tabular text-muted-foreground">{r.order}</td>}
                   <td className="p-2">
-                    <div className="font-semibold">{r.player.name}</div>
-                    <div className="text-xs text-muted-foreground">{r.player.country}{r.player.nationality_type === "Overseas" ? " ✈" : ""}</div>
+                    <PlayerProfile player={r.player} currency={currency}><div className="flex items-center gap-3"><PlayerPortrait player={r.player} className="h-12 w-10 shrink-0 rounded"/><div><div className="whitespace-nowrap font-semibold">{r.player.name}</div><div className="text-xs text-muted-foreground">{r.player.country}{r.player.nationality_type === "Overseas" ? " ✈" : ""}</div></div></div></PlayerProfile>
                   </td>
                   <td className="p-2 text-xs">{r.player.sub_role}</td>
                   <td className="p-2"><TierBadge tier={r.player.tier} /></td>

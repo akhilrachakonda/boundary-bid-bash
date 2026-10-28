@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { formatMoney, type Settings } from "@/lib/auction-rules";
 import type { Notes, RoomPlayer } from "@/hooks/use-room";
 import type { Derived } from "./derive";
+import { PlayerPortrait } from "./PlayerPortrait";
+import { PlayerProfile } from "./PlayerProfile";
 
 export function TargetList({
   notes,
@@ -37,6 +39,7 @@ export function TargetList({
         return (
           <li key={id} className="rounded-lg border bg-secondary/40 p-2">
             <div className="flex items-center gap-2">
+              <PlayerProfile player={rp.player} currency={currency}><PlayerPortrait player={rp.player} className="h-12 w-10 shrink-0 rounded"/></PlayerProfile>
               <div className="min-w-0 flex-1">
                 <div className="truncate text-sm font-semibold">{rp.player.name}</div>
                 <div className="text-xs" style={owner ? { color: owner.color } : undefined}>

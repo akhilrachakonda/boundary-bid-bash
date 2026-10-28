@@ -10,6 +10,8 @@ import type { Trade } from "@/hooks/use-room";
 import type { RoomData, Derived } from "@/components/auction/derive";
 import { PrivatePanel } from "./PrivatePanel";
 import { rpc } from "./rpc";
+import { PlayerPortrait } from "@/components/auction/PlayerPortrait";
+import { PlayerProfile } from "@/components/auction/PlayerProfile";
 
 export function TradeCard({ t, d, currency, actions }: { t: Trade; d: Derived; currency: "cr" | "lakh" | "coins"; actions?: React.ReactNode }) {
   const from = d.partById.get(t.from_participant);
@@ -27,6 +29,7 @@ export function TradeCard({ t, d, currency, actions }: { t: Trade; d: Derived; c
         <div><span className="text-xs text-muted-foreground">Gives: </span>{names(t.offer_players)}{Number(t.cash) > 0 && ` + ${formatMoney(Number(t.cash), currency)}`}</div>
         <div><span className="text-xs text-muted-foreground">Gets: </span>{names(t.request_players)}{Number(t.cash) < 0 && ` + ${formatMoney(-Number(t.cash), currency)}`}</div>
       </div>
+      <div className="mt-3 flex flex-wrap gap-2">{[...t.offer_players,...t.request_players].map(id=>{const player=d.playerById.get(id);return player ? <PlayerProfile key={id} player={player} currency={currency}><PlayerPortrait player={player} className="h-14 w-12 rounded"/></PlayerProfile> : null;})}</div>
       {actions && <div className="mt-2 flex flex-wrap gap-2">{actions}</div>}
     </div>
   );
@@ -38,7 +41,7 @@ function PickList({ players, picked, toggle }: { players: Player[]; picked: stri
     <div className="flex max-h-48 flex-wrap gap-1 overflow-y-auto">
       {players.map((p) => (
         <button key={p.id} onClick={() => toggle(p.id)} className={cn("rounded-full border px-2 py-1 text-xs", picked.includes(p.id) && "border-primary bg-primary/20 text-primary")}>
-          {p.name} · {p.rating}
+          <PlayerPortrait player={p} className="mr-1 inline-block h-10 w-8 rounded"/>{p.name} · {p.rating}
         </button>
       ))}
     </div>
