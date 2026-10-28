@@ -28,5 +28,18 @@ Then open **/admin** (shield icon in the header).
 - `bunx vitest run` — rules tests (increments, purse guard, pool requirements, rating).
 - Two browser windows (one incognito) are the quickest way to try a full auction.
 
+## Player portraits
+- `src/data/player-photos.json` is the canonical name + country catalogue for all 150 identities, reused across all 450 format entries. It includes cached asset URLs, original provider URL, source profile and credits.
+- `src/data/player-photos-backfill.sql` is a reproducible data update, not a schema migration. Apply through Lovable's database data-write tool after schema migrations; never run it at page load.
+- Every selected image was downloaded, decoded and visually checked; 26 provider shirt/silhouette placeholders were replaced with actual portraits.
+- Most photos are editorial provider assets with **no verified open reuse licence**. Attribution is not permission; obtain permission or replace with licensed portraits before public distribution. Josh Inglis is CC BY 3.0, Prime Video AU & NZ.
+- Owner photo URL/source/credit editing and replacement upload are in `/admin`; photo replacements update all format rows for the same identity. The workspace blocks public storage buckets, so uploads use a private bucket and long-lived signed sharing links. Only existing owner admins may upload/edit; links expire and may need replacement.
+
+## Upgrade verification
+- Desktop and 390px mobile auction: accepted bids, first SOLD with correct frozen portrait, next live lot, UNSOLD, pause, no sale replay on reload, strategy/squad drawers, reduced motion, broken-image fallback.
+- 20 local tests plus 26 live backend invariant checks passed (concurrent bids, membership/private-note isolation and atomic trades).
+- Positive owner upload/edit flow remains unverified because no owner admin identity is assigned; non-admin editing was confirmed ineffective.
+- Project workspace display name could not be changed with available tools; in-app branding, page metadata, favicon and exports use Cricket Auction.
+
 ## Deploying
 Click **Publish** in Lovable. To host elsewhere (e.g. Vercel), export the repo, set the two `VITE_SUPABASE_*` variables, and run `bun install && bun run build`.

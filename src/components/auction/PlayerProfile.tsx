@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { PlayerPortrait } from "./PlayerPortrait";
 import { formatMoney, ROLE_LABEL, type Player, type Settings } from "@/lib/auction-rules";
+import { withCanonicalPhoto } from "@/lib/player-photos";
 
 export function PlayerProfile({ player, children, currency = "cr" }: { player: Player; children?: React.ReactNode; currency?: Settings["currency"] }) {
   const [open, setOpen] = useState(false);
+  player=withCanonicalPhoto(player);
   return <><Button variant="ghost" onClick={() => setOpen(true)} className="player-profile-trigger h-auto min-w-0 justify-start p-0 text-left hover:bg-transparent" aria-label={`View ${player.name} profile`}>{children ?? player.name}</Button>
     <Dialog open={open} onOpenChange={setOpen}><DialogContent className="max-w-lg overflow-hidden">
       <PlayerPortrait player={player} className="mx-auto h-64 w-52 rounded-md" priority />
