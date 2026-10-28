@@ -1,4 +1,7 @@
 import { Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { PlayerPortrait } from "./PlayerPortrait";
+import { PlayerProfile } from "./PlayerProfile";
 import { cn } from "@/lib/utils";
 import { formatMoney, ROLE_LABEL, type Player, type Settings } from "@/lib/auction-rules";
 
@@ -33,22 +36,10 @@ export function PlayerCard({
   onStar?: (() => void) | undefined;
   footer?: React.ReactNode;
 }) {
-  const initials = player.name
-    .split(" ")
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("");
   return (
     <div className={cn("panel relative overflow-hidden", big ? "p-5 sm:p-6" : "p-3")}>
       <div className="flex items-center gap-3">
-        <div
-          className={cn(
-            "grid shrink-0 place-items-center rounded-full bg-secondary font-display font-bold text-primary",
-            big ? "h-20 w-20 text-3xl shadow-glow" : "h-11 w-11 text-base",
-          )}
-        >
-          {initials}
-        </div>
+        <PlayerProfile player={player} currency={currency}><PlayerPortrait player={player} priority={big} className={cn("shrink-0 rounded-md",big ? "h-28 w-24" : "h-16 w-14")}/></PlayerProfile>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <TierBadge tier={player.tier} />
@@ -56,9 +47,9 @@ export function PlayerCard({
               <span className="text-[10px] font-bold uppercase text-electric">✈ Overseas</span>
             )}
           </div>
-          <h3 className={cn("font-bold uppercase leading-tight", big ? "text-3xl sm:text-4xl" : "truncate text-lg")}>
+          <PlayerProfile player={player} currency={currency}><h3 className={cn("font-bold uppercase leading-tight", big ? "text-3xl sm:text-4xl" : "truncate text-lg")}>
             {player.name}
-          </h3>
+          </h3></PlayerProfile>
           <p className="truncate text-xs text-muted-foreground">
             {player.country} · {ROLE_LABEL[player.role]} · {player.sub_role}
           </p>
@@ -75,13 +66,13 @@ export function PlayerCard({
           <div className="text-[10px] uppercase text-muted-foreground">Base {formatMoney(Number(player.base_price), currency)}</div>
         </div>
         {onStar && (
-          <button
+          <Button variant="ghost" size="icon"
             onClick={onStar}
             aria-label={starred ? "Remove from targets" : "Add to my targets"}
-            className="absolute right-2 top-2 p-1 text-muted-foreground hover:text-primary"
+            className="absolute right-1 top-1 h-7 w-7 text-muted-foreground hover:text-primary"
           >
             <Star className={cn("h-4 w-4", starred && "fill-primary text-primary")} />
-          </button>
+          </Button>
         )}
       </div>
       {footer}
