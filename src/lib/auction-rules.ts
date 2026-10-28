@@ -48,9 +48,11 @@ export interface Settings {
   min_base: number;
   currency: "cr" | "lakh" | "coins";
   sound?: boolean;
+  surprise_reveal?: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
+  surprise_reveal: true,
   max_teams: 4,
   min_squad: 11,
   max_squad: 18,

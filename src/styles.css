@@ -161,6 +161,9 @@
 .timeline-list { max-height:405px; overflow:auto; margin-top:8px; }
 .timeline-entry { display:flex; gap:10px; align-items:center; position:relative; padding:14px 0; border-bottom:1px solid color-mix(in oklab,var(--border) 50%,transparent); }
 .bid-bar { display:flex; align-items:center; gap:20px; padding:0 24px 24px; }
+.bid-bar-budget {flex-direction:column;gap:8px;}
+.lot-reveal {animation:lot-reveal .25s ease-out;}
+@keyframes lot-reveal {from {opacity:.3;transform:translateY(8px);} to {opacity:1;transform:translateY(0);}}
 .bid-action { transition:transform .1s,filter .15s; box-shadow:var(--shadow-glow); }
 .bid-action:active:not(:disabled) { transform:translateY(2px) scale(.985); }
 .live-indicator { width:7px; height:7px; border-radius:50%; background:var(--success); box-shadow:0 0 0 4px color-mix(in oklab,var(--success) 12%,transparent); }

@@ -53,6 +53,7 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_340px]">
       <div className="space-y-4">
+        <p className="border-l-2 border-electric px-3 py-2 text-sm">Surprise player reveal: <strong>{s.surprise_reveal ? "ON — future order hidden from everyone" : "OFF — upcoming players visible"}</strong>. The confirmed scouting pool is unchanged.</p>
         <div className="panel flex flex-wrap items-center gap-4 p-5">
           <div>
             <p className="text-xs uppercase text-muted-foreground">Room code</p>
