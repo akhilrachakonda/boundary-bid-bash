@@ -21,6 +21,9 @@ async def main():
         a.on('pageerror',lambda e:errors.append(str(e)))
         for page,nick in [(a,'Order host'),(b,'Order guest')]:
             await page.goto(U);await page.wait_for_timeout(1000)
+        # Read an existing legacy room without advancing or altering its gameplay.
+        legacy=await a.evaluate('''async()=>{const {supabase}=await import('/src/integrations/supabase/client.ts');return (await supabase.from('rooms').select('id').is('first_round_order',null).in('status',['paused','completed','results']).limit(1)).data?.[0]?.id;}''')
+        legacy_before=await snapshot(a,legacy) if legacy else None
         settings=dict(max_teams=2,min_squad=2,max_squad=8,min_wk=0,min_bat=0,min_ar=0,min_bowl=0,max_overseas=8,min_spinners=0,min_pacers=0,purse=100,pool_size=8,bid_timer=3,bid_reset=1,increments=[dict(upto=None,step=.5)],review_seconds=120,min_base=.2,currency='cr')
         cr=await rpc(a,'create_room',dict(p_name='Random order regression',p_format='IPL',p_settings=settings,p_nickname='Host',p_team='Order Royals',p_color='#f4c34d'));rid=cr['room_id']
         await rpc(b,'join_room',dict(p_code=cr['code'],p_nickname='Guest',p_team='Order Kings',p_color='#29d7ee'))
@@ -100,5 +103,12 @@ async def main():
         print('PASS first/accelerated undo refunds, skip, single unsold shuffle, completion without lost players/duplicate sales')
         assert not errors,errors
         print('PASS browser runtime errors: 0')
+        if legacy:
+            legacy_after=await snapshot(a,legacy)
+            assert legacy_after['pool']==legacy_before['pool']
+            assert legacy_after['room']==legacy_before['room']
+            print('PASS existing legacy room state and queue unaffected')
+        else:
+            print('UNVERIFIED no accessible existing legacy room')
         await browser.close()
 asyncio.run(main())
