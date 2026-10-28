@@ -2,12 +2,13 @@
   {
     "name": "Aamer Jamal",
     "country": "Pakistan",
-    "url": "/__l5e/assets-v1/c97885c2-842c-41ff-a9e8-1f4d5a2e7f8b/aamer-jamal.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/aamer-jamal-793441",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/aamer-jamal.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/28b43a00-c080-4eb2-b622-9a43e57822c8/aamer-jamal-portrait.webp",
+    "original_url": "https://www.photosport.nz/img-get2/I0000aVvFyg68M8Y/fit=180x180/fill=/g=G0000Zqb2qgn8LH4/I0000aVvFyg68M8Y.jpg",
+    "source": "https://www.photosport.nz/gallery/240109-Pakistan-T20-Headshots/G0000Zqb2qgn8LH4/C00009sq8vK3F1_o",
+    "credit": "Alan Lee / Photosport (www.photosport.nz); Pakistan T20 headshots, 9 January 2024. Copyrighted; permission required for reuse.",
+    "pointer": "src/assets/players/aamer-jamal-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Abdul Samad",
@@ -36,12 +37,13 @@
   {
     "name": "Abishek Porel",
     "country": "India",
-    "url": "/__l5e/assets-v1/c79397b0-41e3-4a8e-8446-286a046a799a/abishek-porel.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/abishek-porel-1277545",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/abishek-porel.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/917a6dcd-695b-4726-9f50-a7a264f8bf6b/abishek-porel-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F1396%252F76558.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/1f26a054-3c7f-4fa1-82c0-3057221e1686/abishek-porel",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/abishek-porel-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Adam Zampa",
@@ -132,14 +134,13 @@
   {
     "name": "Ashutosh Sharma",
     "country": "India",
-    "url": "/__l5e/assets-v1/4a17b446-e1b2-4640-b94e-32ef9b28a037/ashutosh-sharma.webp",
-    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c182026/ashutosh-sharma.jpg?d=low&p=gthumb",
-    "source": "https://www.cricbuzz.com/profiles/13497/ashutosh-sharma",
-    "credit": "Cricbuzz; photographer and reuse rights not specified. Public access is not a reuse license.",
-    "pointer": "src/assets/players/ashutosh-sharma.webp.asset.json",
+    "url": "/__l5e/assets-v1/1f6b43cf-f988-4bf0-a1e5-dc27eca0a8a1/ashutosh-sharma-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F1396%252F67627.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/f9386ded-ef11-40bc-930b-2746e7b92662/ashutosh-sharma",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/ashutosh-sharma-portrait.webp.asset.json",
     "verified_identity": true,
-    "license": null,
-    "rights": "Cricbuzz; photographer and reuse rights not specified. Public access is not a reuse license."
+    "visually_verified": true
   },
   {
     "name": "Avesh Khan",
@@ -244,12 +245,13 @@
   {
     "name": "Daryl Mitchell",
     "country": "New Zealand",
-    "url": "/__l5e/assets-v1/94236d43-de02-41a9-97d4-e17bf5ae6898/daryl-mitchell.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/daryl-mitchell-381743",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/daryl-mitchell.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/53c41f0a-7752-4b1f-b7b3-c3e5f9e655e3/daryl-mitchell-portrait.webp",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c845511/daryl-mitchell.jpg?d=low&p=gthumb",
+    "source": "https://www.cricbuzz.com/profiles/10713/daryl-mitchell",
+    "credit": "Cricbuzz / Times Internet; photographer unspecified; copyrighted editorial image, no open reuse license verified.",
+    "pointer": "src/assets/players/daryl-mitchell-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "David Miller",
@@ -286,12 +288,13 @@
   {
     "name": "Devon Conway",
     "country": "New Zealand",
-    "url": "/__l5e/assets-v1/e00bbc7f-c495-4334-aadd-3a5c959a4825/devon-conway.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/devon-conway-379140",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/devon-conway.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/e8effdf6-e8db-4683-81a7-1ab0b97cc1ac/devon-conway-portrait.webp",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c845526/devon-conway.jpg?d=low&p=gthumb",
+    "source": "https://www.cricbuzz.com/profiles/9838/devon-conway",
+    "credit": "Cricbuzz / Times Internet; photographer unspecified; copyrighted editorial image, no open reuse license verified.",
+    "pointer": "src/assets/players/devon-conway-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Dewald Brevis",
@@ -364,12 +367,13 @@
   {
     "name": "Glenn Phillips",
     "country": "New Zealand",
-    "url": "/__l5e/assets-v1/8d3bc93a-389a-4196-8bd7-5a42f7a2f531/glenn-phillips.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/glenn-phillips-823509",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/glenn-phillips.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/bf16b76f-a307-4b55-b281-e882e91616b0/glenn-phillips-portrait.webp",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c845521/glenn-phillips.jpg?d=low&p=gthumb",
+    "source": "https://www.cricbuzz.com/profiles/10693/glenn-phillips",
+    "credit": "Cricbuzz / Times Internet; photographer unspecified; copyrighted editorial image, no open reuse license verified.",
+    "pointer": "src/assets/players/glenn-phillips-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Hardik Pandya",
@@ -452,12 +456,13 @@
   {
     "name": "Jamie Smith",
     "country": "England",
-    "url": "/__l5e/assets-v1/68e9081d-397d-4823-afd3-6ca70d3ac37d/jamie-smith.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/jamie-smith-1096092",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/jamie-smith.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/f0bf858c-8621-487e-885e-b5be543fbf8b/jamie-smith-portrait.webp",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c717789/jamie-smith.jpg?d=low&p=gthumb",
+    "source": "https://www.cricbuzz.com/profiles/13810/jamie-smith",
+    "credit": "Cricbuzz / Times Internet; photographer unspecified; copyrighted editorial image, no open reuse license verified.",
+    "pointer": "src/assets/players/jamie-smith-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Jason Holder",
@@ -569,12 +574,13 @@
   {
     "name": "Kamindu Mendis",
     "country": "Sri Lanka",
-    "url": "/__l5e/assets-v1/47ba5833-1fe0-469a-8c21-3388ed5ed0d1/kamindu-mendis.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/kamindu-mendis-784373",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/kamindu-mendis.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/4a070cc9-42fb-400f-ba9a-4a232c060dbc/kamindu-mendis-portrait.webp",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c847173/kamindu-mendis.jpg?d=low&p=gthumb",
+    "source": "https://www.cricbuzz.com/profiles/10940/kamindu-mendis",
+    "credit": "Cricbuzz / Times Internet; photographer unspecified; copyrighted editorial image, no open reuse license verified.",
+    "pointer": "src/assets/players/kamindu-mendis-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Kane Williamson",
@@ -641,12 +647,13 @@
   {
     "name": "Kyle Jamieson",
     "country": "New Zealand",
-    "url": "/__l5e/assets-v1/c2265cea-c112-4fde-875b-89e129af9b82/kyle-jamieson.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/kyle-jamieson-625960",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/kyle-jamieson.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/e4272d43-1faa-49e3-9a35-2b220f21f735/kyle-jamieson-portrait.webp",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c845508/kyle-jamieson.jpg?d=low&p=gthumb",
+    "source": "https://www.cricbuzz.com/profiles/9441/kyle-jamieson",
+    "credit": "Cricbuzz / Times Internet; photographer unspecified; copyrighted editorial image, no open reuse license verified.",
+    "pointer": "src/assets/players/kyle-jamieson-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Liam Livingstone",
@@ -663,22 +670,24 @@
   {
     "name": "Lockie Ferguson",
     "country": "New Zealand",
-    "url": "/__l5e/assets-v1/72dd25ca-7092-47b6-9b2b-dc34de0f75a6/lockie-ferguson.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/lockie-ferguson-493773",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/lockie-ferguson.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/ad841e6e-9f6e-4e22-b93c-6be6675e9b2d/lockie-ferguson-portrait.webp",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c845492/lockie-ferguson.jpg?d=low&p=gthumb",
+    "source": "https://www.cricbuzz.com/profiles/10692/lockie-ferguson",
+    "credit": "Cricbuzz / Times Internet; photographer unspecified; copyrighted editorial image, no open reuse license verified.",
+    "pointer": "src/assets/players/lockie-ferguson-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "MS Dhoni",
     "country": "India",
-    "url": "/__l5e/assets-v1/fcc2b8cb-dc7d-42af-9923-e0e9153f5035/ms-dhoni.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/ms-dhoni-28081",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/ms-dhoni.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/87ae68de-c3c8-4adf-b5f0-c65f9722fb50/ms-dhoni-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F1622%252F11318.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/312863bc-7672-4dc3-8d32-eacf60f0ee89/mahendra-singh-dhoni",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/ms-dhoni-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Maheesh Theekshana",
@@ -727,24 +736,24 @@
   {
     "name": "Matheesha Pathirana",
     "country": "Sri Lanka",
-    "url": "/__l5e/assets-v1/e0d5b538-4719-4680-b36d-25820d9c5609/matheesha-pathirana.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/matheesha-pathirana-1194795",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/matheesha-pathirana.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/74a7fd58-64d8-4d33-bb89-32e7d1ae3933/matheesha-pathirana-portrait.webp",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c847143/matheesha-pathirana.jpg?d=low&p=gthumb",
+    "source": "https://www.cricbuzz.com/profiles/16458/matheesha-pathirana",
+    "credit": "Cricbuzz / Times Internet; photographer unspecified; copyrighted editorial image, no open reuse license verified.",
+    "pointer": "src/assets/players/matheesha-pathirana-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Mayank Yadav",
     "country": "India",
-    "url": "/__l5e/assets-v1/627f9b43-925b-4952-9e73-c7fef3e77442/mayank-yadav.webp",
-    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c182026/mayank-yadav.jpg?d=low&p=gthumb",
-    "source": "https://www.cricbuzz.com/profiles/22401/mayank-yadav",
-    "credit": "Cricbuzz; photographer and reuse rights not specified. Public access is not a reuse license.",
-    "pointer": "src/assets/players/mayank-yadav.webp.asset.json",
+    "url": "/__l5e/assets-v1/25215773-be84-4880-8728-8dc64ec7da8b/mayank-yadav-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2880%252F76160.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/5a95f834-4626-492f-922a-ef177d4086e3/mayank-yadav",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/mayank-yadav-portrait.webp.asset.json",
     "verified_identity": true,
-    "license": null,
-    "rights": "Cricbuzz; photographer and reuse rights not specified. Public access is not a reuse license."
+    "visually_verified": true
   },
   {
     "name": "Mitchell Marsh",
@@ -833,14 +842,13 @@
   {
     "name": "Mohsin Khan",
     "country": "India",
-    "url": "/__l5e/assets-v1/cf64406c-8c56-443a-bd9f-7a4ed6a45029/mohsin-khan.webp",
-    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c182026/mohsin-khan.jpg?d=low&p=gthumb",
-    "source": "https://www.cricbuzz.com/profiles/13534/mohsin-khan",
-    "credit": "Cricbuzz; photographer and reuse rights not specified. Public access is not a reuse license.",
-    "pointer": "src/assets/players/mohsin-khan.webp.asset.json",
+    "url": "/__l5e/assets-v1/485f8a40-71a6-4af7-aaae-1f873059fb9e/mohsin-khan-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2880%252F67617.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/32cacb25-f20c-4976-9fd4-ba420049932f/mohsin-khan",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/mohsin-khan-portrait.webp.asset.json",
     "verified_identity": true,
-    "license": null,
-    "rights": "Cricbuzz; photographer and reuse rights not specified. Public access is not a reuse license."
+    "visually_verified": true
   },
   {
     "name": "Mujeeb Ur Rahman",
@@ -901,14 +909,13 @@
   {
     "name": "Nehal Wadhera",
     "country": "India",
-    "url": "/__l5e/assets-v1/2c99d67a-584b-464f-bf4e-5aaa51c5f090/nehal-wadhera.webp",
-    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c182026/nehal-wadhera.jpg?d=low&p=gthumb",
-    "source": "https://www.cricbuzz.com/profiles/13915/nehal-wadhera",
-    "credit": "Cricbuzz; photographer and reuse rights not specified. Public access is not a reuse license.",
-    "pointer": "src/assets/players/nehal-wadhera.webp.asset.json",
+    "url": "/__l5e/assets-v1/2ee009cf-f323-455b-a726-53b982364e7d/nehal-wadhera-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2040%252F68289.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/4de0836e-ce14-43f4-8e33-42049b9cb37b/nehal-wadhera",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/nehal-wadhera-portrait.webp.asset.json",
     "verified_identity": true,
-    "license": null,
-    "rights": "Cricbuzz; photographer and reuse rights not specified. Public access is not a reuse license."
+    "visually_verified": true
   },
   {
     "name": "Nicholas Pooran",
@@ -925,22 +932,24 @@
   {
     "name": "Nitish Kumar Reddy",
     "country": "India",
-    "url": "/__l5e/assets-v1/039e6013-f9ce-4b3a-9dca-9e9640a4cfd7/nitish-kumar-reddy.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/nitish-kumar-reddy-1175496",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/nitish-kumar-reddy.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/efa4751b-2b66-4641-82f2-89d5e4783cc8/nitish-kumar-reddy-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F1153%252F74028.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/db109714-ae28-4f6e-a3a7-2fc4f713e673/nitish-kumar-reddy",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/nitish-kumar-reddy-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Noor Ahmad",
     "country": "Afghanistan",
-    "url": "/__l5e/assets-v1/bf9c6d2e-a943-41db-9008-69b234481c84/noor-ahmad.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/noor-ahmad-1182529",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/noor-ahmad.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/6d980ad4-1b7e-429a-a7df-faf065e4c472/noor-ahmad-portrait.webp",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c616569/noor-ahmad.jpg?d=low&p=gthumb",
+    "source": "https://www.cricbuzz.com/profiles/15452/noor-ahmad",
+    "credit": "Cricbuzz / Times Internet; photographer unspecified; copyrighted editorial image, no open reuse license verified.",
+    "pointer": "src/assets/players/noor-ahmad-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Pat Cummins",
@@ -1001,12 +1010,13 @@
   {
     "name": "Priyansh Arya",
     "country": "India",
-    "url": "/__l5e/assets-v1/4c570f7a-60c4-47ba-bc69-14f64a53ba3f/priyansh-arya.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/priyansh-arya-1175456",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/priyansh-arya.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/0890897a-f2fe-4a1f-a68a-18e73d75b81a/priyansh-arya-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2040%252F75656.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/0764b948-a2b4-4c82-9455-4fb2665e844b/priyansh-arya",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/priyansh-arya-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Quinton de Kock",
@@ -1067,12 +1077,13 @@
   {
     "name": "Rajat Patidar",
     "country": "India",
-    "url": "/__l5e/assets-v1/eb4ef8e9-4807-4d84-a9c9-fd1e91ba6152/rajat-patidar.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/rajat-patidar-823703/matches",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/rajat-patidar.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/8065ff82-2b16-421b-b4ea-209eef15cecd/rajat-patidar-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2138%252F29333.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/7b565a9d-58e7-486d-be5f-5801d9b13b34/rajat-patidar",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/rajat-patidar-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Ramandeep Singh",
@@ -1223,22 +1234,24 @@
   {
     "name": "Sai Kishore",
     "country": "India",
-    "url": "/__l5e/assets-v1/abcbd3af-8373-427a-a8fd-d2262a41ff2f/sai-kishore.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/sai-kishore-1048739",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/sai-kishore.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/24aa0ff1-a265-4b64-9692-6bc004d50cd3/sai-kishore-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2879%252F65783.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/72ecc618-a84d-4367-8495-2c2e61dc0a34/sai-kishore",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/sai-kishore-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Sai Sudharsan",
     "country": "India",
-    "url": "/__l5e/assets-v1/bf78d730-dbec-4c6c-bbbe-9c8049404a94/sai-sudharsan.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/sai-sudharsan-1151288",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/sai-sudharsan.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/7819ad0f-8622-4162-a38a-6d9e9182fe78/sai-sudharsan-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2879%252F74538.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/2490cf68-4516-4584-a902-2e6ac93205b6/sai-sudharsan",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/sai-sudharsan-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Sam Curran",
@@ -1311,12 +1324,13 @@
   {
     "name": "Shashank Singh",
     "country": "India",
-    "url": "/__l5e/assets-v1/6188493b-ac7d-4da3-9ab0-8782487182dd/shashank-singh.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/shashank-singh-1277535",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/shashank-singh.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/5874d1e3-0463-40f9-a3d2-118e6a2c62ba/shashank-singh-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2040%252F34331.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/0b6fb487-d416-4319-aa3e-6d563ce7d996/shashank-singh",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/shashank-singh-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Sherfane Rutherford",
@@ -1423,14 +1437,13 @@
   {
     "name": "Suyash Sharma",
     "country": "India",
-    "url": "/__l5e/assets-v1/e6d8745a-fdf6-4316-b9af-586ac1c1aede/suyash-sharma.webp",
-    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c182026/suyash-sharma.jpg?d=low&p=gthumb",
-    "source": "https://www.cricbuzz.com/profiles/36487/suyash-sharma",
-    "credit": "Cricbuzz; photographer and reuse rights not specified. Public access is not a reuse license.",
-    "pointer": "src/assets/players/suyash-sharma.webp.asset.json",
+    "url": "/__l5e/assets-v1/000b70a3-5842-4c8c-9481-28345e9adc97/suyash-sharma-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2138%252F80525.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/4e88a745-d510-4365-9e52-56904d17880a/suyash-sharma",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/suyash-sharma-portrait.webp.asset.json",
     "verified_identity": true,
-    "license": null,
-    "rights": "Cricbuzz; photographer and reuse rights not specified. Public access is not a reuse license."
+    "visually_verified": true
   },
   {
     "name": "T Natarajan",
@@ -1569,12 +1582,13 @@
   {
     "name": "Vyshak Vijaykumar",
     "country": "India",
-    "url": "/__l5e/assets-v1/28b93790-e267-462a-8ae0-9510d5082f26/vyshak-vijaykumar.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/vijaykumar-vyshak-777815",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/vyshak-vijaykumar.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/37c7ce7a-03ff-4e83-9dd4-1f1685bc3b7f/vyshak-vijaykumar-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2040%252F74053.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/7b863ebe-ec50-4e32-991e-81a38e0c7493/vijaykumar-vyshak",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/vyshak-vijaykumar-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Wanindu Hasaranga",
@@ -1603,22 +1617,24 @@
   {
     "name": "Will Jacks",
     "country": "England",
-    "url": "/__l5e/assets-v1/7a93f733-f6dc-46a7-aef5-d8950bba6bf3/will-jacks.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/will-jacks-897549",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/will-jacks.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/20c00a81-8196-4d13-95f7-abfb36056737/will-jacks-portrait.webp",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c848529/will-jacks.jpg?d=low&p=gthumb",
+    "source": "https://www.cricbuzz.com/profiles/12258/will-jacks",
+    "credit": "Cricbuzz / Times Internet; photographer unspecified; copyrighted editorial image, no open reuse license verified.",
+    "pointer": "src/assets/players/will-jacks-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Yash Dayal",
     "country": "India",
-    "url": "/__l5e/assets-v1/153fb6d9-c746-44a7-a5d9-92130345d749/yash-dayal.webp",
-    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/default-player-logo-500.png",
-    "source": "https://www.espncricinfo.com/cricketers/yash-dayal-1159720",
-    "credit": "ESPN / ESPNcricinfo; photographer and reuse rights not specified",
-    "pointer": "src/assets/players/yash-dayal.webp.asset.json",
-    "verified_identity": true
+    "url": "/__l5e/assets-v1/fe86329f-7fdf-4bd8-bb5e-c4b21873d9c8/yash-dayal-portrait.webp",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2138%252F68716.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source": "https://www.iplt20.com/players/f072eb5a-5a1e-4204-9b09-9edb25878c1d/yash-dayal",
+    "credit": "IPL/BCCI. Public access does not establish permission to reuse.",
+    "pointer": "src/assets/players/yash-dayal-portrait.webp.asset.json",
+    "verified_identity": true,
+    "visually_verified": true
   },
   {
     "name": "Yashasvi Jaiswal",
