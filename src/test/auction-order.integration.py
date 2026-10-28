@@ -15,12 +15,12 @@ async def snapshot(page, room):
 async def main():
     async with async_playwright() as pw:
         browser=await pw.chromium.launch(headless=True)
-        ca=await browser.new_context(viewport={'width':1280,'height':1800})
-        cb=await browser.new_context(viewport={'width':390,'height':1000})
+        ca=await browser.new_context(viewport={'width':1280,'height':1800},storage_state='/tmp/browser/upgrade/host-session.json')
+        cb=await browser.new_context(viewport={'width':390,'height':1000},storage_state='/tmp/browser/upgrade/guest-session.json')
         a=await ca.new_page(); b=await cb.new_page(); errors=[]
         a.on('pageerror',lambda e:errors.append(str(e)))
         for page,nick in [(a,'Order host'),(b,'Order guest')]:
-            await page.goto(U+'/auth');await page.get_by_label('Nickname').fill(nick);await page.get_by_role('button',name='Continue as guest').click();await page.wait_for_url('**/create')
+            await page.goto(U);await page.wait_for_timeout(1000)
         settings=dict(max_teams=2,min_squad=2,max_squad=8,min_wk=0,min_bat=0,min_ar=0,min_bowl=0,max_overseas=8,min_spinners=0,min_pacers=0,purse=100,pool_size=8,bid_timer=3,bid_reset=1,increments=[dict(upto=None,step=.5)],review_seconds=120,min_base=.2,currency='cr')
         cr=await rpc(a,'create_room',dict(p_name='Random order regression',p_format='IPL',p_settings=settings,p_nickname='Host',p_team='Order Royals',p_color='#f4c34d'));rid=cr['room_id']
         await rpc(b,'join_room',dict(p_code=cr['code'],p_nickname='Guest',p_team='Order Kings',p_color='#29d7ee'))
