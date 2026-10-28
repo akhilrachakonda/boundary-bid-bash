@@ -218,6 +218,7 @@ export type Database = {
           kind: string
           message: string
           room_id: string
+          room_player_id: string | null
         }
         Insert: {
           created_at?: string
@@ -225,6 +226,7 @@ export type Database = {
           kind: string
           message: string
           room_id: string
+          room_player_id?: string | null
         }
         Update: {
           created_at?: string
@@ -232,6 +234,7 @@ export type Database = {
           kind?: string
           message?: string
           room_id?: string
+          room_player_id?: string | null
         }
         Relationships: [
           {

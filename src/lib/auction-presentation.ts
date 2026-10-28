@@ -7,6 +7,7 @@ export function unseenEvents<T extends { id: string | number }>(items: T[], seen
   return fresh;
 }
 export function resolvedLot(event: RoomEvent, pool: RoomPlayer[]) {
+  if(event.room_player_id) return pool.find(p=>p.id===event.room_player_id && p.status===event.kind);
   return pool.filter(p => p.status === event.kind && event.message.startsWith(p.player.name + " ")).sort((a,b) => b.round-a.round)[0];
 }
 export function bidChange(bid: Bid, previous: number | null) {

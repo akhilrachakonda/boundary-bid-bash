@@ -68,6 +68,7 @@ export interface Trade {
 }
 export interface RoomEvent {
   id: number;
+  room_player_id?: string | null;
   kind: string;
   message: string;
   created_at: string;

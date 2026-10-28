@@ -29,6 +29,13 @@
       "when": 1793229418819,
       "tag": "0003_player_photo_metadata",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793230019789,
+      "tag": "0004_sale_event_lot_reference",
+      "breakpoints": true
     }
   ]
 }

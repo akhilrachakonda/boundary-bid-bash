@@ -148,7 +148,7 @@
 .player-stage-body { position:relative; display:grid; grid-template-columns:42% minmax(0,1fr); min-height:310px; }
 .stage-portrait { position:relative; align-self:stretch; overflow:hidden; }
 .stage-portrait .portrait { background:transparent; }
-.stage-portrait img { object-fit:contain; object-position:center bottom; }
+  .stage-portrait img { object-fit:contain; object-position:center bottom; }
 .portrait-vignette { position:absolute; inset:0; background:var(--gradient-vignette); pointer-events:none; }
 .stage-player-number { position:absolute; bottom:0; left:18px; font:800 110px var(--font-display); color:var(--foreground); opacity:.06; }
 .stage-player-info { min-width:0; padding:40px 28px 28px 10px; align-self:center; }
