@@ -69,14 +69,24 @@ async def main():
         assert not undo['squads'] and all(t['purse']==100 for t in undo['teams']) and undo['sales'][0]['undone']
         await rpc(a,'host_control',dict(p_room=rid,p_action='skip'));await rpc(a,'host_control',dict(p_room=rid,p_action='pause'))
         assert (await snapshot(a,rid))['room']['current_rp']==first['id']
+        # Sell the returned lot; only the other confirmed players may accelerate.
+        await rpc(a,'host_control',dict(p_room=rid,p_action='resume'))
+        await rpc(a,'place_bid',dict(p_room=rid,p_amount=base))
+        for _ in range(30):
+            state=await snapshot(a,rid)
+            if state['squads']:break
+            await a.wait_for_timeout(300)
+        assert len(state['squads'])==1
+        await rpc(a,'host_control',dict(p_room=rid,p_action='pause'))
+        expected_unsold=[id for id in ids if id!=first['player_id']]
         # Consume the entire first pass through existing host skip semantics.
         for _ in range(10):
             state=await snapshot(a,rid)
             if state['room']['accel_done']:break
             await rpc(a,'host_control',dict(p_room=rid,p_action='skip'));await rpc(a,'host_control',dict(p_room=rid,p_action='pause'))
         accel=await snapshot(a,rid);accel_order=accel['room']['accelerated_order']
-        assert accel['room']['accel_done'] and sorted(accel_order)==sorted(ids) and len(set(accel_order))==8
-        assert [p['player_id'] for p in accel['pool']]==accel_order and all(p['round']==2 for p in accel['pool'])
+        assert accel['room']['accel_done'] and sorted(accel_order)==sorted(expected_unsold) and len(set(accel_order))==7
+        assert [p['player_id'] for p in accel['pool'] if p['round']==2]==accel_order
         assert accel['room']['first_round_order']==order
         await a.reload();await rpc(a,'tick',dict(p_room=rid));assert (await snapshot(a,rid))['room']['accelerated_order']==accel_order
         # Sell then undo in accelerated round; original shuffled snapshot remains frozen.
@@ -86,21 +96,22 @@ async def main():
         await rpc(a,'place_bid',dict(p_room=rid,p_amount=base))
         for _ in range(30):
             state=await snapshot(a,rid)
-            if state['squads']:break
+            if len(state['squads'])==2:break
             await a.wait_for_timeout(300)
-        assert len(state['squads'])==1
+        assert len(state['squads'])==2
         await rpc(a,'host_control',dict(p_room=rid,p_action='pause'));await rpc(a,'host_control',dict(p_room=rid,p_action='undo'))
-        state=await snapshot(a,rid);assert not state['squads'] and state['room']['accelerated_order']==accel_order
+        state=await snapshot(a,rid);assert len(state['squads'])==1 and state['room']['accelerated_order']==accel_order
         for _ in range(10):
             state=await snapshot(a,rid)
             if state['room']['status']=='completed':break
             await rpc(a,'host_control',dict(p_room=rid,p_action='skip'))
             if (await snapshot(a,rid))['room']['status']!='completed':await rpc(a,'host_control',dict(p_room=rid,p_action='pause'))
-        final=await snapshot(a,rid);assert final['room']['status']=='completed' and not final['squads']
-        assert all(p['status']=='unsold' for p in final['pool']) and len(final['pool'])==8
-        active_sales=[s for s in final['sales'] if s['participant_id'] and not s['undone']];assert not active_sales
+        final=await snapshot(a,rid);assert final['room']['status']=='completed' and len(final['squads'])==1
+        assert sum(p['status']=='unsold' for p in final['pool'])==7 and len(final['pool'])==8
+        active_sales=[s for s in final['sales'] if s['participant_id'] and not s['undone']];assert len(active_sales)==1
         assert final['room']['accelerated_order']==accel_order and final['room']['first_round_order']==order
         print('PASS first/accelerated undo refunds, skip, single unsold shuffle, completion without lost players/duplicate sales')
+        assert final['squads'][0]['player_id']==first['player_id']
         assert not errors,errors
         print('PASS browser runtime errors: 0')
         if legacy:
