@@ -1,5 +1,10 @@
 import type { Bid, RoomEvent, RoomPlayer } from "@/hooks/use-room";
 
+/** Match the server's queue, including accelerated lots and explicit undo priority. */
+export function pendingLots(pool: RoomPlayer[]) {
+  return pool.filter(p => p.status === "pending").sort((a, b) => a.round - b.round || a.lot_order - b.lot_order);
+}
+
 /** Baseline historic IDs once; an initially empty feed must still celebrate its first event. */
 export function unseenEvents<T extends { id: string | number }>(items: T[], seen: Set<string | number>, initialized: boolean): T[] {
   const fresh = initialized ? items.filter(item => !seen.has(item.id)) : [];

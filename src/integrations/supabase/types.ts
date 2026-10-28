@@ -307,11 +307,13 @@ export type Database = {
       rooms: {
         Row: {
           accel_done: boolean
+          accelerated_order: string[] | null
           code: string
           created_at: string
           current_bid: number | null
           current_bidder: string | null
           current_rp: string | null
+          first_round_order: string[] | null
           format: string
           host_id: string
           id: string
@@ -325,11 +327,13 @@ export type Database = {
         }
         Insert: {
           accel_done?: boolean
+          accelerated_order?: string[] | null
           code: string
           created_at?: string
           current_bid?: number | null
           current_bidder?: string | null
           current_rp?: string | null
+          first_round_order?: string[] | null
           format: string
           host_id: string
           id?: string
@@ -343,11 +347,13 @@ export type Database = {
         }
         Update: {
           accel_done?: boolean
+          accelerated_order?: string[] | null
           code?: string
           created_at?: string
           current_bid?: number | null
           current_bidder?: string | null
           current_rp?: string | null
+          first_round_order?: string[] | null
           format?: string
           host_id?: string
           id?: string
@@ -614,6 +620,7 @@ export type Database = {
         Args: { p_force_unsold: boolean; p_room: string }
         Returns: undefined
       }
+      _shuffle_player_ids: { Args: { p_ids: string[] }; Returns: string[] }
       _squad_counts: { Args: { p_part: string }; Returns: Json }
       create_room: {
         Args: {

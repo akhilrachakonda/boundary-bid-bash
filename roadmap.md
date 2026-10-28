@@ -1,4 +1,6 @@
 # Cricket Auction upgrade
+- [x] Persist one random confirmed-pool order at bidding start; shuffle accelerated unsold round once, leaving active rooms unchanged.
+- [x] Align review/upcoming displays and verify sequencing, concurrent starts, reconnect and undo with regression tests (27 unit tests; real two-guest browser regression, including mixed sold/unsold accelerated pool and legacy-room stability).
 - [x] Inspect desktop/mobile live auction and supplied references (first image returned 422; second image and bid trail inspected).
 - [x] Match and cache all 150 actual portraits; populate 450 rows with canonical credits and reproducible backfill.
 - [x] Rebrand and redesign landing, auction, player profiles and strategy/team drawers.

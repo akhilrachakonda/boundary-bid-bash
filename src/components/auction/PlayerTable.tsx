@@ -11,7 +11,8 @@ import { PlayerProfile } from "./PlayerProfile";
 export interface PoolRow {
   player: Player;
   set?: string;
-  order?: number;
+  order?: number | undefined;
+  round?: number;
   status?: string;
   owner?: { name: string; color: string } | null;
   price?: number | null;
@@ -58,7 +59,7 @@ export function PlayerTable({
           ? Number(b.player.base_price) - Number(a.player.base_price)
           : sort === "name"
             ? a.player.name.localeCompare(b.player.name)
-            : (a.order ?? 0) - (b.order ?? 0),
+            : (a.round ?? 1) - (b.round ?? 1) || (a.order ?? 0) - (b.order ?? 0),
     );
     return out;
   }, [rows, q, role, sub, tier, nat, maxBase, sort, onlyStar, starred]);
@@ -117,13 +118,13 @@ export function PlayerTable({
             <thead className="text-left text-xs uppercase text-muted-foreground">
               <tr className="border-b">
                 {onStar && <th className="p-2" />}
-                {rows[0]?.order != null && <th className="p-2">#</th>}
+                {rows[0]?.order != null && <th className="p-2">Round / queue</th>}
                 <th className="p-2">Player</th>
                 <th className="p-2">Role</th>
                 <th className="p-2">Tier</th>
                 <th className="p-2 text-right">Rtg</th>
                 <th className="p-2 text-right">Base</th>
-                {rows[0]?.set && <th className="p-2">Set</th>}
+                {rows[0]?.set && <th className="p-2">Category</th>}
                 {rows[0]?.status && <th className="p-2">Status</th>}
               </tr>
             </thead>
@@ -137,7 +138,7 @@ export function PlayerTable({
                       </button>
                     </td>
                   )}
-                  {r.order != null && <td className="p-2 tabular text-muted-foreground">{r.order}</td>}
+                  {r.order != null && <td className="p-2 tabular text-muted-foreground">{r.round ?? 1} / {r.order}</td>}
                   <td className="p-2">
                     <PlayerProfile player={r.player} currency={currency}><div className="flex items-center gap-3"><PlayerPortrait player={r.player} className="h-12 w-10 shrink-0 rounded"/><div><div className="whitespace-nowrap font-semibold">{r.player.name}</div><div className="text-xs text-muted-foreground">{r.player.country}{r.player.nationality_type === "Overseas" ? " ✈" : ""}</div></div></div></PlayerProfile>
                   </td>
