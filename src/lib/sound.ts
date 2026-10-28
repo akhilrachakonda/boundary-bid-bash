@@ -33,6 +33,15 @@ export function getSoundPref() {
   if (typeof window === "undefined") return false;
   return localStorage.getItem("auction-sound") === "on";
 }
+export function playBid() {
+  try {
+    ctx ??= new AudioContext();
+    const tone=ctx.createOscillator();const gain=ctx.createGain();const t=ctx.currentTime;
+    tone.frequency.setValueAtTime(520,t);tone.frequency.exponentialRampToValueAtTime(740,t+.08);
+    gain.gain.setValueAtTime(.06,t);gain.gain.exponentialRampToValueAtTime(.001,t+.12);
+    tone.connect(gain).connect(ctx.destination);tone.start(t);tone.stop(t+.13);
+  } catch { /* optional audio unavailable */ }
+}
 export function setSoundPref(on: boolean) {
   localStorage.setItem("auction-sound", on ? "on" : "off");
 }

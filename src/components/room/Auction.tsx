@@ -6,7 +6,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { cn } from "@/lib/utils";
 import { bidBlockReason, formatMoney, nextBidAmount } from "@/lib/auction-rules";
 import { unseenEvents, resolvedLot, bidChange } from "@/lib/auction-presentation";
-import { playHammer } from "@/lib/sound";
+import { playHammer, playBid } from "@/lib/sound";
 import { AuctionStage } from "@/components/auction/AuctionStage";
 import { SaleReveal, type SaleSnapshot } from "@/components/auction/SaleReveal";
 import { PlayerPortrait } from "@/components/auction/PlayerPortrait";
@@ -48,6 +48,7 @@ export function Auction({ data, d, now, sound }: { data: RoomData; d: Derived; n
     if (bid && bid.room_player_id===room?.current_rp) {
       setIncrement(bidChange(bid,previousPrice.current));
       previousPrice.current=Number(bid.amount); setPulse(bid.id);
+      if(sound)playBid();
     }
     const event = data.events.find(e => (e.kind === "sold" || e.kind === "unsold") && !eventSeen.current.has(e.id));
     if (event) {
