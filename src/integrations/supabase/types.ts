@@ -123,6 +123,9 @@ export type Database = {
           image_placeholder: string | null
           name: string
           nationality_type: string
+          photo_credit: string | null
+          photo_source: string | null
+          photo_url: string | null
           rating: number
           role: string
           sub_role: string
@@ -140,6 +143,9 @@ export type Database = {
           image_placeholder?: string | null
           name: string
           nationality_type: string
+          photo_credit?: string | null
+          photo_source?: string | null
+          photo_url?: string | null
           rating: number
           role: string
           sub_role: string
@@ -157,6 +163,9 @@ export type Database = {
           image_placeholder?: string | null
           name?: string
           nationality_type?: string
+          photo_credit?: string | null
+          photo_source?: string | null
+          photo_url?: string | null
           rating?: number
           role?: string
           sub_role?: string

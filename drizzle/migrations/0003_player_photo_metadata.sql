@@ -1,0 +1,6 @@
+ALTER TABLE public.players ADD COLUMN IF NOT EXISTS photo_url text, ADD COLUMN IF NOT EXISTS photo_source text, ADD COLUMN IF NOT EXISTS photo_credit text;
+COMMENT ON COLUMN public.players.image_placeholder IS 'DEPRECATED: initials fallback replaced by photo_url and sourced real portraits';
+CREATE POLICY "Owner admins insert portraits" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'player-portraits' AND public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Owner admins read portraits" ON storage.objects FOR SELECT TO authenticated USING (bucket_id = 'player-portraits' AND public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Owner admins update portraits" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'player-portraits' AND public.has_role(auth.uid(), 'admin')) WITH CHECK (bucket_id = 'player-portraits' AND public.has_role(auth.uid(), 'admin'));
+CREATE POLICY "Owner admins delete portraits" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'player-portraits' AND public.has_role(auth.uid(), 'admin'));
