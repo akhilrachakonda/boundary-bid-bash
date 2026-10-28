@@ -63,7 +63,7 @@ function RoomPage() {
         return {
           player: rp.player,
           set: rp.round === 2 ? "Accelerated" : rp.set_name,
-          order: data.room?.status === "lobby" || data.room?.status === "review" ? undefined : rp.lot_order,
+          order: data.room?.settings.surprise_reveal || data.room?.status === "lobby" || data.room?.status === "review" ? undefined : rp.lot_order,
           round: rp.round,
           status: rp.status,
           owner: owner ? { name: owner.team_name, color: owner.color } : null,

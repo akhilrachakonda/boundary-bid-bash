@@ -217,8 +217,8 @@
   .bid-timeline {border-left:0;border-top:1px solid var(--border);padding:18px 16px;}
   .timeline-list {max-height:250px;}
   .bid-bar {position:fixed;z-index:40;bottom:0;left:0;right:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--background);border-top:1px solid var(--border);}
-  .auction-room {padding-bottom:85px;}
-  .sale-reveal {right:12px;bottom:100px;padding:12px;gap:10px;width:360px;}
+  .auction-room {padding-bottom:155px;}
+  .sale-reveal {right:12px;bottom:165px;padding:12px;gap:10px;width:360px;}
   .sale-reveal .text-2xl {font-size:22px;}
   .landing-masthead {display:block;padding-top:28px;}
   .landing-masthead h1 {font-size:46px;}
