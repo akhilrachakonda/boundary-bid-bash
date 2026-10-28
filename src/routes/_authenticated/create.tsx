@@ -31,7 +31,7 @@ function CreatePage() {
   const [name, setName] = useState("Friday Night Auction");
   const [nick, setNick] = useState("");
   const [team, setTeam] = useState("");
-  const [color, setColor] = useState(TEAM_COLORS[0]);
+  const [color, setColor] = useState<string>(TEAM_COLORS[0]!);
   const [s, setS] = useState<Settings>(DEFAULT_SETTINGS);
   const [busy, setBusy] = useState(false);
 
@@ -48,7 +48,7 @@ function CreatePage() {
       p_color: color,
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     const { room_id } = data as unknown as { room_id: string };
     navigate({ to: "/room/$roomId", params: { roomId: room_id } });
   };

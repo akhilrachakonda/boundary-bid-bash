@@ -44,15 +44,15 @@ describe("purse guard", () => {
     expect(maxAffordableBid(DEFAULT_SETTINGS, 100, squadCounts([]), "BAT")).toBe(98);
   });
   it("blocks a bid that would leave the squad uncompletable", () => {
-    const p = db[0];
+    const p = db[0]!;
     expect(bidBlockReason(DEFAULT_SETTINGS, 3, squadCounts([]), p, 1.5, false)).toBe("Not enough purse to complete squad");
   });
   it("blocks the current highest bidder", () => {
-    expect(bidBlockReason(DEFAULT_SETTINGS, 100, squadCounts([]), db[0], 2, true)).toBe("You're the highest bidder");
+    expect(bidBlockReason(DEFAULT_SETTINGS, 100, squadCounts([]), db[0]!, 2, true)).toBe("You're the highest bidder");
   });
   it("blocks overseas beyond the limit", () => {
     const overseas = db.filter((p) => p.nationality_type === "Overseas").slice(0, 6);
-    const target = db.filter((p) => p.nationality_type === "Overseas")[6];
+    const target = db.filter((p) => p.nationality_type === "Overseas")[6]!;
     expect(bidBlockReason(DEFAULT_SETTINGS, 100, squadCounts(overseas), target, 1, false)).toBe("Overseas limit reached");
   });
 });
@@ -100,6 +100,6 @@ describe("team rating", () => {
     const balanced = [...pick("WK-Batter", 1), ...pick("Top order", 3), ...pick("Middle order", 2), ...pick("Finisher", 1), ...pick("Bowling AR (spin)", 1), ...pick("Pace", 2), ...pick("Spin", 2)];
     const batters = [...pick("Top order", 8), ...pick("Middle order", 5)];
     const r = compareTeams([{ id: "bal", squad: balanced, spent: 50 }, { id: "bat", squad: batters, spent: 50 }], "T20");
-    expect(r[0].id).toBe("bal");
+    expect(r[0]!.id).toBe("bal");
   });
 });

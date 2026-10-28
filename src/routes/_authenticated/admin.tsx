@@ -47,7 +47,7 @@ function AdminPage() {
   const save = async () => {
     for (const [id, patch] of Object.entries(dirty)) {
       const { error } = await supabase.from("players").update(patch).eq("id", id);
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
     }
     toast.success(`Saved ${Object.keys(dirty).length} players`);
     load();
@@ -59,7 +59,7 @@ function AdminPage() {
     const { error } = await supabase.from("players").insert({
       name, country: "India", format, role: "BAT", sub_role: "Top order", rating: 65, base_price: 0.5, nationality_type: "Indian", tier: "C",
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     load();
   };
 
@@ -101,7 +101,7 @@ function AdminPage() {
                     <td className="p-1"><Input className="h-8" value={v.name} onChange={(e) => edit(r.id, { name: e.target.value })} /></td>
                     <td className="p-1"><Input className="h-8 w-32" value={v.country} onChange={(e) => edit(r.id, { country: e.target.value, nationality_type: e.target.value === "India" ? "Indian" : "Overseas" })} /></td>
                     <td className="p-1">
-                      <select className={sel} value={`${v.role}|${v.sub_role}`} onChange={(e) => { const [role, sub_role] = e.target.value.split("|"); edit(r.id, { role, sub_role }); }}>
+                      <select className={sel} value={`${v.role}|${v.sub_role}`} onChange={(e) => { const [role = "BAT", sub_role = "Top order"] = e.target.value.split("|"); edit(r.id, { role, sub_role }); }}>
                         {(Object.keys(SUB_ROLES) as Role[]).flatMap((role) => SUB_ROLES[role].map((s) => <option key={s} value={`${role}|${s}`}>{role} · {s}</option>))}
                       </select>
                     </td>

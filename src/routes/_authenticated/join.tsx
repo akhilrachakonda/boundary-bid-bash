@@ -9,7 +9,7 @@ import { ColorPicker, TEAM_COLORS } from "@/components/TeamPicker";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/join")({
-  validateSearch: (s: Record<string, unknown>) => ({ code: typeof s.code === "string" ? s.code : "" }),
+  validateSearch: (s: Record<string, unknown>) => ({ code: typeof s["code"] === "string" ? s["code"] : "" }),
   head: () => ({
     meta: [
       { title: "Join an auction room — Gavel" },
@@ -29,12 +29,12 @@ function JoinPage() {
   const [code, setCode] = useState(initial.toUpperCase());
   const [nick, setNick] = useState("");
   const [team, setTeam] = useState("");
-  const [color, setColor] = useState(TEAM_COLORS[1]);
+  const [color, setColor] = useState<string>(TEAM_COLORS[1]!);
   const [busy, setBusy] = useState(false);
   useEffect(() => setNick(localStorage.getItem("auction-nick") ?? ""), []);
 
   const join = async () => {
-    if (code.trim().length !== 6) return toast.error("Room codes are 6 characters");
+    if (code.trim().length !== 6) { toast.error("Room codes are 6 characters"); return; }
     setBusy(true);
     const { data, error } = await supabase.rpc("join_room", {
       p_code: code,
@@ -43,7 +43,7 @@ function JoinPage() {
       p_color: color,
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     navigate({ to: "/room/$roomId", params: { roomId: data as string } });
   };
 

@@ -53,7 +53,7 @@ export function Results({ data, d }: { data: RoomData; d: Derived }) {
           <Trophy className="mx-auto h-14 w-14 text-primary" />
           <p className="mt-2 text-xs uppercase tracking-[0.3em] text-muted-foreground">Champion team</p>
           <h2 className="font-display text-6xl font-extrabold uppercase sm:text-7xl" style={{ color: champ.color }}>{champ.team_name}</h2>
-          <p className="mt-1 font-display text-3xl font-bold text-gold">{ranked[0].score.total} / 100</p>
+          <p className="mt-1 font-display text-3xl font-bold text-gold">{ranked[0]!.score.total} / 100</p>
           <div className="mt-4 flex justify-center gap-2">
             <Button variant="outline" onClick={download}><Download className="h-4 w-4" /> Download results image</Button>
           </div>

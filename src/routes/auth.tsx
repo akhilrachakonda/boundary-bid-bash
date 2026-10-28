@@ -10,8 +10,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 
 interface Search {
-  redirect?: string;
-  mode?: "link";
+  redirect?: string | undefined;
+  mode?: "link" | undefined;
 }
 
 const safePath = (p?: string) => {
@@ -26,8 +26,8 @@ const safePath = (p?: string) => {
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    redirect: typeof s.redirect === "string" ? s.redirect : undefined,
-    mode: s.mode === "link" ? "link" : undefined,
+    redirect: typeof s["redirect"] === "string" ? s["redirect"] : undefined,
+    mode: s["mode"] === "link" ? "link" : undefined,
   }),
   head: () => ({
     meta: [
@@ -60,7 +60,7 @@ function AuthPage() {
   }, [user, loading, mode, redirect, navigate]);
 
   const guest = async () => {
-    if (!nick.trim()) return toast.error("Pick a nickname");
+    if (!nick.trim()) { toast.error("Pick a nickname"); return; }
     setBusy(true);
     localStorage.setItem("auction-nick", nick.trim());
     const { error } = await supabase.auth.signInAnonymously({ options: { data: { nickname: nick.trim() } } });
@@ -69,7 +69,7 @@ function AuthPage() {
   };
 
   const emailLink = async () => {
-    if (!/^\S+@\S+\.\S+$/.test(email)) return toast.error("Enter a valid email");
+    if (!/^\S+@\S+\.\S+$/.test(email)) { toast.error("Enter a valid email"); return; }
     setBusy(true);
     const target = window.location.origin + safePath(redirect);
     const { error } =
@@ -77,7 +77,7 @@ function AuthPage() {
         ? await supabase.auth.updateUser({ email }, { emailRedirectTo: target })
         : await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: target } });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setSent(email);
   };
 

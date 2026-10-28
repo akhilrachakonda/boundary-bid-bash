@@ -29,8 +29,8 @@ export function PlayerCard({
   player: Player;
   currency?: Settings["currency"];
   big?: boolean;
-  starred?: boolean;
-  onStar?: () => void;
+  starred?: boolean | undefined;
+  onStar?: (() => void) | undefined;
   footer?: React.ReactNode;
 }) {
   const initials = player.name

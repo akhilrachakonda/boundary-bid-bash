@@ -72,7 +72,7 @@ export interface RoomEvent {
   created_at: string;
 }
 export interface Notes {
-  targets: Record<string, { max?: number; note?: string }>;
+  targets: Record<string, { max?: number | undefined; note?: string | undefined }>;
   xi: { order: string[]; overs: Record<string, number> };
   notes: string;
 }
