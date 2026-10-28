@@ -1,4 +1,10 @@
 # Cricket Auction upgrade
+- [ ] Mobile/desktop purse plus conservative legal maximum explanation.
+- [ ] Lobby-only surprise setting and secure hidden future-order projection, current reveal.
+- [ ] Persistent authoritative last sold with reconnect and undo rollback.
+- [ ] Ingest available real Cricsheet data with identity mapping, provenance, refresh/import validation and exact coverage report.
+- [ ] Frozen server-canonical V2 scoring, legal deterministic XI/workload, shared evidence profiles and transparent results/rules.
+- [ ] Validate privacy, scoring/data edge cases, two-client flows, legacy behavior and mobile UI.
 - [x] Persist one random confirmed-pool order at bidding start; shuffle accelerated unsold round once, leaving active rooms unchanged.
 - [x] Align review/upcoming displays and verify sequencing, concurrent starts, reconnect and undo with regression tests (27 unit tests; real two-guest browser regression, including mixed sold/unsold accelerated pool and legacy-room stability).
 - [x] Inspect desktop/mobile live auction and supplied references (first image returned 422; second image and bid trail inspected).
