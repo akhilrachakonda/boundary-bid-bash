@@ -1,4 +1,5 @@
 # Cricket Auction upgrade
+- [ ] Release audit: security scanners, public grants/RPCs, stale-lot protection, bounded inputs, regression checks, guest-browser flows and release report; do not publish.
 - [x] Separate evidence indices from legacy setup estimates throughout scouting/live UI; preserve prices and pool selection with explicit estimate labels.
 - [x] Future-only frozen V2.1 leadership rubric, owner review and exact coverage: 6 evidence-only format entries, zero owner-rated, all450 neutral C/VC.
 - [x] Source position groups (IPL140/T20149/ODI121); public lineup/C/VC submission, accessible move/drag controls, deterministic approximate auto strategy.
