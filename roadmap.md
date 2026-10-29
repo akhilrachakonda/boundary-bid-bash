@@ -1,4 +1,9 @@
 # Cricket Auction upgrade
+- [ ] Separate evidence indices from legacy setup estimates throughout scouting/live UI.
+- [ ] Future-only frozen V2.1 leadership rubric, owner review and exact neutral-prior coverage.
+- [ ] Source assigned-position group aggregates; public lineup/C/VC submission and deterministic auto strategy.
+- [ ] Canonical lineup-aware scoring, immutable final cutoff, trade revalidation and transparent results.
+- [ ] Verify leadership/positions/security/history and 390px public lineup workflow.
 - [x] Mobile/desktop purse plus conservative legal maximum explanation (360/390/430/1280px verified).
 - [x] Lobby-only surprise setting, private base queue, safe member projection/doorbell and current reveal; surprise-off queue regression verified.
 - [x] Persistent authoritative last sold with reconnect and undo rollback; public player/team details.
