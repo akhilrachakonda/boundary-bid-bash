@@ -68,7 +68,7 @@ def main():
  ap=argparse.ArgumentParser();ap.add_argument('--data',default='/tmp/cricket-data');ap.add_argument('--out',default='/tmp/cricket-import');ap.add_argument('--cutoff',default=date.today().isoformat());args=ap.parse_args();root=Path(args.data);out=Path(args.out);out.mkdir(parents=True,exist_ok=True);cutoff=date.fromisoformat(args.cutoff)
  photos=json.load(open('src/data/player-photos.json'));cross=json.load(open(root/'reviewed-crosswalk.json')) if (root/'reviewed-crosswalk.json').exists() else json.load(open('src/data/cricsheet-crosswalk.json'))
  by_name={x['name']:x for x in cross};ids={x['identifier'] for x in cross if x.get('identifier')};recent_start=month_before(cutoff,12);est_start=month_before(cutoff,36)
- sid=str(uuid.uuid5(uuid.NAMESPACE_URL,'cricket-auction-import-v2.0.1:'+args.cutoff+':'+':'.join(hashlib.sha256((root/n).read_bytes()).hexdigest() for n in ['ipl_male_json.zip','t20s_male_json.zip','odis_male_json.zip'])))
+ sid=str(uuid.uuid5(uuid.NAMESPACE_URL,'cricket-auction-import-v2.1-arrival-group-1:'+args.cutoff+':'+':'.join(hashlib.sha256((root/n).read_bytes()).hexdigest() for n in ['ipl_male_json.zip','t20s_male_json.zip','odis_male_json.zip'])))
  aggregated=defaultdict(empty);dates=defaultdict(list);matches=[];innings_rows=[];counts=defaultdict(int);latest={};earliest={};revisions={};dedup={};rejected=[]
  for filename,competition,formats,mt in [('ipl_male_json.zip','IPL',['IPL','T20'],'T20'),('t20s_male_json.zip','T20I',['T20'],'T20'),('odis_male_json.zip','ODI',['ODI'],'ODI')]:
   z=zipfile.ZipFile(root/filename)
@@ -117,6 +117,11 @@ def main():
  coverage={fmt:dict(competitions=['IPL'] if fmt=='IPL' else ['T20I','IPL'] if fmt=='T20' else ['ODI'],matched=sum(bool(p['source_player_id']) for p in stats_rows),with_data=sum(p['stats'][fmt]['latest'] is not None for p in stats_rows),missing=[p['name'] for p in stats_rows if not p['stats'][fmt]['latest']],latest=max((p['stats'][fmt]['latest'] for p in stats_rows if p['stats'][fmt]['latest']),default=None),archive_latest=str(latest['IPL' if fmt=='IPL' else 'T20I' if fmt=='T20' else 'ODI']),matches=counts['IPL'] if fmt=='IPL' else counts['T20I']+counts['IPL'] if fmt=='T20' else counts['ODI']) for fmt in ('IPL','T20','ODI')}
  snapshot=dict(id=sid,version='v2.0',cutoff=args.cutoff,status='validated',provenance=dict(attribution=CREDIT,urls=['https://cricsheet.org/downloads/'+n for n in ['ipl_male_json.zip','t20s_male_json.zip','odis_male_json.zip']],register='https://cricsheet.org/register/',license='https://cricsheet.org/licensing/',method='cricsheet-import-v2.0',recent_start=str(recent_start),established_start=str(est_start),competition_adjustment='None; T20 explicitly pools IPL and T20I. Not strength-adjusted.'),coverage=coverage,cohorts=cohorts)
  write_csv(out/'snapshots.csv',['id','version','cutoff','status','provenance','coverage','cohorts'],[snapshot]);write_csv(out/'matches.csv',['snapshot_id','source_id','competition','played_on','revision','content_hash','info'],matches);write_csv(out/'players.csv',['snapshot_id','identity_key','source_player_id','name','country','mapping','stats'],stats_rows);write_csv(out/'innings.csv',['snapshot_id','source_id','innings','source_player_id','format','played_on','aggregates'],innings_rows)
- (out/'bundle.json').write_text(json.dumps(dict(snapshot=snapshot,players=stats_rows,matches=matches),separators=(',',':')))
+ # The position supplement derives grouped, validated arrival order independently of legacy V2 positions.
+ import subprocess,sys
+ subprocess.run([sys.executable,str(Path(__file__).with_name('import-positions.py')),'--snapshot',sid,'--cutoff',args.cutoff,'--data',str(root),'--out',str(out/'positions.csv')],check=True)
+ with open(out/'positions.csv') as f:
+  position_rows=[dict(identity_key=r['identity_key'],format=r['format'],groups=json.loads(r['groups']),method=r['method'],cutoff=r['cutoff']) for r in csv.DictReader(f)]
+ (out/'bundle.json').write_text(json.dumps(dict(snapshot=snapshot,players=stats_rows,matches=matches,positions=position_rows),separators=(',',':')))
  (out/'coverage.json').write_text(json.dumps(coverage,indent=2));(out/'snapshot.json').write_text(json.dumps(snapshot,indent=2));print(json.dumps(dict(snapshot=sid,coverage=coverage,innings=len(innings_rows)),indent=2))
 if __name__=='__main__':main()
