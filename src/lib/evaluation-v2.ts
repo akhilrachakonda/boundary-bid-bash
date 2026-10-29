@@ -29,8 +29,13 @@ export function evaluateXI(xi:MeasuredPlayer[],squad:MeasuredPlayer[],settings:S
  const valid=xi.length===11&&unique&&keeper&&workload&&overseas;
  const history=(p:MeasuredPlayer)=>p.evidence?.windows["history"];
  const positional=(lo:number,hi:number)=>xi.filter(p=>Object.entries(history(p)?.positions??{}).some(([slot,count])=>Number(slot)>=lo&&Number(slot)<=hi&&count>=5)).length;
- const phaseEvidence=(phase:string)=>bowlers.some(p=>(history(p)?.phases[phase]?.legal_balls??0)>=180&&(history(p)?.phases[phase]?.wickets??0)>=5);
- const checks=[{label:'11 unique players, keeper, overseas limit and feasible workload',met:valid,maximum:40},{label:'At least two observed opening/top-order options (positions 1–3, ≥5 innings)',met:positional(1,3)>=2,maximum:15},{label:'Two middle-order options (positions 4–6, ≥5 innings)',met:positional(4,6)>=2,maximum:10},{label:'A lower-order option (positions 6–8, ≥5 innings)',met:positional(6,8)>=1,maximum:5},{label:'Pace and spin variety',met:xi.some(isPacer)&&xi.some(isSpinner),maximum:10},...['powerplay','middle','death'].map(phase=>({label:`Observed ${phase} bowling workload (≥180 legal balls, ≥5 wickets; not a specialist claim)`,met:phaseEvidence(phase),maximum:20/3}))].map(c=>({...c,points:c.met?c.maximum:0}));
+ const phaseEvidence=(phase:string)=>bowlers.some(p=>{
+   const a=history(p)?.phases[phase];const cohort=cohorts[`${format}|recent|${p.role}`]?.phases[phase];
+   if(!a||!cohort||a.legal_balls<180||a.wickets<5||cohort.legal_balls===0||cohort.wickets===0)return false;
+   const economy=6*a.conceded/a.legal_balls;const mean=6*cohort.conceded/cohort.legal_balls;
+   return metric(economy,a.legal_balls,mean,180,true,1,'Phase economy').normalized>=50;
+ });
+ const checks=[{label:'11 unique players, keeper, overseas limit and feasible workload',met:valid,maximum:40},{label:'At least two observed opening/top-order options (positions 1–3, ≥5 innings)',met:positional(1,3)>=2,maximum:15},{label:'Two middle-order options (positions 4–6, ≥5 innings)',met:positional(4,6)>=2,maximum:10},{label:'A lower-order option (positions 6–8, ≥5 innings)',met:positional(6,8)>=1,maximum:5},{label:'Pace and spin variety',met:xi.some(isPacer)&&xi.some(isSpinner),maximum:10},...['powerplay','middle','death'].map(phase=>({label:`Observed ${phase} bowling coverage (≥180 legal balls, ≥5 wickets, shrunk economy at least recent same-role phase cohort; not a specialist claim)`,met:phaseEvidence(phase),maximum:20/3}))].map(c=>({...c,points:c.met?c.maximum:0}));
  const combination=checks.reduce((sum,c)=>sum+c.points,0);
  const contributions=xi.map(p=>{const established=performance(p,'established',cohorts),recent=performance(p,'recent',cohorts);return {id:p.id,established:established.score,recent:recent.score,confidence:(established.confidence+recent.confidence)/2,metrics:{established:established.metrics,recent:recent.metrics},latest:p.evidence?.latest??null};});
  const established=contributions.reduce((sum,p)=>sum+p.established,0)/11;
@@ -50,7 +55,13 @@ export function optimizeTeam(squad:MeasuredPlayer[],settings:Settings,format:str
  const unique=[...new Map(squad.map(p=>[p.id,p])).values()].sort((a,b)=>a.id.localeCompare(b.id));
  if(unique.length<=11)return evaluateXI(unique,unique,settings,format,cohorts);
  let candidates=unique;
- if(unique.length>16){candidates=[...unique].sort((a,b)=>(performance(b,'established',cohorts).score+performance(b,'recent',cohorts).score)-(performance(a,'established',cohorts).score+performance(a,'recent',cohorts).score)||a.id.localeCompare(b.id)).slice(0,16);}
+ if(unique.length>16){candidates=[...unique].sort((a,b)=>(performance(b,'established',cohorts).score+performance(b,'recent',cohorts).score)-(performance(a,'established',cohorts).score+performance(a,'recent',cohorts).score)||a.id.localeCompare(b.id)).slice(0,16);
+   // Reserve a keeper and five bowling options when a legal XI is feasible.
+   const mandatory=[unique.find(p=>p.role==='WK'),...unique.filter(isBowlingOption).slice(0,5)].filter((p):p is MeasuredPlayer=>!!p);
+   const required=new Set(mandatory.map(p=>p.id));for(const p of mandatory){if(!candidates.some(c=>c.id===p.id)){const index=candidates.findLastIndex(c=>!required.has(c.id));if(index>=0)candidates[index]=p;}}
+   candidates.sort((a,b)=>a.id.localeCompare(b.id));
+ }
+
  let best:Evaluation|null=null;
  const choose=(start:number,selected:MeasuredPlayer[])=>{if(selected.length===11){const r=evaluateXI(selected,unique,settings,format,cohorts);if(!best||(r.eligible&&!best.eligible)||(r.eligible===best.eligible&&r.total>best.total))best=r;return;}for(let i=start;i<=candidates.length-(11-selected.length);i++){const p=candidates[i];if(p)choose(i+1,[...selected,p]);}};
  choose(0,[]);return best??evaluateXI(unique.slice(0,11),unique,settings,format,cohorts);
