@@ -44,13 +44,13 @@ export function evaluateXI(xi:MeasuredPlayer[],squad:MeasuredPlayer[],settings:S
  const lineup=[...xi].sort((a,b)=>{const avg=(p:MeasuredPlayer)=>{const pos=Object.entries(history(p)?.positions??{});const n=pos.reduce((s,[,c])=>s+c,0);return n?pos.reduce((s,[k,c])=>s+Number(k)*c,0)/n:9;};return avg(a)-avg(b)||a.id.localeCompare(b.id);}).map(p=>p.id);
  const reasons=[];if(xi.length!==11)reasons.push(`${11-xi.length} missing XI slots`);if(!keeper)reasons.push('No wicketkeeper');if(!workload)reasons.push(`Insufficient bowling options to allocate ${totalOvers} overs`);if(!overseas)reasons.push('XI overseas limit exceeded');
  const confidence=contributions.reduce((s,p)=>s+p.confidence,0)/11;const provisional=confidence<.7||contributions.some(p=>!p.latest)||!valid;
- return {total:clamp(combination*.4+established*.3+recent*.2+bench*.1),eligible:valid,provisional,combination,established,recent,bench,xi:xi.map(p=>p.id),lineup,overs,checks,contributions,reasons,benched:benchPlayers.map(p=>({id:p.id,reason:'Not selected by the same deterministic score-maximizing XI search; available replacement cover'})),confidence,solver:'Exhaustive subsets through 20; bounded deterministic candidate search above 20 (approximate)'};
+ return {total:clamp(combination*.4+established*.3+recent*.2+bench*.1),eligible:valid,provisional,combination,established,recent,bench,xi:xi.map(p=>p.id),lineup,overs,checks,contributions,reasons,benched:benchPlayers.map(p=>({id:p.id,reason:'Not selected by the same deterministic score-maximizing XI search; available replacement cover'})),confidence,solver:'Exhaustive subsets through 16; bounded deterministic candidate search above 16 (approximate)'};
 }
 export function optimizeTeam(squad:MeasuredPlayer[],settings:Settings,format:string,cohorts:Record<string,Aggregate>):Evaluation {
  const unique=[...new Map(squad.map(p=>[p.id,p])).values()].sort((a,b)=>a.id.localeCompare(b.id));
  if(unique.length<=11)return evaluateXI(unique,unique,settings,format,cohorts);
  let candidates=unique;
- if(unique.length>20){candidates=[...unique].sort((a,b)=>(performance(b,'established',cohorts).score+performance(b,'recent',cohorts).score)-(performance(a,'established',cohorts).score+performance(a,'recent',cohorts).score)||a.id.localeCompare(b.id)).slice(0,20);}
+ if(unique.length>16){candidates=[...unique].sort((a,b)=>(performance(b,'established',cohorts).score+performance(b,'recent',cohorts).score)-(performance(a,'established',cohorts).score+performance(a,'recent',cohorts).score)||a.id.localeCompare(b.id)).slice(0,16);}
  let best:Evaluation|null=null;
  const choose=(start:number,selected:MeasuredPlayer[])=>{if(selected.length===11){const r=evaluateXI(selected,unique,settings,format,cohorts);if(!best||(r.eligible&&!best.eligible)||(r.eligible===best.eligible&&r.total>best.total))best=r;return;}for(let i=start;i<=candidates.length-(11-selected.length);i++){const p=candidates[i];if(p)choose(i+1,[...selected,p]);}};
  choose(0,[]);return best??evaluateXI(unique.slice(0,11),unique,settings,format,cohorts);
