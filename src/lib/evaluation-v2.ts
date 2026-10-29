@@ -1,7 +1,7 @@
 import { isBowlingOption, isPacer, isSpinner, type Player, type Settings } from './auction-rules';
 export const VERSION='v2.0';
 export const WEIGHTS={combination:40,established:30,recent:20,bench:10} as const;
-export interface Aggregate { runs:number; balls:number; dismissals:number; innings:number; legal_balls:number; conceded:number; wickets:number; positions:Record<string,number>; phases:Record<string,Aggregate>; metrics:Record<string,number|null> }
+export interface Aggregate { runs:number; balls:number; dismissals:number; innings:number; catches:number; stumpings:number; legal_balls:number; conceded:number; wickets:number; positions:Record<string,number>; phases:Record<string,Aggregate>; metrics:Record<string,number|null> }
 export interface Evidence { latest:string|null; earliest:string|null; windows:Record<string,Aggregate> }
 export interface MeasuredPlayer extends Player { evidence?:Evidence; identity_key?:string }
 export interface MetricPoint { metric:string; raw:number|null; normalized:number; weight:number; points:number; sample:number; confidence:number; cohort:number|null; fallback:boolean }
@@ -11,13 +11,13 @@ const clamp=(n:number)=>Math.max(0,Math.min(100,n));
 /** Same format/role pooled-rate prior, deterministic empirical shrinkage. */
 export function metric(raw:number|null,sample:number,cohort:number|null,prior:number,invert:boolean,weight:number,name:string):MetricPoint {
  const confidence=sample/(sample+prior);const fallback=raw==null||cohort==null||cohort<=0;
- const normalized=fallback?50:clamp(50+50*((invert?cohort/raw:raw/cohort)-1)*confidence);
+ const normalized=fallback?50:clamp(50+50*((invert?cohort/Math.max(raw,0.000001):raw/cohort)-1)*confidence);
  return {metric:name,raw,normalized,weight,points:normalized*weight,sample,confidence,fallback,cohort};
 }
 export function performance(p:MeasuredPlayer,window:string,cohorts:Record<string,Aggregate>):{score:number;metrics:MetricPoint[];confidence:number} {
  const a=p.evidence?.windows[window];const c=cohorts[`${p.format}|${window}|${p.role}`];
- const batting=[metric(a?.metrics.sr??null,a?.balls??0,c?.metrics.sr??null,120,false,.5,'Batting strike rate'),metric(a?.metrics.average??null,a?.dismissals??0,c?.metrics.average??null,12,false,.5,'Batting average')];
- const bowling=[metric(a?.metrics.economy??null,a?.legal_balls??0,c?.metrics.economy??null,180,true,.5,'Bowling economy'),metric(a?.metrics.bowling_sr??null,a?.wickets??0,c?.metrics.bowling_sr??null,12,true,.5,'Bowling strike rate')];
+ const batting=[metric(a?.metrics["sr"]??null,a?.balls??0,c?.metrics["sr"]??null,120,false,.5,'Batting strike rate'),metric(a?.metrics["average"]??null,a?.dismissals??0,c?.metrics["average"]??null,12,false,.5,'Batting average')];
+ const bowling=[metric(a?.metrics["economy"]??null,a?.legal_balls??0,c?.metrics["economy"]??null,180,true,.5,'Bowling economy'),metric(a?.metrics["bowling_sr"]??null,a?.wickets??0,c?.metrics["bowling_sr"]??null,12,true,.5,'Bowling strike rate')];
  const metrics=p.role==='BOWL'?bowling:p.role==='AR'?[...batting,...bowling].map(m=>({...m,weight:m.weight/2,points:m.points/2})):batting;
  return {score:metrics.reduce((sum,m)=>sum+m.points,0),metrics,confidence:metrics.reduce((sum,m)=>sum+m.confidence*m.weight,0)};
 }
@@ -27,7 +27,7 @@ export function evaluateXI(xi:MeasuredPlayer[],squad:MeasuredPlayer[],settings:S
  const keeper=xi.some(p=>p.role==='WK');const workload=bowlers.length*cap>=totalOvers;
  const overseas=xi.filter(p=>p.nationality_type==='Overseas').length<=maxOverseas;
  const valid=xi.length===11&&unique&&keeper&&workload&&overseas;
- const history=(p:MeasuredPlayer)=>p.evidence?.windows.history;
+ const history=(p:MeasuredPlayer)=>p.evidence?.windows["history"];
  const positional=(lo:number,hi:number)=>xi.filter(p=>Object.entries(history(p)?.positions??{}).some(([slot,count])=>Number(slot)>=lo&&Number(slot)<=hi&&count>=5)).length;
  const phaseEvidence=(phase:string)=>bowlers.some(p=>(history(p)?.phases[phase]?.legal_balls??0)>=180&&(history(p)?.phases[phase]?.wickets??0)>=5);
  const checks=[{label:'11 unique players, keeper, overseas limit and feasible workload',met:valid,maximum:40},{label:'At least two observed opening/top-order options (positions 1–3, ≥5 innings)',met:positional(1,3)>=2,maximum:15},{label:'Two middle-order options (positions 4–6, ≥5 innings)',met:positional(4,6)>=2,maximum:10},{label:'A lower-order option (positions 6–8, ≥5 innings)',met:positional(6,8)>=1,maximum:5},{label:'Pace and spin variety',met:xi.some(isPacer)&&xi.some(isSpinner),maximum:10},...['powerplay','middle','death'].map(phase=>({label:`Observed ${phase} bowling workload (≥180 legal balls, ≥5 wickets; not a specialist claim)`,met:phaseEvidence(phase),maximum:20/3}))].map(c=>({...c,points:c.met?c.maximum:0}));
