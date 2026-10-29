@@ -10,6 +10,7 @@ import { SUB_ROLES, type Player, type Role } from "@/lib/auction-rules";
 import { PlayerPortrait } from "@/components/auction/PlayerPortrait";
 import { withCanonicalPhoto } from "@/lib/player-photos";
 import { EvidenceAdmin } from "@/components/auction/EvidenceAdmin";
+import {LeadershipAdmin} from '@/components/auction/LeadershipAdmin';
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -90,6 +91,7 @@ function AdminPage() {
       <AppHeader />
       <main className="mx-auto max-w-7xl space-y-4 px-4 py-6">
         <EvidenceAdmin />
+        <LeadershipAdmin players={rows}/>
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="mr-auto text-4xl font-extrabold uppercase">Player database</h1>
           {["IPL", "T20", "ODI"].map((f) => (
@@ -102,7 +104,7 @@ function AdminPage() {
         <div className="panel overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="text-left text-xs uppercase text-muted-foreground">
-              <tr className="border-b"><th className="p-2">Photo / credits</th><th className="p-2">Name</th><th className="p-2">Country</th><th className="p-2">Sub-role</th><th className="p-2">Bats</th><th className="p-2">Rating</th><th className="p-2">Base (Cr)</th><th className="p-2">Tier</th><th className="p-2" /></tr>
+              <tr className="border-b"><th className="p-2">Photo / credits</th><th className="p-2">Name</th><th className="p-2">Country</th><th className="p-2">Sub-role</th><th className="p-2">Bats</th><th className="p-2">Legacy setup estimate</th><th className="p-2">Estimated base (Cr)</th><th className="p-2">Estimated tier</th><th className="p-2" /></tr>
             </thead>
             <tbody>
               {shown.map((r) => {
