@@ -3,12 +3,13 @@ import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 import { optimizeTeam, rankEvaluations, type Aggregate, type Evidence, type MeasuredPlayer } from './evaluation-v2';
 import type { Settings } from './auction-rules';
 import type { Json } from '@/integrations/supabase/types';
+import { optimizeTeam21, type Player21, type SubmittedLineup } from './evaluation-v21';
 
 export const getRoomEvaluation=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator((input:{roomId:string})=>input).handler(async({data,context})=>{
  const projection=await context.supabase.rpc('room_projection',{p_room:data.roomId});
  if(projection.error)throw new Error('You must be a room member');
  const room=(projection.data as unknown as {room:{status:string;evaluation_version:string;format:string;settings:Settings}}).room;
- if(room.evaluation_version!=='v2.0')return null;
+ if(!['v2.0','v2.1'].includes(room.evaluation_version))return null;
  const stored=await context.supabase.from('room_evaluations').select('result').eq('room_id',data.roomId).maybeSingle();
  if(stored.data)return stored.data.result;
  const input=await context.supabase.from('room_evaluation_inputs').select('*').eq('room_id',data.roomId).single();
@@ -20,10 +21,12 @@ export const getRoomEvaluation=createServerFn({method:'POST'}).middleware([requi
  const teams=await context.supabase.from('participants').select('id').eq('room_id',data.roomId);
  const hash=await context.supabase.rpc('evaluation_holdings_hash',{p_room:data.roomId});if(hash.error)throw new Error('Could not verify final holdings');
  const facts=input.data.player_facts as unknown as MeasuredPlayer[];
- const measured=facts.map(p=>{const e=evidence.find(e=>e.identity_key===p.name+'|'+p.country);const stats=e?.stats as unknown as Record<string,Evidence>|undefined;return {...p,...(stats?.[room.format]?{evidence:stats[room.format]}:{})};});
+ const positions=sid?(await context.supabase.from('evidence_positions').select('*').eq('snapshot_id',sid).eq('format',room.format)).data??[]:[];
+ const lineups=room.evaluation_version==='v2.1'?(await context.supabase.from('evaluation_lineups').select('*').eq('room_id',data.roomId)).data??[]:[];
+ const measured=facts.map(p=>{const e=evidence.find(e=>e.identity_key===p.name+'|'+p.country);const stats=e?.stats as unknown as Record<string,Evidence>|undefined;const original=stats?.[room.format];const pos=positions.find(x=>x.identity_key===p.name+'|'+p.country);const ev=original?{...original,windows:{...original.windows,history:{...original.windows['history'],position_groups:pos?.groups??{}}}}:undefined;return {...p,...(ev?{evidence:ev}:{})} as Player21;});
  const cohorts=(snapshot?.cohorts??{}) as unknown as Record<string,Aggregate>;
  const settings=(input.data.rules as unknown as {settings:Settings}).settings;
- const result={version:'v2.0',cutoff:snapshot?.cutoff??null,coverage:snapshot?.coverage??null,attribution:'Available Cricsheet matches • ODC-By 1.0 • coverage incomplete',teams:rankEvaluations((teams.data??[]).map(t=>({id:t.id,score:optimizeTeam(measured.filter(p=>(holdings.data??[]).some(s=>s.participant_id===t.id&&s.player_id===p.id)),settings,room.format,cohorts)})))};
+ const result={version:room.evaluation_version,cutoff:snapshot?.cutoff??null,coverage:snapshot?.coverage??null,attribution:'Available Cricsheet matches • ODC-By 1.0 • coverage incomplete',teams:rankEvaluations((teams.data??[]).map(t=>{const squad=measured.filter(p=>(holdings.data??[]).some(s=>s.participant_id===t.id&&s.player_id===p.id));const line=lineups.find(l=>l.participant_id===t.id);return {id:t.id,score:room.evaluation_version==='v2.1'?optimizeTeam21(squad,settings,room.format,cohorts,line as SubmittedLineup|undefined):optimizeTeam(squad,settings,room.format,cohorts)};}))};
  if(room.status!=='results')return result as unknown as Json;
  // Membership verified above; service access is used only to commit trusted calculated output.
  const {supabaseAdmin}=await import('@/integrations/supabase/client.server');
