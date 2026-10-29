@@ -71,6 +71,13 @@
       "when": 1793232480535,
       "tag": "0009_frozen_room_evidence_projection",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793232527645,
+      "tag": "0010_atomic_owner_evidence_import",
+      "breakpoints": true
     }
   ]
 }

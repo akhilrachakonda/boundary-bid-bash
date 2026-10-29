@@ -912,6 +912,7 @@ export type Database = {
         Args: { p_action: string; p_room: string }
         Returns: undefined
       }
+      import_evidence_bundle: { Args: { p_bundle: Json }; Returns: string }
       is_room_member: { Args: { p_room: string }; Returns: boolean }
       join_room: {
         Args: {
