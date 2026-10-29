@@ -252,6 +252,41 @@ export type Database = {
           },
         ]
       }
+      evidence_positions: {
+        Row: {
+          cutoff: string
+          format: string
+          groups: Json
+          identity_key: string
+          method: string
+          snapshot_id: string
+        }
+        Insert: {
+          cutoff: string
+          format: string
+          groups: Json
+          identity_key: string
+          method?: string
+          snapshot_id: string
+        }
+        Update: {
+          cutoff?: string
+          format?: string
+          groups?: Json
+          identity_key?: string
+          method?: string
+          snapshot_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evidence_positions_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leadership_reviews: {
         Row: {
           captain_rating: number
