@@ -32,24 +32,6 @@
       ]
     },
     {
-      "name": "Rohit Sharma",
-      "format": "ODI",
-      "sources": [
-        {
-          "url": "https://www.icc-cricket.com/tournaments/t20cricketworldcup/news/title-winning-skipper-rohit-sharma-confirms-retirement-from-t20-internationals",
-          "fact": "ICC identifies him as captain; he announced his last T20I after India won the 2024 T20 World Cup final against South Africa in Barbados.",
-          "published_on": "2024-06-29",
-          "scope": "India T20I"
-        },
-        {
-          "url": "https://www.icc-cricket.com/news/on-par-with-dhoni-as-captain",
-          "fact": "49 wins in 62 matches; Dhoni had 41 wins in 72 at the time of publication.",
-          "published_on": "2024-08-01",
-          "scope": "India T20I captaincy"
-        }
-      ]
-    },
-    {
       "name": "Virat Kohli",
       "format": "T20",
       "sources": [

@@ -17,7 +17,7 @@ async def main():
     if now['room']['current_rp']!=cur['id']:break
    if now['room']['status']=='completed':break
    await rpc(a,'host_control',dict(p_room=rid,p_action='pause'))
-  await a.get_by_role('tab',name='Evaluation XI',exact=True).click();await a.get_by_role('button',name='Save public lineup',exact=True).wait_for(timeout=30000)
+  await a.get_by_role('tab',name='Evaluation XI',exact=True).click();await a.get_by_role('button',name='Save public lineup',exact=True).wait_for(timeout=30000);await a.locator('select[aria-label="Captain"]').wait_for();await a.wait_for_function("document.querySelector('select[aria-label=Captain]').value.length>0")
   await a.set_viewport_size({'width':390,'height':1000});await a.screenshot(path='/tmp/browser/leadership/lineup-390.png');assert not await a.evaluate('document.documentElement.scrollWidth>innerWidth')
   await a.get_by_role('button',name='Save public lineup',exact=True).click();await a.get_by_text('Public evaluation lineup saved.',exact=True).wait_for()
   lines=await a.evaluate("""async id=>{const {supabase}=await import('/src/integrations/supabase/client.ts');return (await supabase.from('evaluation_lineups').select('*').eq('room_id',id)).data;}""",rid);assert len(lines)==1;line=lines[0]
