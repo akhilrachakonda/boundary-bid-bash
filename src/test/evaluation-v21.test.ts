@@ -5,6 +5,12 @@ const squad:Player21[]=Array.from({length:11},(_,i)=>({id:String(i),name:`Player
 const get=(i:number):Player21=>{const p=squad[i];if(!p)throw new Error('Missing test player');return p;};
 const line={lineup:squad.map(p=>p.id),captain:'0',vice_captain:'1'};
 describe('V2.1 leadership and positions',()=>{
+ it('release reserve keeps a legal domestic bowling XI in a large overseas-heavy squad',()=>{
+  const ps:Player21[]=Array.from({length:25},(_,i)=>({...get(1),id:String(i).padStart(2,'0'),role:i===0?'WK':i<6||i>=20?'BOWL':'BAT',nationality_type:i>0&&i<6?'Overseas':'Indian'}));
+  const result=optimizeTeam21(ps,DEFAULT_SETTINGS,'IPL',{},null,true);
+  expect(result.eligible).toBe(true);expect(result.xi).toHaveLength(11);
+  expect(ps.filter(p=>result.xi.includes(p.id)&&p.nationality_type==='Overseas').length).toBeLessThanOrEqual(4);
+ });
  it('weights exactly 100 and combination subweights exactly 35',()=>{expect(Object.values(V21_WEIGHTS).reduce((a,b)=>a+b,0)).toBe(100);expect(Object.values(POSITION_WEIGHTS).reduce((a,b)=>a+b,0)).toBe(35);});
  it('neutral captain and VC earn 1.5 + 1 points, not multipliers',()=>{const r=optimizeTeam21(squad,DEFAULT_SETTINGS,'IPL',{},line);expect(r.captainPoints).toBe(1.5);expect(r.viceCaptainPoints).toBe(1);expect(r.leadership).toBe(2.5);expect(r.provisional).toBe(true);});
  it('leadership is bounded at five and total at 100',()=>{const ps=squad.map(p=>({...p,leadership:{captain_rating:100,vice_captain_rating:100,status:'reviewed',rubric_version:'leadership-1',confidence:1,cutoff:'2026-10-29',rationale:'Reviewed',sources:[]}}));const r=optimizeTeam21(ps,DEFAULT_SETTINGS,'IPL',{},line);expect(r.leadership).toBe(5);expect(r.total).toBeLessThanOrEqual(100);});

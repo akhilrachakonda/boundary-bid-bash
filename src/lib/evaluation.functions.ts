@@ -4,11 +4,12 @@ import { optimizeTeam, rankEvaluations, type Aggregate, type Evidence, type Meas
 import type { Settings } from './auction-rules';
 import type { Json } from '@/integrations/supabase/types';
 import { optimizeTeam21, type Player21, type SubmittedLineup } from './evaluation-v21';
+import { z } from 'zod';
 
-export const getRoomEvaluation=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator((input:{roomId:string})=>input).handler(async({data,context})=>{
+export const getRoomEvaluation=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator((input:unknown)=>z.object({roomId:z.string().uuid()}).parse(input)).handler(async({data,context})=>{
  const projection=await context.supabase.rpc('room_projection',{p_room:data.roomId});
  if(projection.error)throw new Error('You must be a room member');
- const room=(projection.data as unknown as {room:{status:string;evaluation_version:string;format:string;settings:Settings}}).room;
+ const room=(projection.data as unknown as {room:{status:string;evaluation_version:string;format:string;settings:Settings;scoring_patch?:string}}).room;
  if(!['v2.0','v2.1'].includes(room.evaluation_version))return null;
  const stored=await context.supabase.from('room_evaluations').select('result').eq('room_id',data.roomId).maybeSingle();
  if(stored.data)return stored.data.result;
