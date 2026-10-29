@@ -106,6 +106,13 @@
       "when": 1793234306050,
       "tag": "0014_lock_position_snapshot_after_room_freeze",
       "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1793234797280,
+      "tag": "0015_release_lot_binding_and_privilege_hardening",
+      "breakpoints": true
     }
   ]
 }

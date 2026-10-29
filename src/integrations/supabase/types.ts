@@ -14,12 +14,34 @@ export type Database = {
   }
   public: {
     Tables: {
+      action_limits: {
+        Row: {
+          action: string
+          attempts: number
+          user_id: string
+          window_start: string
+        }
+        Insert: {
+          action: string
+          attempts?: number
+          user_id: string
+          window_start: string
+        }
+        Update: {
+          action?: string
+          attempts?: number
+          user_id?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       bids: {
         Row: {
           amount: number
           created_at: string
           id: string
           participant_id: string
+          request_id: string | null
           room_id: string
           room_player_id: string
         }
@@ -28,6 +50,7 @@ export type Database = {
           created_at?: string
           id?: string
           participant_id: string
+          request_id?: string | null
           room_id: string
           room_player_id: string
         }
@@ -36,6 +59,7 @@ export type Database = {
           created_at?: string
           id?: string
           participant_id?: string
+          request_id?: string | null
           room_id?: string
           room_player_id?: string
         }
@@ -703,6 +727,7 @@ export type Database = {
           host_id: string
           id: string
           lot_ends_at: string | null
+          lot_version: number
           name: string
           paused_remaining_ms: number | null
           review_ends_at: string | null
@@ -724,6 +749,7 @@ export type Database = {
           host_id: string
           id?: string
           lot_ends_at?: string | null
+          lot_version?: number
           name: string
           paused_remaining_ms?: number | null
           review_ends_at?: string | null
@@ -745,6 +771,7 @@ export type Database = {
           host_id?: string
           id?: string
           lot_ends_at?: string | null
+          lot_version?: number
           name?: string
           paused_remaining_ms?: number | null
           review_ends_at?: string | null
@@ -1003,6 +1030,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      _release_limit: {
+        Args: { p_action: string; p_limit: number; p_seconds: number }
+        Returns: boolean
+      }
       _resolve_lot: {
         Args: { p_force_unsold: boolean; p_room: string }
         Returns: undefined
@@ -1038,10 +1069,18 @@ export type Database = {
         Returns: boolean
       }
       heartbeat: { Args: { p_room: string }; Returns: undefined }
-      host_control: {
-        Args: { p_action: string; p_room: string }
-        Returns: undefined
-      }
+      host_control:
+        | { Args: { p_action: string; p_room: string }; Returns: undefined }
+        | {
+            Args: {
+              p_action: string
+              p_room: string
+              p_sale: string
+              p_status: string
+              p_version: number
+            }
+            Returns: undefined
+          }
       import_evidence_bundle: { Args: { p_bundle: Json }; Returns: string }
       import_evidence_bundle_with_positions: {
         Args: { p_bundle: Json }
@@ -1066,7 +1105,18 @@ export type Database = {
         Args: { p_minutes: number; p_room: string }
         Returns: undefined
       }
-      place_bid: { Args: { p_amount: number; p_room: string }; Returns: number }
+      place_bid:
+        | { Args: { p_amount: number; p_room: string }; Returns: number }
+        | {
+            Args: {
+              p_amount: number
+              p_lot: string
+              p_request: string
+              p_room: string
+              p_version: number
+            }
+            Returns: number
+          }
       propose_trade: {
         Args: {
           p_cash: number
