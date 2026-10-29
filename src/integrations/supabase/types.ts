@@ -1043,6 +1043,10 @@ export type Database = {
         Returns: undefined
       }
       import_evidence_bundle: { Args: { p_bundle: Json }; Returns: string }
+      import_evidence_bundle_with_positions: {
+        Args: { p_bundle: Json }
+        Returns: string
+      }
       is_room_member: { Args: { p_room: string }; Returns: boolean }
       join_room: {
         Args: {
