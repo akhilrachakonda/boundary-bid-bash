@@ -47,6 +47,14 @@ function isH3SwallowedErrorBody(body: string): boolean {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      if(request.body){
+        const maximum=32*1024*1024;
+        if(Number(request.headers.get('content-length')??0)>maximum)return new Response('Request too large',{status:413});
+        const reader=request.body.getReader();const chunks:Uint8Array[]=[];let size=0;
+        while(true){const part=await reader.read();if(part.done)break;size+=part.value.byteLength;if(size>maximum){await reader.cancel();return new Response('Request too large',{status:413});}chunks.push(part.value);}
+        const body=new Uint8Array(size);let offset=0;for(const chunk of chunks){body.set(chunk,offset);offset+=chunk.byteLength;}
+        request=new Request(request,{body});
+      }
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
