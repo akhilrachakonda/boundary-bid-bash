@@ -57,6 +57,13 @@
       "when": 1793232035886,
       "tag": "0007_evidence_snapshots_v2",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793232381354,
+      "tag": "0008_safe_room_notification_record_fields",
+      "breakpoints": true
     }
   ]
 }
