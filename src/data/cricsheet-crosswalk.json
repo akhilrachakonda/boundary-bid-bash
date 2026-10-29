@@ -1,0 +1,3921 @@
+[
+  {
+    "name": "Aamer Jamal",
+    "identifier": "a8e54ef4",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Abhishek Sharma",
+    "identifier": "f29185a1",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Abishek Porel",
+    "identifier": "ad3b6e95",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Adam Zampa",
+    "identifier": "14f96089",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Adil Rashid",
+    "identifier": "249d60c9",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Aiden Markram",
+    "identifier": "6a26221c",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Ajinkya Rahane",
+    "identifier": "29e95537",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Alex Carey",
+    "identifier": "69d03465",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Andre Russell",
+    "identifier": "bbd41817",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Anrich Nortje",
+    "identifier": "acdc62f5",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Arshdeep Singh",
+    "identifier": "244048f6",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Ashutosh Sharma",
+    "identifier": "84d9c311",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Avesh Khan",
+    "identifier": "eef2536f",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Axar Patel",
+    "identifier": "2e171977",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Azmatullah Omarzai",
+    "identifier": "8f6dd463",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Babar Azam",
+    "identifier": "8a75e999",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Ben Duckett",
+    "identifier": "5f26f677",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Bhuvneshwar Kumar",
+    "identifier": "2e81a32d",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Cameron Green",
+    "identifier": "eaa76d3c",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Charith Asalanka",
+    "identifier": "732c038e",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Chris Woakes",
+    "identifier": "4c5d73db",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Daryl Mitchell",
+    "identifier": "eade4650",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "David Miller",
+    "identifier": "d67d5f00",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "David Warner",
+    "identifier": "dcce6f09",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Devon Conway",
+    "identifier": "df5a6881",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Dewald Brevis",
+    "identifier": "844e79d1",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Dhruv Jurel",
+    "identifier": "bcf325d2",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Dinesh Karthik",
+    "identifier": "c03f1114",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Fazalhaq Farooqi",
+    "identifier": "e9c7f0d0",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Gerald Coetzee",
+    "identifier": "3204c99f",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Glenn Maxwell",
+    "identifier": "b681e71e",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Glenn Phillips",
+    "identifier": "9a46c4e5",
+    "method": "provider",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Hardik Pandya",
+    "identifier": "dbe50b21",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Harshit Rana",
+    "identifier": "77b1aa15",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Heinrich Klaasen",
+    "identifier": "235c2bb6",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Ish Sodhi",
+    "identifier": "641ac5ff",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Ishan Kishan",
+    "identifier": "752f7486",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Jason Holder",
+    "identifier": "0f721006",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Jasprit Bumrah",
+    "identifier": "462411b3",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Joe Root",
+    "identifier": "a343262c",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Jofra Archer",
+    "identifier": "5574750c",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Jos Buttler",
+    "identifier": "99b75528",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Josh Hazlewood",
+    "identifier": "03806cf8",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Josh Inglis",
+    "identifier": "989889ff",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "KL Rahul",
+    "identifier": "b17e2f24",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Kagiso Rabada",
+    "identifier": "e62dd25d",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Kane Williamson",
+    "identifier": "d027ba9f",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Keshav Maharaj",
+    "identifier": "0b60eb09",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Kuldeep Yadav",
+    "identifier": "8d2c70ad",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Kusal Mendis",
+    "identifier": "5d1e7582",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Kyle Jamieson",
+    "identifier": "68c56d09",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Liam Livingstone",
+    "identifier": "50c6bc2b",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Lockie Ferguson",
+    "identifier": "2f9d0389",
+    "method": "provider",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "MS Dhoni",
+    "identifier": "4a8a2e3b",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Marco Jansen",
+    "identifier": "81c36ee9",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Marcus Stoinis",
+    "identifier": "d9273ee7",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Mark Wood",
+    "identifier": "8d92a2c3",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Mitchell Marsh",
+    "identifier": "3d8feaf8",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Mitchell Santner",
+    "identifier": "e4a0deae",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Mitchell Starc",
+    "identifier": "3fb19989",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Moeen Ali",
+    "identifier": "bb351c23",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Mohammad Nabi",
+    "identifier": "62af8546",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Mohammad Rizwan",
+    "identifier": "2f26ac1a",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Mohammed Shami",
+    "identifier": "8cf9814c",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Mohammed Siraj",
+    "identifier": "2f49c897",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Mujeeb Ur Rahman",
+    "identifier": "7d92277a",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Mukesh Kumar",
+    "identifier": "2cffab74",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Mustafizur Rahman",
+    "identifier": "0a8fce53",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Nathan Ellis",
+    "identifier": "9eb1455b",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Naveen-ul-Haq",
+    "identifier": "c0c411cb",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Nicholas Pooran",
+    "identifier": "3241e3fd",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Noor Ahmad",
+    "identifier": "efc04be7",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Pat Cummins",
+    "identifier": "ded9240e",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Pathum Nissanka",
+    "identifier": "8ee36b18",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Prabhsimran Singh",
+    "identifier": "9418198b",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Priyansh Arya",
+    "identifier": "b5797845",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Quinton de Kock",
+    "identifier": "372455c4",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Rachin Ravindra",
+    "identifier": "ba5e1069",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Rahmanullah Gurbaz",
+    "identifier": "0bacade8",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Rajat Patidar",
+    "identifier": "c740ea83",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Ramandeep Singh",
+    "identifier": "be24ead0",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Rassie van der Dussen",
+    "identifier": "9948e262",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Ravi Bishnoi",
+    "identifier": "df064e1a",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Ravindra Jadeja",
+    "identifier": "fe93fd9d",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Rinku Singh",
+    "identifier": "0a509d6b",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Rishabh Pant",
+    "identifier": "919a3be2",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Riyan Parag",
+    "identifier": "04a418e8",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Ryan Rickelton",
+    "identifier": "e66732f8",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Sam Curran",
+    "identifier": "e94915e6",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Sanju Samson",
+    "identifier": "a4cc73aa",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Shaheen Afridi",
+    "identifier": "45a7e761",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Shai Hope",
+    "identifier": "1fc6ef83",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Shakib Al Hasan",
+    "identifier": "7dc35884",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Shardul Thakur",
+    "identifier": "1abb78f8",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Shashank Singh",
+    "identifier": "26989d80",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Sherfane Rutherford",
+    "identifier": "d014d5ac",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Shivam Dube",
+    "identifier": "a4e37e47",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Shreyas Iyer",
+    "identifier": "85ec8e33",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Shubman Gill",
+    "identifier": "b4b99816",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Sikandar Raza",
+    "identifier": "26d041c4",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Sunil Narine",
+    "identifier": "9d430b40",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Suyash Sharma",
+    "identifier": "9440ef41",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "T Natarajan",
+    "identifier": "ce794613",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Tabraiz Shamsi",
+    "identifier": "a03bba42",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Tilak Varma",
+    "identifier": "b0482a1d",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Tim David",
+    "identifier": "f1f99156",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Tom Latham",
+    "identifier": "e824e6ee",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Travis Head",
+    "identifier": "12b610c2",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Trent Boult",
+    "identifier": "a818c1be",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Tristan Stubbs",
+    "identifier": "85b3fab2",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Venkatesh Iyer",
+    "identifier": "a24be938",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Virat Kohli",
+    "identifier": "ba607b88",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Wanindu Hasaranga",
+    "identifier": "a97c8ec2",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Washington Sundar",
+    "identifier": "f19ccfad",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Will Jacks",
+    "identifier": "9caf69a1",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Yash Dayal",
+    "identifier": "7210d461",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Yuzvendra Chahal",
+    "identifier": "57ee1fde",
+    "method": "exact",
+    "evidence": "Exact register name/provider join; original canonical country"
+  },
+  {
+    "name": "Abdul Samad",
+    "identifier": "8e514b4c",
+    "register_name": "Abdul Samad",
+    "register_unique_name": "Abdul Samad",
+    "register_aliases": [
+      "A Samad"
+    ],
+    "archive_roster_aliases": [
+      "Abdul Samad"
+    ],
+    "canonical_exact_in_register": true,
+    "country": "India",
+    "country_verified_by_international_roster": false,
+    "international_roster_evidence": {},
+    "club_roster_evidence": {
+      "Sunrisers Hyderabad": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216495",
+          "date": "2020-11-03",
+          "roster_name": "Abdul Samad",
+          "registry_identifier": "8e514b4c"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216498",
+          "date": "2020-10-24",
+          "roster_name": "Abdul Samad",
+          "registry_identifier": "8e514b4c"
+        }
+      ],
+      "Lucknow Super Giants": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473444",
+          "date": "2025-03-27",
+          "roster_name": "Abdul Samad",
+          "registry_identifier": "8e514b4c"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473450",
+          "date": "2025-04-01",
+          "roster_name": "Abdul Samad",
+          "registry_identifier": "8e514b4c"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "hicQGCIJAJiJiVKXbJLyU0Oii1OzIee",
+      "key_cricinfo": "1175485",
+      "key_cricketarchive": "1949202",
+      "key_pulse": "19352"
+    },
+    "source": "https://www.cricbuzz.com/profiles/14628/abdul-samad",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c226276/abdul-samad.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "14628",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Abdul Samad Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim.",
+      "No matching international-country roster in supplied archives; IPL club is not nationality evidence. Country retained from photo metadata, not independently established by these archives.",
+      "Three exact-name register entries; selected 8e514b4c is the IPL roster player. Other IDs: 21dbacff, 8e554b6b. No international roster country proof."
+    ]
+  },
+  {
+    "name": "Deepak Chahar",
+    "identifier": "23eeb873",
+    "register_name": "DL Chahar",
+    "register_unique_name": "DL Chahar",
+    "register_aliases": [
+      "D L Chahar",
+      "D Chahar",
+      "Chahar"
+    ],
+    "archive_roster_aliases": [
+      "DL Chahar"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1119545",
+          "date": "2018-07-08",
+          "roster_name": "DL Chahar",
+          "registry_identifier": "23eeb873"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1187005",
+          "date": "2019-09-18",
+          "roster_name": "DL Chahar",
+          "registry_identifier": "23eeb873"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Rising Pune Supergiant": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082592",
+          "date": "2017-04-06",
+          "roster_name": "DL Chahar",
+          "registry_identifier": "23eeb873"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082599",
+          "date": "2017-04-11",
+          "roster_name": "DL Chahar",
+          "registry_identifier": "23eeb873"
+        }
+      ],
+      "Chennai Super Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136561",
+          "date": "2018-04-07",
+          "roster_name": "DL Chahar",
+          "registry_identifier": "23eeb873"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136565",
+          "date": "2018-04-10",
+          "roster_name": "DL Chahar",
+          "registry_identifier": "23eeb873"
+        }
+      ],
+      "Mumbai Indians": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473440",
+          "date": "2025-03-23",
+          "roster_name": "DL Chahar",
+          "registry_identifier": "23eeb873"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473446",
+          "date": "2025-03-29",
+          "roster_name": "DL Chahar",
+          "registry_identifier": "23eeb873"
+        }
+      ],
+      "Rising Pune Supergiants": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "980997",
+          "date": "2016-05-17",
+          "roster_name": "DL Chahar",
+          "registry_identifier": "23eeb873"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "981005",
+          "date": "2016-05-21",
+          "roster_name": "DL Chahar",
+          "registry_identifier": "23eeb873"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "1bJVJAyiCKUIheLXiJQ0ciOIzGiJOie",
+      "key_cricinfo": "447261",
+      "key_cricketarchive": "258155",
+      "key_pulse": "140"
+    },
+    "source": "https://www.cricbuzz.com/profiles/7836/deepak-chahar",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c226392/deepak-chahar.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "7836",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Deepak Chahar Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Harry Brook",
+    "identifier": "4ae1755b",
+    "register_name": "HC Brook",
+    "register_unique_name": "HC Brook",
+    "register_aliases": [
+      "H Brook"
+    ],
+    "archive_roster_aliases": [
+      "HC Brook"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "England",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "England": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1256722",
+          "date": "2022-01-26",
+          "roster_name": "HC Brook",
+          "registry_identifier": "4ae1755b"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1276904",
+          "date": "2022-07-07",
+          "roster_name": "HC Brook",
+          "registry_identifier": "4ae1755b"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Sunrisers Hyderabad": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1359478",
+          "date": "2023-04-02",
+          "roster_name": "HC Brook",
+          "registry_identifier": "4ae1755b"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1359484",
+          "date": "2023-04-07",
+          "roster_name": "HC Brook",
+          "registry_identifier": "4ae1755b"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_cricinfo": "911707",
+      "key_cricketarchive": "1317007",
+      "key_nvplay": "1720f03e-163e-49d0-a555-2ae36923dd70",
+      "key_pulse": "3375"
+    },
+    "source": "https://www.cricbuzz.com/profiles/12201/harry-brook",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c848570/harry-brook.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "12201",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Harry Brook Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Harshal Patel",
+    "identifier": "f986ca1a",
+    "register_name": "HV Patel",
+    "register_unique_name": "HV Patel",
+    "register_aliases": [
+      "H V Patel",
+      "H Patel"
+    ],
+    "archive_roster_aliases": [
+      "HV Patel"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1276904",
+          "date": "2022-07-07",
+          "roster_name": "HV Patel",
+          "registry_identifier": "f986ca1a"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1276905",
+          "date": "2022-07-09",
+          "roster_name": "HV Patel",
+          "registry_identifier": "f986ca1a"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Royal Challengers Bangalore": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082646",
+          "date": "2017-05-14",
+          "roster_name": "HV Patel",
+          "registry_identifier": "f986ca1a"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1254058",
+          "date": "2021-04-09",
+          "roster_name": "HV Patel",
+          "registry_identifier": "f986ca1a"
+        }
+      ],
+      "Delhi Daredevils": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136579",
+          "date": "2018-04-21",
+          "roster_name": "HV Patel",
+          "registry_identifier": "f986ca1a"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136602",
+          "date": "2018-05-10",
+          "roster_name": "HV Patel",
+          "registry_identifier": "f986ca1a"
+        }
+      ],
+      "Delhi Capitals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1175365",
+          "date": "2019-03-30",
+          "roster_name": "HV Patel",
+          "registry_identifier": "f986ca1a"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1175368",
+          "date": "2019-04-01",
+          "roster_name": "HV Patel",
+          "registry_identifier": "f986ca1a"
+        }
+      ],
+      "Punjab Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1422120",
+          "date": "2024-03-23",
+          "roster_name": "HV Patel",
+          "registry_identifier": "f986ca1a"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1422124",
+          "date": "2024-03-25",
+          "roster_name": "HV Patel",
+          "registry_identifier": "f986ca1a"
+        }
+      ],
+      "Sunrisers Hyderabad": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473439",
+          "date": "2025-03-23",
+          "roster_name": "HV Patel",
+          "registry_identifier": "f986ca1a"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473444",
+          "date": "2025-03-27",
+          "roster_name": "HV Patel",
+          "registry_identifier": "f986ca1a"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "J0ULeeiciJJX1bOiOCVAJizyhQIiGIK",
+      "key_cricinfo": "390481",
+      "key_cricketarchive": "250417",
+      "key_pulse": "157"
+    },
+    "source": "https://www.cricbuzz.com/profiles/8175/harshal-patel",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c594314/harshal-patel.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "8175",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Harshal Patel Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Jamie Smith",
+    "identifier": "c834c290",
+    "register_name": "JL Smith",
+    "register_unique_name": "JL Smith",
+    "register_aliases": [
+      "J Smith"
+    ],
+    "archive_roster_aliases": [
+      "JL Smith"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "England",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "England": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1439900",
+          "date": "2025-01-25",
+          "roster_name": "JL Smith",
+          "registry_identifier": "c834c290"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1439901",
+          "date": "2025-01-28",
+          "roster_name": "JL Smith",
+          "registry_identifier": "c834c290"
+        }
+      ]
+    },
+    "club_roster_evidence": {},
+    "register_provider_keys": {
+      "key_cricinfo": "1096092",
+      "key_cricketarchive": "1885413",
+      "key_nvplay": "111f8a64-db69-4f6f-a9a7-14812ebba9eb",
+      "key_pulse": "5223"
+    },
+    "source": "https://www.cricbuzz.com/profiles/13810/jamie-smith",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c717789/jamie-smith.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "13810",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Jamie Smith Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Jitesh Sharma",
+    "identifier": "800d2d97",
+    "register_name": "JM Sharma",
+    "register_unique_name": "JM Sharma",
+    "register_aliases": [
+      "J M Sharma"
+    ],
+    "archive_roster_aliases": [
+      "JM Sharma"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1387598",
+          "date": "2023-12-12",
+          "roster_name": "JM Sharma",
+          "registry_identifier": "800d2d97"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1387599",
+          "date": "2023-12-14",
+          "roster_name": "JM Sharma",
+          "registry_identifier": "800d2d97"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Punjab Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304057",
+          "date": "2022-04-03",
+          "roster_name": "JM Sharma",
+          "registry_identifier": "800d2d97"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304062",
+          "date": "2022-04-08",
+          "roster_name": "JM Sharma",
+          "registry_identifier": "800d2d97"
+        }
+      ],
+      "Royal Challengers Bengaluru": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473438",
+          "date": "2025-03-22",
+          "roster_name": "JM Sharma",
+          "registry_identifier": "800d2d97"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473445",
+          "date": "2025-03-28",
+          "roster_name": "JM Sharma",
+          "registry_identifier": "800d2d97"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "XGiIhViyKiIAOLJU0OCe1ecJJQzJibi",
+      "key_cricinfo": "721867"
+    },
+    "source": "https://www.cricbuzz.com/profiles/10214/jitesh-sharma",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c226474/jitesh-sharma.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "10214",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Jitesh Sharma Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Kamindu Mendis",
+    "identifier": "08548b13",
+    "register_name": "PHKD Mendis",
+    "register_unique_name": "PHKD Mendis",
+    "register_aliases": [],
+    "archive_roster_aliases": [
+      "PHKD Mendis"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "Sri Lanka",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "Sri Lanka": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1140384",
+          "date": "2018-10-27",
+          "roster_name": "PHKD Mendis",
+          "registry_identifier": "08548b13"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1144172",
+          "date": "2019-03-19",
+          "roster_name": "PHKD Mendis",
+          "registry_identifier": "08548b13"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Sunrisers Hyderabad": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473452",
+          "date": "2025-04-03",
+          "roster_name": "PHKD Mendis",
+          "registry_identifier": "08548b13"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473457",
+          "date": "2025-04-06",
+          "roster_name": "PHKD Mendis",
+          "registry_identifier": "08548b13"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_cricinfo": "784373",
+      "key_pulse": "3086"
+    },
+    "source": "https://www.cricbuzz.com/profiles/10940/kamindu-mendis",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c847173/kamindu-mendis.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "10940",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Kamindu Mendis Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Khaleel Ahmed",
+    "identifier": "a2f46292",
+    "register_name": "KK Ahmed",
+    "register_unique_name": "KK Ahmed",
+    "register_aliases": [
+      "S K K Ahmed",
+      "K Ahmed",
+      "Ahmed"
+    ],
+    "archive_roster_aliases": [
+      "KK Ahmed"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1144990",
+          "date": "2018-11-21",
+          "roster_name": "KK Ahmed",
+          "registry_identifier": "a2f46292"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1144991",
+          "date": "2018-11-23",
+          "roster_name": "KK Ahmed",
+          "registry_identifier": "a2f46292"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Sunrisers Hyderabad": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136619",
+          "date": "2018-05-25",
+          "roster_name": "KK Ahmed",
+          "registry_identifier": "a2f46292"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1178405",
+          "date": "2019-04-14",
+          "roster_name": "KK Ahmed",
+          "registry_identifier": "a2f46292"
+        }
+      ],
+      "Delhi Capitals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304048",
+          "date": "2022-03-27",
+          "roster_name": "KK Ahmed",
+          "registry_identifier": "a2f46292"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304056",
+          "date": "2022-04-02",
+          "roster_name": "KK Ahmed",
+          "registry_identifier": "a2f46292"
+        }
+      ],
+      "Chennai Super Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473440",
+          "date": "2025-03-23",
+          "roster_name": "KK Ahmed",
+          "registry_identifier": "a2f46292"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473445",
+          "date": "2025-03-28",
+          "roster_name": "KK Ahmed",
+          "registry_identifier": "a2f46292"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "IQJiLJyeIGhziObUJ0COiiX1VKceAJi",
+      "key_cricinfo": "942645",
+      "key_cricketarchive": "1196933",
+      "key_nvplay": "67dc81f9-df52-436f-88ec-3ded368652c7",
+      "key_pulse": "2964"
+    },
+    "source": "https://www.espncricinfo.com/cricketers/khaleel-ahmed-942645",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/942645.png",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricinfo",
+        "profile_id": "942645",
+        "register_field": "key_cricinfo",
+        "register_value": "942645",
+        "exact_register_id_match": true
+      },
+      {
+        "field": "original_url",
+        "provider": "cricinfo",
+        "profile_id": "942645",
+        "register_field": "key_cricinfo",
+        "register_value": "942645",
+        "exact_register_id_match": true
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 403,
+      "title": null
+    },
+    "match_basis": "exact_provider_register_id",
+    "status": "matched",
+    "uncertainties": []
+  },
+  {
+    "name": "Krunal Pandya",
+    "identifier": "5b8c830e",
+    "register_name": "KH Pandya",
+    "register_unique_name": "KH Pandya",
+    "register_aliases": [
+      "K H Pandya",
+      "K Pandya"
+    ],
+    "archive_roster_aliases": [
+      "KH Pandya"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1144990",
+          "date": "2018-11-21",
+          "roster_name": "KH Pandya",
+          "registry_identifier": "5b8c830e"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1144991",
+          "date": "2018-11-23",
+          "roster_name": "KH Pandya",
+          "registry_identifier": "5b8c830e"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Mumbai Indians": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082592",
+          "date": "2017-04-06",
+          "roster_name": "KH Pandya",
+          "registry_identifier": "5b8c830e"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082597",
+          "date": "2017-04-09",
+          "roster_name": "KH Pandya",
+          "registry_identifier": "5b8c830e"
+        }
+      ],
+      "Lucknow Super Giants": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304050",
+          "date": "2022-03-28",
+          "roster_name": "KH Pandya",
+          "registry_identifier": "5b8c830e"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304053",
+          "date": "2022-03-31",
+          "roster_name": "KH Pandya",
+          "registry_identifier": "5b8c830e"
+        }
+      ],
+      "Royal Challengers Bengaluru": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473438",
+          "date": "2025-03-22",
+          "roster_name": "KH Pandya",
+          "registry_identifier": "5b8c830e"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473445",
+          "date": "2025-03-28",
+          "roster_name": "KH Pandya",
+          "registry_identifier": "5b8c830e"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "UicQOhOJ1XACJeGKyeVJbiLIiJiiIz0",
+      "key_cricinfo": "471342",
+      "key_cricketarchive": "254356",
+      "key_pulse": "3183"
+    },
+    "source": "https://www.cricbuzz.com/profiles/11311/krunal-pandya",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c171069/krunal-pandya.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "11311",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Krunal Pandya Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Maheesh Theekshana",
+    "identifier": "f24c6701",
+    "register_name": "M Theekshana",
+    "register_unique_name": "M Theekshana",
+    "register_aliases": [],
+    "archive_roster_aliases": [
+      "M Theekshana"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "Sri Lanka",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "Sri Lanka": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1263471",
+          "date": "2022-02-11",
+          "roster_name": "M Theekshana",
+          "registry_identifier": "f24c6701"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1263472",
+          "date": "2022-02-13",
+          "roster_name": "M Theekshana",
+          "registry_identifier": "f24c6701"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Chennai Super Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304063",
+          "date": "2022-04-09",
+          "roster_name": "M Theekshana",
+          "registry_identifier": "f24c6701"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304068",
+          "date": "2022-04-12",
+          "roster_name": "M Theekshana",
+          "registry_identifier": "f24c6701"
+        }
+      ],
+      "Rajasthan Royals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473439",
+          "date": "2025-03-23",
+          "roster_name": "M Theekshana",
+          "registry_identifier": "f24c6701"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473443",
+          "date": "2025-03-26",
+          "roster_name": "M Theekshana",
+          "registry_identifier": "f24c6701"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_cricinfo": "1138316"
+    },
+    "source": "https://www.cricbuzz.com/profiles/18504/maheesh-theekshana",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c847197/maheesh-theekshana.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "18504",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Maheesh Theekshana Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Matheesha Pathirana",
+    "identifier": "64839cb3",
+    "register_name": "M Pathirana",
+    "register_unique_name": "M Pathirana",
+    "register_aliases": [],
+    "archive_roster_aliases": [
+      "M Pathirana"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "Sri Lanka",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "Sri Lanka": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1415704",
+          "date": "2024-06-03",
+          "roster_name": "M Pathirana",
+          "registry_identifier": "64839cb3"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1415715",
+          "date": "2024-06-07",
+          "roster_name": "M Pathirana",
+          "registry_identifier": "64839cb3"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Chennai Super Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304108",
+          "date": "2022-05-15",
+          "roster_name": "M Pathirana",
+          "registry_identifier": "64839cb3"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304114",
+          "date": "2022-05-20",
+          "roster_name": "M Pathirana",
+          "registry_identifier": "64839cb3"
+        }
+      ],
+      "Kolkata Knight Riders": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1529303",
+          "date": "2026-05-16",
+          "roster_name": "M Pathirana",
+          "registry_identifier": "64839cb3"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_cricinfo": "1194795"
+    },
+    "source": "https://www.cricbuzz.com/profiles/16458/matheesha-pathirana",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c847143/matheesha-pathirana.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "16458",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Matheesha Pathirana Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Mayank Yadav",
+    "identifier": "b1ad996b",
+    "register_name": "MP Yadav",
+    "register_unique_name": "MP Yadav",
+    "register_aliases": [],
+    "archive_roster_aliases": [
+      "MP Yadav"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1439893",
+          "date": "2024-10-06",
+          "roster_name": "MP Yadav",
+          "registry_identifier": "b1ad996b"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1439894",
+          "date": "2024-10-09",
+          "roster_name": "MP Yadav",
+          "registry_identifier": "b1ad996b"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Lucknow Super Giants": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1422129",
+          "date": "2024-03-30",
+          "roster_name": "MP Yadav",
+          "registry_identifier": "b1ad996b"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1422133",
+          "date": "2024-04-02",
+          "roster_name": "MP Yadav",
+          "registry_identifier": "b1ad996b"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_cricinfo": "1292563"
+    },
+    "source": "https://www.iplt20.com/players/5a95f834-4626-492f-922a-ef177d4086e3/mayank-yadav",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2880%252F76160.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "iplt20",
+        "profile_id": "5a95f834-4626-492f-922a-ef177d4086e3",
+        "exact_register_id_match": false,
+        "note": "IPL UUID is not a register key; team asset numbers are not assumed to be key_pulse."
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Mayank Yadav | Lucknow Super Giants Profile | IPLT20"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Mohsin Khan",
+    "identifier": "c33d8116",
+    "register_name": "Mohsin Khan",
+    "register_unique_name": "Mohsin Khan (2)",
+    "register_aliases": [],
+    "archive_roster_aliases": [
+      "Mohsin Khan"
+    ],
+    "canonical_exact_in_register": true,
+    "country": "India",
+    "country_verified_by_international_roster": false,
+    "international_roster_evidence": {},
+    "club_roster_evidence": {
+      "Lucknow Super Giants": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304050",
+          "date": "2022-03-28",
+          "roster_name": "Mohsin Khan",
+          "registry_identifier": "c33d8116"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304083",
+          "date": "2022-04-24",
+          "roster_name": "Mohsin Khan",
+          "registry_identifier": "c33d8116"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "eiIL1ciCOJJJI0GzOybiQhViUJKAieX",
+      "key_cricinfo": "1132005"
+    },
+    "source": "https://www.iplt20.com/players/32cacb25-f20c-4976-9fd4-ba420049932f/mohsin-khan",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2880%252F67617.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "iplt20",
+        "profile_id": "32cacb25-f20c-4976-9fd4-ba420049932f",
+        "exact_register_id_match": false,
+        "note": "IPL UUID is not a register key; team asset numbers are not assumed to be key_pulse."
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Mohsin Khan | Lucknow Super Giants Profile | IPLT20"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim.",
+      "No matching international-country roster in supplied archives; IPL club is not nationality evidence. Country retained from photo metadata, not independently established by these archives.",
+      "Selected modern IPL roster identity c33d8116, not 742373a0 (Mohsin Hasan Khan) or 2669d6b7. No international roster country proof."
+    ]
+  },
+  {
+    "name": "Nehal Wadhera",
+    "identifier": "d1a60072",
+    "register_name": "N Wadhera",
+    "register_unique_name": "N Wadhera",
+    "register_aliases": [],
+    "archive_roster_aliases": [
+      "N Wadhera"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": false,
+    "international_roster_evidence": {},
+    "club_roster_evidence": {
+      "Mumbai Indians": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1359479",
+          "date": "2023-04-02",
+          "roster_name": "N Wadhera",
+          "registry_identifier": "d1a60072"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1359490",
+          "date": "2023-04-11",
+          "roster_name": "N Wadhera",
+          "registry_identifier": "d1a60072"
+        }
+      ],
+      "Punjab Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473450",
+          "date": "2025-04-01",
+          "roster_name": "N Wadhera",
+          "registry_identifier": "d1a60072"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473455",
+          "date": "2025-04-05",
+          "roster_name": "N Wadhera",
+          "registry_identifier": "d1a60072"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_cricinfo": "1151273"
+    },
+    "source": "https://www.iplt20.com/players/4de0836e-ce14-43f4-8e33-42049b9cb37b/nehal-wadhera",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2040%252F68289.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "iplt20",
+        "profile_id": "4de0836e-ce14-43f4-8e33-42049b9cb37b",
+        "exact_register_id_match": false,
+        "note": "IPL UUID is not a register key; team asset numbers are not assumed to be key_pulse."
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Nehal Wadhera | Punjab Kings Profile | IPLT20"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim.",
+      "No matching international-country roster in supplied archives; IPL club is not nationality evidence. Country retained from photo metadata, not independently established by these archives."
+    ]
+  },
+  {
+    "name": "Nitish Kumar Reddy",
+    "identifier": "aad0c365",
+    "register_name": "Nithish Kumar Reddy",
+    "register_unique_name": "Nithish Kumar Reddy",
+    "register_aliases": [
+      "K Nithish Kumar Reddy"
+    ],
+    "archive_roster_aliases": [
+      "Nithish Kumar Reddy"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1439893",
+          "date": "2024-10-06",
+          "roster_name": "Nithish Kumar Reddy",
+          "registry_identifier": "aad0c365"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1439894",
+          "date": "2024-10-09",
+          "roster_name": "Nithish Kumar Reddy",
+          "registry_identifier": "aad0c365"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Sunrisers Hyderabad": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1359539",
+          "date": "2023-05-18",
+          "roster_name": "Nithish Kumar Reddy",
+          "registry_identifier": "aad0c365"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1359543",
+          "date": "2023-05-21",
+          "roster_name": "Nithish Kumar Reddy",
+          "registry_identifier": "aad0c365"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "20161382502ab62911e6842a028d29d",
+      "key_cricinfo": "1175496"
+    },
+    "source": "https://www.iplt20.com/players/db109714-ae28-4f6e-a3a7-2fc4f713e673/nitish-kumar-reddy",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F1153%252F74028.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "iplt20",
+        "profile_id": "db109714-ae28-4f6e-a3a7-2fc4f713e673",
+        "exact_register_id_match": false,
+        "note": "IPL UUID is not a register key; team asset numbers are not assumed to be key_pulse."
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Nitish Kumar Reddy | Sunrisers Hyderabad Profile | IPLT20"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Phil Salt",
+    "identifier": "3d284ca3",
+    "register_name": "PD Salt",
+    "register_unique_name": "PD Salt",
+    "register_aliases": [
+      "P Salt",
+      "Philip Salt"
+    ],
+    "archive_roster_aliases": [
+      "PD Salt"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "England",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "England": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1256722",
+          "date": "2022-01-26",
+          "roster_name": "PD Salt",
+          "registry_identifier": "3d284ca3"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1256723",
+          "date": "2022-01-29",
+          "roster_name": "PD Salt",
+          "registry_identifier": "3d284ca3"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Delhi Capitals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1359502",
+          "date": "2023-04-20",
+          "roster_name": "PD Salt",
+          "registry_identifier": "3d284ca3"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1359508",
+          "date": "2023-04-24",
+          "roster_name": "PD Salt",
+          "registry_identifier": "3d284ca3"
+        }
+      ],
+      "Kolkata Knight Riders": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1422121",
+          "date": "2024-03-23",
+          "roster_name": "PD Salt",
+          "registry_identifier": "3d284ca3"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1422128",
+          "date": "2024-03-29",
+          "roster_name": "PD Salt",
+          "registry_identifier": "3d284ca3"
+        }
+      ],
+      "Royal Challengers Bengaluru": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473438",
+          "date": "2025-03-22",
+          "roster_name": "PD Salt",
+          "registry_identifier": "3d284ca3"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473445",
+          "date": "2025-03-28",
+          "roster_name": "PD Salt",
+          "registry_identifier": "3d284ca3"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bigbash": "8012",
+      "key_cricinfo": "669365",
+      "key_cricingif": "18690",
+      "key_cricketarchive": "1104883",
+      "key_nvplay": "00ec5aca-d922-421b-a5d1-f8e70e69b7b4",
+      "key_pulse": "3511"
+    },
+    "source": "https://www.cricbuzz.com/profiles/10479/phil-salt",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c848522/philip-salt.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "10479",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Philip Salt Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Prasidh Krishna",
+    "identifier": "85e0cf10",
+    "register_name": "M Prasidh Krishna",
+    "register_unique_name": "M Prasidh Krishna",
+    "register_aliases": [
+      "M Prasidh",
+      "P Krishna",
+      "Krishna"
+    ],
+    "archive_roster_aliases": [
+      "M Prasidh Krishna"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1384634",
+          "date": "2023-08-18",
+          "roster_name": "M Prasidh Krishna",
+          "registry_identifier": "85e0cf10"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1384637",
+          "date": "2023-08-20",
+          "roster_name": "M Prasidh Krishna",
+          "registry_identifier": "85e0cf10"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Kolkata Knight Riders": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136597",
+          "date": "2018-05-06",
+          "roster_name": "M Prasidh Krishna",
+          "registry_identifier": "85e0cf10"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136601",
+          "date": "2018-05-09",
+          "roster_name": "M Prasidh Krishna",
+          "registry_identifier": "85e0cf10"
+        }
+      ],
+      "Rajasthan Royals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304051",
+          "date": "2022-03-29",
+          "roster_name": "M Prasidh Krishna",
+          "registry_identifier": "85e0cf10"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304055",
+          "date": "2022-04-02",
+          "roster_name": "M Prasidh Krishna",
+          "registry_identifier": "85e0cf10"
+        }
+      ],
+      "Gujarat Titans": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473442",
+          "date": "2025-03-25",
+          "roster_name": "M Prasidh Krishna",
+          "registry_identifier": "85e0cf10"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473446",
+          "date": "2025-03-29",
+          "roster_name": "M Prasidh Krishna",
+          "registry_identifier": "85e0cf10"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "1V0JJIIiiXUcQeiGLJAJOihybzCiOeK",
+      "key_cricinfo": "917159",
+      "key_cricketarchive": "1556435",
+      "key_pulse": "5105"
+    },
+    "source": "https://www.cricbuzz.com/profiles/10551/prasidh-krishna",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c591958/prasidh-krishna.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "10551",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Prasidh Krishna Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Rahul Chahar",
+    "identifier": "2ed569a0",
+    "register_name": "RD Chahar",
+    "register_unique_name": "RD Chahar",
+    "register_aliases": [
+      "R D Chahar",
+      "R Chahar"
+    ],
+    "archive_roster_aliases": [
+      "RD Chahar"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1188623",
+          "date": "2019-08-06",
+          "roster_name": "RD Chahar",
+          "registry_identifier": "2ed569a0"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1243391",
+          "date": "2021-03-18",
+          "roster_name": "RD Chahar",
+          "registry_identifier": "2ed569a0"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Rising Pune Supergiant": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082594",
+          "date": "2017-04-08",
+          "roster_name": "RD Chahar",
+          "registry_identifier": "2ed569a0"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082603",
+          "date": "2017-04-14",
+          "roster_name": "RD Chahar",
+          "registry_identifier": "2ed569a0"
+        }
+      ],
+      "Mumbai Indians": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1175370",
+          "date": "2019-04-03",
+          "roster_name": "RD Chahar",
+          "registry_identifier": "2ed569a0"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1178394",
+          "date": "2019-04-06",
+          "roster_name": "RD Chahar",
+          "registry_identifier": "2ed569a0"
+        }
+      ],
+      "Punjab Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304049",
+          "date": "2022-03-27",
+          "roster_name": "RD Chahar",
+          "registry_identifier": "2ed569a0"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304054",
+          "date": "2022-04-01",
+          "roster_name": "RD Chahar",
+          "registry_identifier": "2ed569a0"
+        }
+      ],
+      "Sunrisers Hyderabad": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473470",
+          "date": "2025-04-17",
+          "roster_name": "RD Chahar",
+          "registry_identifier": "2ed569a0"
+        }
+      ],
+      "Chennai Super Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1527680",
+          "date": "2026-04-03",
+          "roster_name": "RD Chahar",
+          "registry_identifier": "2ed569a0"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "C1eiJOJOAViGiXcJJhiUIQIzKiL0yeb",
+      "key_cricinfo": "1064812",
+      "key_cricketarchive": "1573581",
+      "key_nvplay": "6efe9aaf-c500-4fa5-be27-c9d72591d2dd",
+      "key_pulse": "3763"
+    },
+    "source": "https://www.cricbuzz.com/profiles/12087/rahul-chahar",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c226225/rahul-chahar.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "12087",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Rahul Chahar Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Rahul Tewatia",
+    "identifier": "39a2dfa8",
+    "register_name": "R Tewatia",
+    "register_unique_name": "R Tewatia",
+    "register_aliases": [
+      "R K Tewatia"
+    ],
+    "archive_roster_aliases": [
+      "R Tewatia"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": false,
+    "international_roster_evidence": {},
+    "club_roster_evidence": {
+      "Kings XI Punjab": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082639",
+          "date": "2017-05-09",
+          "roster_name": "R Tewatia",
+          "registry_identifier": "39a2dfa8"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082641",
+          "date": "2017-05-11",
+          "roster_name": "R Tewatia",
+          "registry_identifier": "39a2dfa8"
+        }
+      ],
+      "Delhi Daredevils": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136562",
+          "date": "2018-04-08",
+          "roster_name": "R Tewatia",
+          "registry_identifier": "39a2dfa8"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136566",
+          "date": "2018-04-11",
+          "roster_name": "R Tewatia",
+          "registry_identifier": "39a2dfa8"
+        }
+      ],
+      "Delhi Capitals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1175358",
+          "date": "2019-03-24",
+          "roster_name": "R Tewatia",
+          "registry_identifier": "39a2dfa8"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1175360",
+          "date": "2019-03-26",
+          "roster_name": "R Tewatia",
+          "registry_identifier": "39a2dfa8"
+        }
+      ],
+      "Rajasthan Royals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216496",
+          "date": "2020-09-22",
+          "roster_name": "R Tewatia",
+          "registry_identifier": "39a2dfa8"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216500",
+          "date": "2020-10-09",
+          "roster_name": "R Tewatia",
+          "registry_identifier": "39a2dfa8"
+        }
+      ],
+      "Gujarat Titans": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304050",
+          "date": "2022-03-28",
+          "roster_name": "R Tewatia",
+          "registry_identifier": "39a2dfa8"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304056",
+          "date": "2022-04-02",
+          "roster_name": "R Tewatia",
+          "registry_identifier": "39a2dfa8"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "CiJ1yhieIbzOiUKOViAGc0ieJJILQXJ",
+      "key_cricinfo": "423838",
+      "key_cricketarchive": "262658",
+      "key_pulse": "1749"
+    },
+    "source": "https://www.cricbuzz.com/profiles/9693/rahul-tewatia",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c196288/rahul-tewatia.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "9693",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Rahul Tewatia Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim.",
+      "No matching international-country roster in supplied archives; IPL club is not nationality evidence. Country retained from photo metadata, not independently established by these archives."
+    ]
+  },
+  {
+    "name": "Rashid Khan",
+    "identifier": "5f547c8b",
+    "register_name": "Rashid Khan",
+    "register_unique_name": "Rashid Khan",
+    "register_aliases": [
+      "R Khan"
+    ],
+    "archive_roster_aliases": [
+      "Rashid Khan"
+    ],
+    "canonical_exact_in_register": true,
+    "country": "Afghanistan",
+    "country_verified_by_international_roster": false,
+    "international_roster_evidence": {
+      "ICC World XI": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1141232",
+          "date": "2018-05-31",
+          "roster_name": "Rashid Khan",
+          "registry_identifier": "5f547c8b"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Sunrisers Hyderabad": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082591",
+          "date": "2017-04-05",
+          "roster_name": "Rashid Khan",
+          "registry_identifier": "5f547c8b"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082596",
+          "date": "2017-04-09",
+          "roster_name": "Rashid Khan",
+          "registry_identifier": "5f547c8b"
+        }
+      ],
+      "Gujarat Titans": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304050",
+          "date": "2022-03-28",
+          "roster_name": "Rashid Khan",
+          "registry_identifier": "5f547c8b"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304056",
+          "date": "2022-04-02",
+          "roster_name": "Rashid Khan",
+          "registry_identifier": "5f547c8b"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bigbash": "8141",
+      "key_cricinfo": "793463",
+      "key_cricketarchive": "1738090",
+      "key_pulse": "2885"
+    },
+    "source": "https://www.espncricinfo.com/cricketers/rashid-khan-793463",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/793463.png",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricinfo",
+        "profile_id": "793463",
+        "register_field": "key_cricinfo",
+        "register_value": "793463",
+        "exact_register_id_match": true
+      },
+      {
+        "field": "original_url",
+        "provider": "cricinfo",
+        "profile_id": "793463",
+        "register_field": "key_cricinfo",
+        "register_value": "793463",
+        "exact_register_id_match": true
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 403,
+      "title": null
+    },
+    "match_basis": "exact_provider_register_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No matching international-country roster in supplied archives; IPL club is not nationality evidence. Country retained from photo metadata, not independently established by these archives."
+    ]
+  },
+  {
+    "name": "Ravichandran Ashwin",
+    "identifier": "495d42a5",
+    "register_name": "R Ashwin",
+    "register_unique_name": "R Ashwin",
+    "register_aliases": [
+      "Ravi Ashwin"
+    ],
+    "archive_roster_aliases": [
+      "R Ashwin"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1041615",
+          "date": "2016-08-27",
+          "roster_name": "R Ashwin",
+          "registry_identifier": "495d42a5"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1041617",
+          "date": "2016-08-28",
+          "roster_name": "R Ashwin",
+          "registry_identifier": "495d42a5"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Kings XI Punjab": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136562",
+          "date": "2018-04-08",
+          "roster_name": "R Ashwin",
+          "registry_identifier": "495d42a5"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136568",
+          "date": "2018-04-13",
+          "roster_name": "R Ashwin",
+          "registry_identifier": "495d42a5"
+        }
+      ],
+      "Delhi Capitals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216493",
+          "date": "2020-09-20",
+          "roster_name": "R Ashwin",
+          "registry_identifier": "495d42a5"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216497",
+          "date": "2020-10-24",
+          "roster_name": "R Ashwin",
+          "registry_identifier": "495d42a5"
+        }
+      ],
+      "Rajasthan Royals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304051",
+          "date": "2022-03-29",
+          "roster_name": "R Ashwin",
+          "registry_identifier": "495d42a5"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304055",
+          "date": "2022-04-02",
+          "roster_name": "R Ashwin",
+          "registry_identifier": "495d42a5"
+        }
+      ],
+      "Chennai Super Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473440",
+          "date": "2025-03-23",
+          "roster_name": "R Ashwin",
+          "registry_identifier": "495d42a5"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473445",
+          "date": "2025-03-28",
+          "roster_name": "R Ashwin",
+          "registry_identifier": "495d42a5"
+        }
+      ],
+      "Rising Pune Supergiants": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "980901",
+          "date": "2016-04-09",
+          "roster_name": "R Ashwin",
+          "registry_identifier": "495d42a5"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "980911",
+          "date": "2016-04-14",
+          "roster_name": "R Ashwin",
+          "registry_identifier": "495d42a5"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "LJiViehiIzeiOAJXKJ1iGcUIJybO0QC",
+      "key_cricinfo": "26421",
+      "key_cricketarchive": "12674",
+      "key_pulse": "8"
+    },
+    "source": "https://www.espncricinfo.com/cricketers/ravichandran-ashwin-26421",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/26421.png",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricinfo",
+        "profile_id": "26421",
+        "register_field": "key_cricinfo",
+        "register_value": "26421",
+        "exact_register_id_match": true
+      },
+      {
+        "field": "original_url",
+        "provider": "cricinfo",
+        "profile_id": "26421",
+        "register_field": "key_cricinfo",
+        "register_value": "26421",
+        "exact_register_id_match": true
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 403,
+      "title": null
+    },
+    "match_basis": "exact_provider_register_id",
+    "status": "matched",
+    "uncertainties": []
+  },
+  {
+    "name": "Rohit Sharma",
+    "identifier": "740742ef",
+    "register_name": "RG Sharma",
+    "register_unique_name": "RG Sharma",
+    "register_aliases": [
+      "Rohit Sharma",
+      "R Sharma"
+    ],
+    "archive_roster_aliases": [
+      "RG Sharma"
+    ],
+    "canonical_exact_in_register": true,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1041615",
+          "date": "2016-08-27",
+          "roster_name": "RG Sharma",
+          "registry_identifier": "740742ef"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1041617",
+          "date": "2016-08-28",
+          "roster_name": "RG Sharma",
+          "registry_identifier": "740742ef"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Mumbai Indians": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082592",
+          "date": "2017-04-06",
+          "roster_name": "RG Sharma",
+          "registry_identifier": "740742ef"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082597",
+          "date": "2017-04-09",
+          "roster_name": "RG Sharma",
+          "registry_identifier": "740742ef"
+        }
+      ],
+      "Deccan Chargers": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "335986",
+          "date": "2008-04-20",
+          "roster_name": "RG Sharma",
+          "registry_identifier": "740742ef"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "335988",
+          "date": "2008-04-22",
+          "roster_name": "RG Sharma",
+          "registry_identifier": "740742ef"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_cricinfo": "34102",
+      "key_cricketarchive": "74266",
+      "key_pulse": "107"
+    },
+    "source": "https://www.espncricinfo.com/cricketers/rohit-sharma-34102",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/34102.png",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricinfo",
+        "profile_id": "34102",
+        "register_field": "key_cricinfo",
+        "register_value": "34102",
+        "exact_register_id_match": true
+      },
+      {
+        "field": "original_url",
+        "provider": "cricinfo",
+        "profile_id": "34102",
+        "register_field": "key_cricinfo",
+        "register_value": "34102",
+        "exact_register_id_match": true
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 403,
+      "title": null
+    },
+    "match_basis": "exact_provider_register_id",
+    "status": "matched",
+    "uncertainties": []
+  },
+  {
+    "name": "Rovman Powell",
+    "identifier": "650d5e49",
+    "register_name": "R Powell",
+    "register_unique_name": "R Powell",
+    "register_aliases": [],
+    "archive_roster_aliases": [
+      "R Powell"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "West Indies",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "West Indies": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1031665",
+          "date": "2017-09-16",
+          "roster_name": "R Powell",
+          "registry_identifier": "650d5e49"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1077947",
+          "date": "2017-03-26",
+          "roster_name": "R Powell",
+          "registry_identifier": "650d5e49"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Delhi Capitals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304048",
+          "date": "2022-03-27",
+          "roster_name": "R Powell",
+          "registry_identifier": "650d5e49"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304056",
+          "date": "2022-04-02",
+          "roster_name": "R Powell",
+          "registry_identifier": "650d5e49"
+        }
+      ],
+      "Rajasthan Royals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1426265",
+          "date": "2024-04-13",
+          "roster_name": "R Powell",
+          "registry_identifier": "650d5e49"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1426269",
+          "date": "2024-04-16",
+          "roster_name": "R Powell",
+          "registry_identifier": "650d5e49"
+        }
+      ],
+      "Kolkata Knight Riders": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473481",
+          "date": "2025-04-26",
+          "roster_name": "R Powell",
+          "registry_identifier": "650d5e49"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473485",
+          "date": "2025-04-29",
+          "roster_name": "R Powell",
+          "registry_identifier": "650d5e49"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_cricinfo": "820351",
+      "key_cricketarchive": "1779397",
+      "key_pulse": "3333"
+    },
+    "source": "https://www.cricbuzz.com/profiles/11445/rovman-powell",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c845516/rovman-powell.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "11445",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Rovman Powell Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Ruturaj Gaikwad",
+    "identifier": "45a43fe2",
+    "register_name": "RD Gaikwad",
+    "register_unique_name": "RD Gaikwad",
+    "register_aliases": [
+      "R D Gaikwad",
+      "R Gaikwad"
+    ],
+    "archive_roster_aliases": [
+      "RD Gaikwad"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1262759",
+          "date": "2021-07-28",
+          "roster_name": "RD Gaikwad",
+          "registry_identifier": "45a43fe2"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1262760",
+          "date": "2021-07-29",
+          "roster_name": "RD Gaikwad",
+          "registry_identifier": "45a43fe2"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Chennai Super Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216496",
+          "date": "2020-09-22",
+          "roster_name": "RD Gaikwad",
+          "registry_identifier": "45a43fe2"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216506",
+          "date": "2020-11-01",
+          "roster_name": "RD Gaikwad",
+          "registry_identifier": "45a43fe2"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "ObLiOCyc1eiGVUJhKIzAJJeXJiiQ0iI",
+      "key_cricinfo": "1060380",
+      "key_cricketarchive": "1358247",
+      "key_pulse": "5443"
+    },
+    "source": "https://www.cricbuzz.com/profiles/11813/ruturaj-gaikwad",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c781069/ruturaj-gaikwad.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "11813",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Ruturaj Gaikwad Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Sai Kishore",
+    "identifier": "c7a995d3",
+    "register_name": "R Sai Kishore",
+    "register_unique_name": "R Sai Kishore",
+    "register_aliases": [
+      "RS Kishore"
+    ],
+    "archive_roster_aliases": [
+      "R Sai Kishore"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1399113",
+          "date": "2023-10-03",
+          "roster_name": "R Sai Kishore",
+          "registry_identifier": "c7a995d3"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1399117",
+          "date": "2023-10-06",
+          "roster_name": "R Sai Kishore",
+          "registry_identifier": "c7a995d3"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Gujarat Titans": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304103",
+          "date": "2022-05-10",
+          "roster_name": "R Sai Kishore",
+          "registry_identifier": "c7a995d3"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304108",
+          "date": "2022-05-15",
+          "roster_name": "R Sai Kishore",
+          "registry_identifier": "c7a995d3"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "1QzyJJeUKAiJGLCOVXiiIcbO0iIiheJ",
+      "key_cricinfo": "1048739",
+      "key_nvplay": "22133e28-03ea-4e57-88df-d2a9cec13044"
+    },
+    "source": "https://www.iplt20.com/players/72ecc618-a84d-4367-8495-2c2e61dc0a34/sai-kishore",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2879%252F65783.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "iplt20",
+        "profile_id": "72ecc618-a84d-4367-8495-2c2e61dc0a34",
+        "exact_register_id_match": false,
+        "note": "IPL UUID is not a register key; team asset numbers are not assumed to be key_pulse."
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Sai Kishore | Gujarat Titans Profile | IPLT20"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Sai Sudharsan",
+    "identifier": "d5130a30",
+    "register_name": "B Sai Sudharsan",
+    "register_unique_name": "B Sai Sudharsan",
+    "register_aliases": [],
+    "archive_roster_aliases": [
+      "B Sai Sudharsan"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1420224",
+          "date": "2024-07-07",
+          "roster_name": "B Sai Sudharsan",
+          "registry_identifier": "d5130a30"
+        },
+        {
+          "archive": "odis_male_json.zip",
+          "match_id": "1387600",
+          "date": "2023-12-17",
+          "roster_name": "B Sai Sudharsan",
+          "registry_identifier": "d5130a30"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Gujarat Titans": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304062",
+          "date": "2022-04-08",
+          "roster_name": "B Sai Sudharsan",
+          "registry_identifier": "d5130a30"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304067",
+          "date": "2022-04-11",
+          "roster_name": "B Sai Sudharsan",
+          "registry_identifier": "d5130a30"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "20167c1304259cec11e69558028d29d",
+      "key_cricinfo": "1151288"
+    },
+    "source": "https://www.iplt20.com/players/2490cf68-4516-4584-a902-2e6ac93205b6/sai-sudharsan",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2879%252F74538.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "iplt20",
+        "profile_id": "2490cf68-4516-4584-a902-2e6ac93205b6",
+        "exact_register_id_match": false,
+        "note": "IPL UUID is not a register key; team asset numbers are not assumed to be key_pulse."
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Sai Sudharsan | Gujarat Titans Profile | IPLT20"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Shimron Hetmyer",
+    "identifier": "48a1d7b7",
+    "register_name": "SO Hetmyer",
+    "register_unique_name": "SO Hetmyer",
+    "register_aliases": [
+      "Shimron Hetmeyer",
+      "S Hetmyer"
+    ],
+    "archive_roster_aliases": [
+      "SO Hetmyer"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "West Indies",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "West Indies": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1115799",
+          "date": "2018-01-01",
+          "roster_name": "SO Hetmyer",
+          "registry_identifier": "48a1d7b7"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1115800",
+          "date": "2018-01-03",
+          "roster_name": "SO Hetmyer",
+          "registry_identifier": "48a1d7b7"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Royal Challengers Bangalore": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1175356",
+          "date": "2019-03-23",
+          "roster_name": "SO Hetmyer",
+          "registry_identifier": "48a1d7b7"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1175362",
+          "date": "2019-03-28",
+          "roster_name": "SO Hetmyer",
+          "registry_identifier": "48a1d7b7"
+        }
+      ],
+      "Delhi Capitals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216493",
+          "date": "2020-09-20",
+          "roster_name": "SO Hetmyer",
+          "registry_identifier": "48a1d7b7"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216497",
+          "date": "2020-10-24",
+          "roster_name": "SO Hetmyer",
+          "registry_identifier": "48a1d7b7"
+        }
+      ],
+      "Rajasthan Royals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304051",
+          "date": "2022-03-29",
+          "roster_name": "SO Hetmyer",
+          "registry_identifier": "48a1d7b7"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304055",
+          "date": "2022-04-02",
+          "roster_name": "SO Hetmyer",
+          "registry_identifier": "48a1d7b7"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_cricinfo": "670025",
+      "key_cricketarchive": "1130686",
+      "key_pulse": "1705"
+    },
+    "source": "https://www.cricbuzz.com/profiles/9789/shimron-hetmyer",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c846142/shimron-hetmyer.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "9789",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Shimron Hetmyer Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Steve Smith",
+    "identifier": "30a45b23",
+    "register_name": "SPD Smith",
+    "register_unique_name": "SPD Smith",
+    "register_aliases": [
+      "Steve Smith",
+      "Steven Smith",
+      "S Smith"
+    ],
+    "archive_roster_aliases": [
+      "SPD Smith"
+    ],
+    "canonical_exact_in_register": true,
+    "country": "Australia",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "Australia": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1183524",
+          "date": "2019-10-27",
+          "roster_name": "SPD Smith",
+          "registry_identifier": "30a45b23"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1183525",
+          "date": "2019-10-30",
+          "roster_name": "SPD Smith",
+          "registry_identifier": "30a45b23"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Rising Pune Supergiant": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082592",
+          "date": "2017-04-06",
+          "roster_name": "SPD Smith",
+          "registry_identifier": "30a45b23"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082594",
+          "date": "2017-04-08",
+          "roster_name": "SPD Smith",
+          "registry_identifier": "30a45b23"
+        }
+      ],
+      "Rajasthan Royals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1175359",
+          "date": "2019-03-25",
+          "roster_name": "SPD Smith",
+          "registry_identifier": "30a45b23"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1175363",
+          "date": "2019-03-29",
+          "roster_name": "SPD Smith",
+          "registry_identifier": "30a45b23"
+        }
+      ],
+      "Delhi Capitals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1254068",
+          "date": "2021-04-18",
+          "roster_name": "SPD Smith",
+          "registry_identifier": "30a45b23"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1254070",
+          "date": "2021-04-20",
+          "roster_name": "SPD Smith",
+          "registry_identifier": "30a45b23"
+        }
+      ],
+      "Pune Warriors": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "548308",
+          "date": "2012-04-06",
+          "roster_name": "SPD Smith",
+          "registry_identifier": "30a45b23"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "548313",
+          "date": "2012-04-08",
+          "roster_name": "SPD Smith",
+          "registry_identifier": "30a45b23"
+        }
+      ],
+      "Rising Pune Supergiants": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "980901",
+          "date": "2016-04-09",
+          "roster_name": "SPD Smith",
+          "registry_identifier": "30a45b23"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "980911",
+          "date": "2016-04-14",
+          "roster_name": "SPD Smith",
+          "registry_identifier": "30a45b23"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bigbash": "4552",
+      "key_cricinfo": "267192",
+      "key_cricketarchive": "113416",
+      "key_pulse": "271"
+    },
+    "source": "https://www.espncricinfo.com/cricketers/steven-smith-267192",
+    "original_url": "https://a.espncdn.com/i/headshots/cricket/players/full/267192.png",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricinfo",
+        "profile_id": "267192",
+        "register_field": "key_cricinfo",
+        "register_value": "267192",
+        "exact_register_id_match": true
+      },
+      {
+        "field": "original_url",
+        "provider": "cricinfo",
+        "profile_id": "267192",
+        "register_field": "key_cricinfo",
+        "register_value": "267192",
+        "exact_register_id_match": true
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 403,
+      "title": null
+    },
+    "match_basis": "exact_provider_register_id",
+    "status": "matched",
+    "uncertainties": []
+  },
+  {
+    "name": "Suryakumar Yadav",
+    "identifier": "271f83cd",
+    "register_name": "SA Yadav",
+    "register_unique_name": "SA Yadav",
+    "register_aliases": [
+      "Surya",
+      "S Yadav"
+    ],
+    "archive_roster_aliases": [
+      "SA Yadav"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1243389",
+          "date": "2021-03-14",
+          "roster_name": "SA Yadav",
+          "registry_identifier": "271f83cd"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1243391",
+          "date": "2021-03-18",
+          "roster_name": "SA Yadav",
+          "registry_identifier": "271f83cd"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Kolkata Knight Riders": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082593",
+          "date": "2017-04-07",
+          "roster_name": "SA Yadav",
+          "registry_identifier": "271f83cd"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1082597",
+          "date": "2017-04-09",
+          "roster_name": "SA Yadav",
+          "registry_identifier": "271f83cd"
+        }
+      ],
+      "Mumbai Indians": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136561",
+          "date": "2018-04-07",
+          "roster_name": "SA Yadav",
+          "registry_identifier": "271f83cd"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1136567",
+          "date": "2018-04-12",
+          "roster_name": "SA Yadav",
+          "registry_identifier": "271f83cd"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "LJiCJOA0JUQbeyzehK1iiXiGVIiOJcI",
+      "key_cricinfo": "446507",
+      "key_cricketarchive": "264193",
+      "key_pulse": "108"
+    },
+    "source": "https://www.cricbuzz.com/profiles/7915/suryakumar-yadav",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c846028/suryakumar-yadav.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "7915",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Suryakumar Yadav Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Tushar Deshpande",
+    "identifier": "46a9bea1",
+    "register_name": "TU Deshpande",
+    "register_unique_name": "TU Deshpande",
+    "register_aliases": [
+      "Tushar U Deshpande",
+      "T Deshpande",
+      "Deshpande"
+    ],
+    "archive_roster_aliases": [
+      "TU Deshpande"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1420226",
+          "date": "2024-07-13",
+          "roster_name": "TU Deshpande",
+          "registry_identifier": "46a9bea1"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1420227",
+          "date": "2024-07-14",
+          "roster_name": "TU Deshpande",
+          "registry_identifier": "46a9bea1"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Delhi Capitals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216497",
+          "date": "2020-10-24",
+          "roster_name": "TU Deshpande",
+          "registry_identifier": "46a9bea1"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216509",
+          "date": "2020-10-17",
+          "roster_name": "TU Deshpande",
+          "registry_identifier": "46a9bea1"
+        }
+      ],
+      "Chennai Super Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304047",
+          "date": "2022-03-26",
+          "roster_name": "TU Deshpande",
+          "registry_identifier": "46a9bea1"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1304053",
+          "date": "2022-03-31",
+          "roster_name": "TU Deshpande",
+          "registry_identifier": "46a9bea1"
+        }
+      ],
+      "Rajasthan Royals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473439",
+          "date": "2025-03-23",
+          "roster_name": "TU Deshpande",
+          "registry_identifier": "46a9bea1"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473443",
+          "date": "2025-03-26",
+          "roster_name": "TU Deshpande",
+          "registry_identifier": "46a9bea1"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "iiiJ0ICJeXI1hyOzLiVJcKAJGbQUieO",
+      "key_cricinfo": "822553",
+      "key_cricketarchive": "967234",
+      "key_pulse": "3257"
+    },
+    "source": "https://www.cricbuzz.com/profiles/11307/tushar-deshpande",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c190903/tushar-deshpande.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "11307",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Tushar Deshpande Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Varun Chakaravarthy",
+    "identifier": "5b7ab5a9",
+    "register_name": "CV Varun",
+    "register_unique_name": "CV Varun",
+    "register_aliases": [
+      "V Chakravarthy",
+      "Chakravarthy"
+    ],
+    "archive_roster_aliases": [
+      "CV Varun"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1262758",
+          "date": "2021-07-25",
+          "roster_name": "CV Varun",
+          "registry_identifier": "5b7ab5a9"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1262759",
+          "date": "2021-07-28",
+          "roster_name": "CV Varun",
+          "registry_identifier": "5b7ab5a9"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Kings XI Punjab": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1175361",
+          "date": "2019-03-27",
+          "roster_name": "CV Varun",
+          "registry_identifier": "5b7ab5a9"
+        }
+      ],
+      "Kolkata Knight Riders": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216494",
+          "date": "2020-10-21",
+          "roster_name": "CV Varun",
+          "registry_identifier": "5b7ab5a9"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216497",
+          "date": "2020-10-24",
+          "roster_name": "CV Varun",
+          "registry_identifier": "5b7ab5a9"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_cricinfo": "1108375",
+      "key_cricketarchive": "2236878",
+      "key_pulse": "5432"
+    },
+    "source": "https://www.cricbuzz.com/profiles/12926/varun-chakaravarthy",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c846040/varun-chakaravarthy.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "12926",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Varun Chakaravarthy Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  },
+  {
+    "name": "Vyshak Vijaykumar",
+    "identifier": "54e52590",
+    "register_name": "Vijaykumar Vyshak",
+    "register_unique_name": "Vijaykumar Vyshak",
+    "register_aliases": [
+      "V Vyshak"
+    ],
+    "archive_roster_aliases": [
+      "Vijaykumar Vyshak"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": false,
+    "international_roster_evidence": {},
+    "club_roster_evidence": {
+      "Royal Challengers Bangalore": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1359494",
+          "date": "2023-04-15",
+          "roster_name": "Vijaykumar Vyshak",
+          "registry_identifier": "54e52590"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1359498",
+          "date": "2023-04-17",
+          "roster_name": "Vijaykumar Vyshak",
+          "registry_identifier": "54e52590"
+        }
+      ],
+      "Royal Challengers Bengaluru": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1422128",
+          "date": "2024-03-29",
+          "roster_name": "Vijaykumar Vyshak",
+          "registry_identifier": "54e52590"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1426263",
+          "date": "2024-04-11",
+          "roster_name": "Vijaykumar Vyshak",
+          "registry_identifier": "54e52590"
+        }
+      ],
+      "Punjab Kings": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473442",
+          "date": "2025-03-25",
+          "roster_name": "Vijaykumar Vyshak",
+          "registry_identifier": "54e52590"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1473491",
+          "date": "2025-05-04",
+          "roster_name": "Vijaykumar Vyshak",
+          "registry_identifier": "54e52590"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "iJiiIiJUXeyVOJQecObiILz1AChGJK0",
+      "key_cricinfo": "777815"
+    },
+    "source": "https://www.iplt20.com/players/7b863ebe-ec50-4e32-991e-81a38e0c7493/vijaykumar-vyshak",
+    "original_url": "https://www.iplt20.com/_next/image?url=%2Fapi%2Fteam-assets%3Fpathname%3Dplayer%252F8903%252F2040%252F74053.png%26brand%3Dipl%26fallback%3Dfallback-player-men&w=1080&q=75",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "iplt20",
+        "profile_id": "7b863ebe-ec50-4e32-991e-81a38e0c7493",
+        "exact_register_id_match": false,
+        "note": "IPL UUID is not a register key; team asset numbers are not assumed to be key_pulse."
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Vijaykumar Vyshak | Punjab Kings Profile | IPLT20"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim.",
+      "No matching international-country roster in supplied archives; IPL club is not nationality evidence. Country retained from photo metadata, not independently established by these archives."
+    ]
+  },
+  {
+    "name": "Yashasvi Jaiswal",
+    "identifier": "6c19c6e5",
+    "register_name": "YBK Jaiswal",
+    "register_unique_name": "YBK Jaiswal",
+    "register_aliases": [
+      "Yashasvi Bhupendra Jaiswal",
+      "Y Jaiswal",
+      "YB Jaiswal"
+    ],
+    "archive_roster_aliases": [
+      "YBK Jaiswal"
+    ],
+    "canonical_exact_in_register": false,
+    "country": "India",
+    "country_verified_by_international_roster": true,
+    "international_roster_evidence": {
+      "India": [
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1381219",
+          "date": "2023-08-08",
+          "roster_name": "YBK Jaiswal",
+          "registry_identifier": "6c19c6e5"
+        },
+        {
+          "archive": "t20s_male_json.zip",
+          "match_id": "1381220",
+          "date": "2023-08-12",
+          "roster_name": "YBK Jaiswal",
+          "registry_identifier": "6c19c6e5"
+        }
+      ]
+    },
+    "club_roster_evidence": {
+      "Rajasthan Royals": [
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216496",
+          "date": "2020-09-22",
+          "roster_name": "YBK Jaiswal",
+          "registry_identifier": "6c19c6e5"
+        },
+        {
+          "archive": "ipl_male_json.zip",
+          "match_id": "1216500",
+          "date": "2020-10-09",
+          "roster_name": "YBK Jaiswal",
+          "registry_identifier": "6c19c6e5"
+        }
+      ]
+    },
+    "register_provider_keys": {
+      "key_bcci": "OXiLecbiiei1J0UJKIGQJhyOVIACziJ",
+      "key_cricinfo": "1151278",
+      "key_cricketarchive": "1903137",
+      "key_pulse": "13538"
+    },
+    "source": "https://www.cricbuzz.com/profiles/13940/yashasvi-jaiswal",
+    "original_url": "https://static.cricbuzz.com/a/img/v1/i1/c591942/yashasvi-jaiswal.jpg?d=low&p=gthumb",
+    "source_profile_ids": [
+      {
+        "field": "source",
+        "provider": "cricbuzz",
+        "profile_id": "13940",
+        "register_field": "key_cricbuzz",
+        "register_value": null,
+        "exact_register_id_match": false
+      }
+    ],
+    "provider_page_review": {
+      "http_status": 200,
+      "title": "Yashasvi Jaiswal Profile - ICC Ranking, Age, Career Info & Stats | Cricbuzz.com"
+    },
+    "match_basis": "reviewed_register_name_and_stable_roster_id",
+    "status": "matched_with_documented_evidence_limits",
+    "uncertainties": [
+      "No direct provider-ID bridge in supplied register: Cricbuzz key absent or IPL UUID not represented. Mapping reviewed via stable roster ID, register initials/aliases and named provider profile; not a provider-ID equality claim."
+    ]
+  }
+]

@@ -1,0 +1,74 @@
+{
+  "IPL": {
+    "competitions": [
+      "IPL"
+    ],
+    "matched": 150,
+    "with_data": 142,
+    "missing": [
+      "Aamer Jamal",
+      "Babar Azam",
+      "Ben Duckett",
+      "Charith Asalanka",
+      "Jamie Smith",
+      "Mohammad Rizwan",
+      "Shaheen Afridi",
+      "Tom Latham"
+    ],
+    "latest": "2026-05-31",
+    "archive_latest": "2026-05-31",
+    "matches": 1243
+  },
+  "T20": {
+    "competitions": [
+      "T20I",
+      "IPL"
+    ],
+    "matched": 150,
+    "with_data": 150,
+    "missing": [],
+    "latest": "2026-10-24",
+    "archive_latest": "2026-10-25",
+    "matches": 4889
+  },
+  "ODI": {
+    "competitions": [
+      "ODI"
+    ],
+    "matched": 150,
+    "with_data": 122,
+    "missing": [
+      "Abdul Samad",
+      "Abhishek Sharma",
+      "Abishek Porel",
+      "Ashutosh Sharma",
+      "Azmatullah Omarzai",
+      "Dhruv Jurel",
+      "Fazalhaq Farooqi",
+      "Harshal Patel",
+      "Jitesh Sharma",
+      "Mayank Yadav",
+      "Mohammad Nabi",
+      "Mohsin Khan",
+      "Mujeeb Ur Rahman",
+      "Naveen-ul-Haq",
+      "Nehal Wadhera",
+      "Noor Ahmad",
+      "Prabhsimran Singh",
+      "Priyansh Arya",
+      "Rahmanullah Gurbaz",
+      "Rahul Tewatia",
+      "Ramandeep Singh",
+      "Rashid Khan",
+      "Sai Kishore",
+      "Shashank Singh",
+      "Suyash Sharma",
+      "Tushar Deshpande",
+      "Vyshak Vijaykumar",
+      "Yash Dayal"
+    ],
+    "latest": "2026-10-25",
+    "archive_latest": "2026-10-25",
+    "matches": 2607
+  }
+}
