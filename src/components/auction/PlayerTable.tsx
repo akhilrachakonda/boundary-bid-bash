@@ -37,7 +37,7 @@ export function PlayerTable({
   const [tier, setTier] = useState("");
   const [nat, setNat] = useState("");
   const [maxBase, setMaxBase] = useState("");
-  const [sort, setSort] = useState<"order" | "rating" | "base" | "name">(rows[0]?.order != null ? "order" : "rating");
+  const [sort, setSort] = useState<"order" | "rating" | "base" | "name">(rows[0]?.order != null ? "order" : "name");
   const [view, setView] = useState<"table" | "cards">("table");
   const [onlyStar, setOnlyStar] = useState(false);
 
@@ -91,7 +91,7 @@ export function PlayerTable({
         </select>
         <select className={sel} value={sort} onChange={(e) => setSort(e.target.value as typeof sort)} aria-label="Sort">
           {rows[0]?.order != null && <option value="order">Auction order</option>}
-          <option value="rating">Rating</option>
+          <option value="rating">Legacy setup estimate</option>
           <option value="base">Base price</option>
           <option value="name">Name</option>
         </select>
@@ -105,7 +105,7 @@ export function PlayerTable({
           <Button size="icon" variant={view === "cards" ? "secondary" : "ghost"} onClick={() => setView("cards")} aria-label="Card view"><LayoutGrid className="h-4 w-4" /></Button>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground">{filtered.length} of {rows.length} players</p>
+      <p className="text-xs text-muted-foreground">{filtered.length} of {rows.length} players · tiers, base prices and balanced pool selection are legacy setup estimates, not measured evaluation rankings.</p>
       {view === "cards" ? (
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((r) => (
@@ -122,8 +122,8 @@ export function PlayerTable({
                 <th className="p-2">Player</th>
                 <th className="p-2">Role</th>
                 <th className="p-2">Tier</th>
-                <th className="p-2 text-right">Rtg</th>
-                <th className="p-2 text-right">Base</th>
+                <th className="p-2 text-right">Evidence</th>
+                <th className="p-2 text-right">Est. base</th>
                 {rows[0]?.set && <th className="p-2">Category</th>}
                 {rows[0]?.status && <th className="p-2">Status</th>}
               </tr>
@@ -144,7 +144,7 @@ export function PlayerTable({
                   </td>
                   <td className="p-2 text-xs">{r.player.sub_role}</td>
                   <td className="p-2"><TierBadge tier={r.player.tier} /></td>
-                  <td className="p-2 text-right font-display text-lg font-bold tabular">{r.player.rating}</td>
+                  <td className="p-2 text-right text-xs text-electric"><PlayerProfile player={r.player}>Stats / fit / C–VC</PlayerProfile></td>
                   <td className="p-2 text-right tabular">{formatMoney(Number(r.player.base_price), currency)}</td>
                   {r.set && <td className="p-2 text-xs">{r.set}</td>}
                   {r.status && (

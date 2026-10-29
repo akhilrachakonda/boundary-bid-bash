@@ -78,6 +78,34 @@
       "when": 1793232527645,
       "tag": "0010_atomic_owner_evidence_import",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793233408021,
+      "tag": "0011_leadership_and_public_evaluation_lineups",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793233477347,
+      "tag": "0012_immutable_batting_position_evidence",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1793234021724,
+      "tag": "0013_atomic_position_bundle_import",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793234306050,
+      "tag": "0014_lock_position_snapshot_after_room_freeze",
+      "breakpoints": true
     }
   ]
 }

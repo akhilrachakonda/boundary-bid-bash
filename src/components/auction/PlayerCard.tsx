@@ -61,9 +61,9 @@ export function PlayerCard({
         </div>
         <div className="text-right">
           <div className={cn("font-display font-bold text-gold tabular", big ? "text-5xl" : "text-2xl")}>
-            {player.rating}
+            {formatMoney(Number(player.base_price), currency)}
           </div>
-          <div className="text-[10px] uppercase text-muted-foreground">Base {formatMoney(Number(player.base_price), currency)}</div>
+          <div className="text-[10px] uppercase text-muted-foreground">Estimated base</div>
         </div>
         {onStar && (
           <Button variant="ghost" size="icon"

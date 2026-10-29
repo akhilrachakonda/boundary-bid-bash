@@ -10,7 +10,7 @@ import { PlayerProfile } from "@/components/auction/PlayerProfile";
 import { ResultsV2 } from "./ResultsV2";
 
 export function Results({ data, d }: { data: RoomData; d: Derived }) {
-  return data.room?.evaluation_version==='v2.0' ? <ResultsV2 data={data} d={d}/> : <LegacyResults data={data} d={d}/>;
+  return data.room?.evaluation_version?.startsWith('v2.') ? <ResultsV2 data={data} d={d}/> : <LegacyResults data={data} d={d}/>;
 }
 function LegacyResults({ data, d }: { data: RoomData; d: Derived }) {
   const room = data.room!;

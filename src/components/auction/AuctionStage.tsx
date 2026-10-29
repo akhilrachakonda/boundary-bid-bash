@@ -21,13 +21,13 @@ export function AuctionStage({ player, currency, price, leader, remaining, total
     <div className="broadcast-stage">
       <div className="stage-topline"><span className="flex items-center gap-2"><Radio className="h-3.5 w-3.5 text-electric"/>{label}</span><span>{paused ? "PAUSED" : connection !== "connected" ? "RECONNECTING" : "ON THE BLOCK"}</span></div>
       <div key={player.id} className="player-stage-body lot-reveal">
-        <div className="stage-portrait"><PlayerPortrait player={player} priority className="h-full w-full"/><div className="portrait-vignette"/><span className="stage-player-number" aria-hidden="true">{player.rating}</span></div>
+        <div className="stage-portrait"><PlayerPortrait player={player} priority className="h-full w-full"/><div className="portrait-vignette"/></div>
         <div className="stage-player-info">
           <div className="mb-3 flex items-center gap-2"><TierBadge tier={player.tier}/><span className="text-xs text-muted-foreground">{player.country}</span></div>
           <PlayerProfile player={player} currency={currency}><h2 className="stage-player-name">{player.name}</h2></PlayerProfile>
           <p className="mt-2 text-sm text-electric">{ROLE_LABEL[player.role]} <span className="text-muted-foreground">/ {player.sub_role}</span></p>
           <p className="mt-2 hidden text-xs text-muted-foreground sm:block">{player.batting_hand}-hand bat · {player.bowling_style}</p>
-          <div className="mt-5 flex items-center gap-6 border-t border-border/60 pt-3"><div><span className="stat-label">Player rating</span><strong className="font-display text-3xl text-primary">{player.rating}<span className="text-sm text-muted-foreground"> /100</span></strong></div><div><span className="stat-label">Base price</span><strong className="font-display text-2xl tabular">{formatMoney(Number(player.base_price),currency)}</strong></div></div>
+          <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-border/60 pt-3"><div><span className="stat-label">Estimated base price</span><strong className="font-display text-2xl tabular">{formatMoney(Number(player.base_price),currency)}</strong></div><PlayerProfile player={player} currency={currency}><span className="text-xs text-electric underline">Performance · positions · leadership</span></PlayerProfile></div>
         </div>
         {onStar && <Button variant="ghost" size="icon" className="absolute right-3 top-12" onClick={onStar} aria-label={starred ? "Remove from targets" : "Add to my targets"}><Star className={cn("h-5 w-5",starred && "fill-primary text-primary")}/></Button>}
       </div>

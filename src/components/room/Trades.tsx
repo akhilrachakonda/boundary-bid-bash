@@ -41,7 +41,7 @@ function PickList({ players, picked, toggle }: { players: Player[]; picked: stri
     <div className="flex max-h-48 flex-wrap gap-1 overflow-y-auto">
       {players.map((p) => (
         <button key={p.id} onClick={() => toggle(p.id)} className={cn("rounded-full border px-2 py-1 text-xs", picked.includes(p.id) && "border-primary bg-primary/20 text-primary")}>
-          <PlayerPortrait player={p} className="mr-1 inline-block h-10 w-8 rounded"/>{p.name} · {p.rating}
+          <PlayerPortrait player={p} className="mr-1 inline-block h-10 w-8 rounded"/>{p.name}
         </button>
       ))}
     </div>
