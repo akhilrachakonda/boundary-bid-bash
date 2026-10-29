@@ -64,13 +64,24 @@ function autoEvaluate(xi:Player21[],squad:Player21[],s:Settings,f:string,c:Recor
  for(const captain of ordered)for(const vice of ordered){if(captain.id===vice.id)continue;const points=3*leadershipRating(captain,'captain')/100+2*leadershipRating(vice,'vice')/100;if(!pair||points>pair.points)pair={c:captain,v:vice,points};}
  return evaluateAssigned(ordered,squad,s,f,c,pair?.c.id??null,pair?.v.id??null);
 }
-export function optimizeTeam21(squad:Player21[],settings:Settings,format:string,cohorts:Record<string,Aggregate>,submitted?:SubmittedLineup|null):Evaluation21 {
+export function optimizeTeam21(squad:Player21[],settings:Settings,format:string,cohorts:Record<string,Aggregate>,submitted?:SubmittedLineup|null,legalReserve=false):Evaluation21 {
  const unique=[...new Map(squad.map(p=>[p.id,p])).values()].sort((a,b)=>a.id.localeCompare(b.id));
  if(submitted&&validateLineup(submitted,unique,settings,format).length===0){const lineup=submitted.lineup.map(id=>unique.find(p=>p.id===id)).filter((p):p is Player21=>!!p);return evaluateAssigned(lineup,unique,settings,format,cohorts,submitted.captain,submitted.vice_captain,'Public submitted lineup');}
  const fallback=submitted?'Submitted lineup invalid after squad change; automatic recomputation':'Automatic';
  if(unique.length<=11){const result=autoEvaluate(unique,unique,settings,format,cohorts);return {...result,lineupSource:fallback};}
  let candidates=unique;
  if(unique.length>14){candidates=[...unique].sort((a,b)=>(performance(b,'established',cohorts).score+performance(b,'recent',cohorts).score)-(performance(a,'established',cohorts).score+performance(a,'recent',cohorts).score)||a.id.localeCompare(b.id)).slice(0,14);const required=[unique.find(p=>p.role==='WK'),...unique.filter(isBowlingOption).slice(0,5)].filter((p):p is Player21=>!!p);for(const p of required)if(!candidates.some(c=>c.id===p.id)){const index=candidates.map((c,i)=>({c,i})).reverse().find(x=>!required.some(r=>r.id===x.c.id))?.i;if(index!==undefined)candidates[index]=p;}candidates.sort((a,b)=>a.id.localeCompare(b.id));}
+ if(legalReserve && unique.length>14){
+  const limit=Math.min(settings.max_overseas,format==='IPL'?4:11);
+  const domesticFirst=[...unique].sort((a,b)=>Number(a.nationality_type==='Overseas')-Number(b.nationality_type==='Overseas')||a.id.localeCompare(b.id));
+  for(const keeper of domesticFirst.filter(p=>p.role==='WK')){
+   const legal=[keeper];
+   const add=(p:Player21)=>{if(legal.length<11&&!legal.some(x=>x.id===p.id)&&(p.nationality_type!=='Overseas'||legal.filter(x=>x.nationality_type==='Overseas').length<limit))legal.push(p);};
+   for(const p of domesticFirst.filter(isBowlingOption)){if(legal.filter(isBowlingOption).length>=5)break;add(p);}
+   for(const p of domesticFirst)add(p);
+   if(legal.length===11&&legal.filter(isBowlingOption).length>=5){candidates=[...legal,...candidates.filter(p=>!legal.some(x=>x.id===p.id))].slice(0,14).sort((a,b)=>a.id.localeCompare(b.id));break;}
+  }
+ }
  let best:Evaluation21|null=null;
  function choose(start:number,selected:Player21[]){if(selected.length===11){const r=autoEvaluate(selected,unique,settings,format,cohorts);if(!best||(r.eligible&&!best.eligible)||(r.eligible===best.eligible&&r.total>best.total))best=r;return;}for(let i=start;i<=candidates.length-(11-selected.length);i++){const p=candidates[i];if(p)choose(i+1,[...selected,p]);}}
  choose(0,[]);const result:Evaluation21=best??autoEvaluate(unique.slice(0,11),unique,settings,format,cohorts);return {...result,lineupSource:fallback};

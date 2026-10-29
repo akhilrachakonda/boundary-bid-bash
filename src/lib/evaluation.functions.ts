@@ -4,29 +4,40 @@ import { optimizeTeam, rankEvaluations, type Aggregate, type Evidence, type Meas
 import type { Settings } from './auction-rules';
 import type { Json } from '@/integrations/supabase/types';
 import { optimizeTeam21, type Player21, type SubmittedLineup } from './evaluation-v21';
+import { z } from 'zod';
 
-export const getRoomEvaluation=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator((input:{roomId:string})=>input).handler(async({data,context})=>{
+export const getRoomEvaluation=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator((input:unknown)=>z.object({roomId:z.string().uuid()}).parse(input)).handler(async({data,context})=>{
  const projection=await context.supabase.rpc('room_projection',{p_room:data.roomId});
  if(projection.error)throw new Error('You must be a room member');
- const room=(projection.data as unknown as {room:{status:string;evaluation_version:string;format:string;settings:Settings}}).room;
+ const room=(projection.data as unknown as {room:{status:string;evaluation_version:string;format:string;settings:Settings;scoring_patch?:string}}).room;
  if(!['v2.0','v2.1'].includes(room.evaluation_version))return null;
  const stored=await context.supabase.from('room_evaluations').select('result').eq('room_id',data.roomId).maybeSingle();
  if(stored.data)return stored.data.result;
+ if(!['completed','trade','results'].includes(room.status))throw new Error('Evaluation opens after the auction');
+ const permit=await context.supabase.rpc('allow_evaluation',{p_room:data.roomId});
+ if(permit.error||!permit.data)throw new Error('Evaluation requested too often; wait a minute');
  const input=await context.supabase.from('room_evaluation_inputs').select('*').eq('room_id',data.roomId).single();
  if(input.error)throw new Error('Scoring inputs are not frozen yet');
  const sid=input.data.snapshot_id;
- const snapshot=sid?(await context.supabase.from('evaluation_snapshots').select('*').eq('id',sid).single()).data:null;
- const evidence=sid?(await context.supabase.from('evidence_players').select('*').eq('snapshot_id',sid)).data??[]:[];
+ const snapshotRead=sid?await context.supabase.from('evaluation_snapshots').select('*').eq('id',sid).single():null;
+ const evidenceRead=sid?await context.supabase.from('evidence_players').select('*').eq('snapshot_id',sid):null;
+ if(snapshotRead?.error||evidenceRead?.error)throw new Error('Could not read frozen evidence; retry');
+ const snapshot=snapshotRead?.data??null;
+ const evidence=evidenceRead?.data??[];
+ const hash=await context.supabase.rpc('evaluation_holdings_hash',{p_room:data.roomId});if(hash.error)throw new Error('Could not verify final holdings');
  const holdings=await context.supabase.from('squads').select('participant_id,player_id').eq('room_id',data.roomId);
  const teams=await context.supabase.from('participants').select('id').eq('room_id',data.roomId);
- const hash=await context.supabase.rpc('evaluation_holdings_hash',{p_room:data.roomId});if(hash.error)throw new Error('Could not verify final holdings');
  const facts=input.data.player_facts as unknown as MeasuredPlayer[];
- const positions=sid?(await context.supabase.from('evidence_positions').select('*').eq('snapshot_id',sid).eq('format',room.format)).data??[]:[];
- const lineups=room.evaluation_version==='v2.1'?(await context.supabase.from('evaluation_lineups').select('*').eq('room_id',data.roomId)).data??[]:[];
+ const positionRead=sid?await context.supabase.from('evidence_positions').select('*').eq('snapshot_id',sid).eq('format',room.format):null;
+ const lineupRead=room.evaluation_version==='v2.1'?await context.supabase.from('evaluation_lineups').select('*').eq('room_id',data.roomId):null;
+ if(positionRead?.error||lineupRead?.error)throw new Error('Could not read complete lineup evidence; retry');
+ const positions=positionRead?.data??[];
+ const lineups=lineupRead?.data??[];
+ if(holdings.error||teams.error||stored.error)throw new Error('Could not read complete scoring inputs; retry');
  const measured=facts.map(p=>{const e=evidence.find(e=>e.identity_key===p.name+'|'+p.country);const stats=e?.stats as unknown as Record<string,Evidence>|undefined;const original=stats?.[room.format];const pos=positions.find(x=>x.identity_key===p.name+'|'+p.country);const ev=original?{...original,windows:{...original.windows,history:{...original.windows['history'],position_groups:pos?.groups??{}}}}:undefined;return {...p,...(ev?{evidence:ev}:{})} as Player21;});
  const cohorts=(snapshot?.cohorts??{}) as unknown as Record<string,Aggregate>;
  const settings=(input.data.rules as unknown as {settings:Settings}).settings;
- const result={version:room.evaluation_version,cutoff:snapshot?.cutoff??null,coverage:snapshot?.coverage??null,attribution:'Available Cricsheet matches • ODC-By 1.0 • coverage incomplete',teams:rankEvaluations((teams.data??[]).map(t=>{const squad=measured.filter(p=>(holdings.data??[]).some(s=>s.participant_id===t.id&&s.player_id===p.id));const line=lineups.find(l=>l.participant_id===t.id);return {id:t.id,score:room.evaluation_version==='v2.1'?optimizeTeam21(squad,settings,room.format,cohorts,line as SubmittedLineup|undefined):optimizeTeam(squad,settings,room.format,cohorts)};}))};
+ const result={version:room.evaluation_version,scoringPatch:room.scoring_patch??null,cutoff:snapshot?.cutoff??null,coverage:snapshot?.coverage??null,attribution:'Available Cricsheet matches • ODC-By 1.0 • coverage incomplete',teams:rankEvaluations((teams.data??[]).map(t=>{const squad=measured.filter(p=>(holdings.data??[]).some(s=>s.participant_id===t.id&&s.player_id===p.id));const line=lineups.find(l=>l.participant_id===t.id);return {id:t.id,score:room.evaluation_version==='v2.1'?optimizeTeam21(squad,settings,room.format,cohorts,line as SubmittedLineup|undefined,room.scoring_patch==='legal-reserve-1'):optimizeTeam(squad,settings,room.format,cohorts)};}))};
  if(room.status!=='results')return result as unknown as Json;
  // Membership verified above; service access is used only to commit trusted calculated output.
  const {supabaseAdmin}=await import('@/integrations/supabase/client.server');

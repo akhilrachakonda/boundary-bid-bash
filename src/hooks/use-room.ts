@@ -13,6 +13,7 @@ export interface Room {
   status: "lobby" | "review" | "auction" | "paused" | "completed" | "trade" | "results";
   review_ends_at: string | null;
   current_rp: string | null;
+  lot_version: number;
   current_bid: number | null;
   current_bidder: string | null;
   lot_ends_at: string | null;
@@ -203,7 +204,6 @@ export function useRoom(roomId: string, userId: string | undefined) {
       await load("rooms");
       await Promise.all([
         load("participants"),
-        load("room_players"),
         load("bids"),
         load("squads"),
         load("sales"),
@@ -270,7 +270,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
       await supabase.rpc("tick", { p_room: roomId });
       inflight = false;
     }, 700);
-    const onFocus = () => (["rooms", "participants", "room_players", "squads", "trades", "bids"] as Table[]).forEach(load);
+    const onFocus = () => (["rooms", "participants", "squads", "sales", "trades", "bids"] as Table[]).forEach(load);
     window.addEventListener("focus", onFocus);
     return () => {
       clearInterval(hb);

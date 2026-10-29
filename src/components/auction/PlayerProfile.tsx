@@ -17,7 +17,7 @@ export function PlayerProfile({ player, children, currency = "cr" }: { player: P
       <p className="text-sm text-muted-foreground">{player.batting_hand}-hand bat · {player.bowling_style} · {player.format}</p>
       <EvidencePanel player={player} />
       <details className="text-xs text-muted-foreground"><summary>Historical setup estimate</summary><p>Legacy game estimate—not used in evaluation: {player.rating}/100. Subjective seed values included format/role offsets and name-based jitter, not current sourced ability. Balanced pool selection, tiers and prices still use these auction setup estimates; existing economics are preserved. Only historical V1 scoring uses them.</p></details>
-      {player.photo_credit && <p className="text-xs text-muted-foreground">Photo: {player.photo_credit} {player.photo_source && <a href={player.photo_source} target="_blank" rel="noreferrer" className="underline">Source</a>}</p>}
+      {player.photo_credit && <p className="text-xs text-muted-foreground">Photo: {player.photo_credit} {player.photo_source?.startsWith('https://') && <a href={player.photo_source} target="_blank" rel="noreferrer" className="underline">Source</a>}</p>}
     </DialogContent></Dialog>
   </>;
 }

@@ -1,4 +1,5 @@
 # Cricket Auction upgrade
+- [x] Release audit: scanners/grants, stale lot and null-auth fixes, bounded inputs, 51 unit/7 importer tests, guest gameplay and 10-team fixtures, canonical lineup/history checks; no publication. See docs/RELEASE-AUDIT.md for limitations and unverified production/owner gates.
 - [x] Separate evidence indices from legacy setup estimates throughout scouting/live UI; preserve prices and pool selection with explicit estimate labels.
 - [x] Future-only frozen V2.1 leadership rubric, owner review and exact coverage: 6 evidence-only format entries, zero owner-rated, all450 neutral C/VC.
 - [x] Source position groups (IPL140/T20149/ODI121); public lineup/C/VC submission, accessible move/drag controls, deterministic approximate auto strategy.

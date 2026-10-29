@@ -50,6 +50,7 @@ function AdminPage() {
 
   const save = async () => {
     for (const [id, patch] of Object.entries(dirty)) {
+      if(patch.photo_source && !patch.photo_source.startsWith('https://')){toast.error('Use an HTTPS source URL');return;}
       if(patch.photo_url && !/^https:\/\//.test(patch.photo_url) && !patch.photo_url.startsWith("/__l5e/assets-v1/")){toast.error("Use an HTTPS photo URL");return;}
       if(patch.photo_url && !patch.photo_url.startsWith("/__l5e/")) {
         try {await new Promise<void>((resolve,reject)=>{const image=new Image();image.onload=()=>resolve();image.onerror=()=>reject(new Error("Photo URL cannot be loaded"));image.src=patch.photo_url ?? "";});} catch {toast.error("Photo URL cannot be loaded");return;}

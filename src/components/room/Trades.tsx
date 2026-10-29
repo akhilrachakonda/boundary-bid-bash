@@ -12,6 +12,7 @@ import { PrivatePanel } from "./PrivatePanel";
 import { rpc } from "./rpc";
 import { PlayerPortrait } from "@/components/auction/PlayerPortrait";
 import { PlayerProfile } from "@/components/auction/PlayerProfile";
+import { hostActionArgs } from '@/lib/room-actions';
 
 export function TradeCard({ t, d, currency, actions }: { t: Trade; d: Derived; currency: "cr" | "lakh" | "coins"; actions?: React.ReactNode }) {
   const from = d.partById.get(t.from_participant);
@@ -71,8 +72,8 @@ export function Trades({ data, d, now }: { data: RoomData; d: Derived; now: numb
               <Input type="number" min={1} max={120} value={minutes} onChange={(e) => setMinutes(Number(e.target.value))} className="w-24" />
               <span className="text-sm text-muted-foreground">minutes</span>
               <Button onClick={() => rpc("open_trades", { p_room: room.id, p_minutes: minutes })}>Open trade window</Button>
-              <Button variant="outline" onClick={() => rpc("host_control", { p_room: room.id, p_action: "results" })}>Skip to results</Button>
-              <Button variant="ghost" onClick={() => confirm("Undo the last sale and reopen the auction?") && rpc("host_control", { p_room: room.id, p_action: "undo" })}>Undo last sale</Button>
+              <Button variant="outline" onClick={() => rpc("host_control", hostActionArgs(room, "results"))}>Skip to results</Button>
+              <Button variant="ghost" onClick={() => confirm("Undo the last sale and reopen the auction?") && rpc("host_control", hostActionArgs(room, "undo", data.sales.find(x => !x.undone && x.participant_id)?.id))}>Undo last sale</Button>
             </div>
           ) : (
             <p className="text-muted-foreground">Waiting for the host to open the trade window.</p>
@@ -104,7 +105,7 @@ export function Trades({ data, d, now }: { data: RoomData; d: Derived; now: numb
         <div className="panel flex flex-wrap items-center gap-3 p-4">
           <h2 className="text-3xl font-extrabold uppercase">Trade window</h2>
           <span className="font-display text-3xl font-bold text-gold tabular">{Math.floor(left / 60000)}:{String(Math.floor((left % 60000) / 1000)).padStart(2, "0")}</span>
-          {d.isHost && <Button variant="outline" className="ml-auto" onClick={() => rpc("host_control", { p_room: room.id, p_action: "results" })}>Close window & show results</Button>}
+          {d.isHost && <Button variant="outline" className="ml-auto" onClick={() => rpc("host_control", hostActionArgs(room, "results"))}>Close window & show results</Button>}
         </div>
         <div className="panel space-y-3 p-4">
           <h3 className="text-xl font-bold uppercase">{parent ? "Counter-offer" : "Propose a trade"}</h3>
