@@ -20,7 +20,7 @@ Definitions: legal balls exclude wides/no-balls; balls faced exclude wides but i
 
 ## Limitations
 - Current V2 subset solver is exhaustive through 16-player squads, approximate deterministic top-16 candidate shortlist above 16. Shortlist may omit a better combination or valid XI; not a guaranteed optimum.
-- Combination currently scores observed position/workload coverage, not normalized phase effectiveness. Phase plan is feasible but allocation is not phase-performance optimized. No specialist tags.
+- Combination currently scores observed position/workload coverage, not globally optimized phase effectiveness. Phase plan is feasible but allocation is not phase-performance optimized. No specialist tags.
 - Same role/format/window cohort is used for overall rates; phase-specific cohort normalization is used for observed coverage checks.
 - Import validation verifies schema/provenance/aggregate bounds but owner bundle upload is not a cryptographic proof of source truth. Full source-ledger reaggregation remains the reproducible audit path.
 - Source match JSON preserved in downloaded archives, not database delivery rows; database contains match metadata/hashes and aggregated player innings.
