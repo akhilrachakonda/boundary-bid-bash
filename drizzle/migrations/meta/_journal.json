@@ -120,6 +120,13 @@
       "when": 1793234866076,
       "tag": "0016_release_endpoint_bounds_and_scoring_patch",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1793235385124,
+      "tag": "0017_release_scoring_request_quota",
+      "breakpoints": true
     }
   ]
 }

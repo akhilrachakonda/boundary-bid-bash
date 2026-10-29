@@ -1043,6 +1043,7 @@ export type Database = {
       }
       _shuffle_player_ids: { Args: { p_ids: string[] }; Returns: string[] }
       _squad_counts: { Args: { p_part: string }; Returns: Json }
+      allow_evaluation: { Args: { p_room: string }; Returns: boolean }
       commit_room_evaluation: {
         Args: {
           p_hash: string

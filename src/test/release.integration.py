@@ -24,7 +24,6 @@ async def main():
   await g.goto(U+'/join?code='+code);await g.get_by_role('button',name='Join auction').click();await g.wait_for_url('**/room/*');assert (await raw(x,'room_projection',{'p_room':rid}))['error'];print('PASS two independent guest signups, UI create/join, other-room projection denial')
   for fn,args in [('start_review',{'p_room':rid}),('set_pool',{'p_room':rid,'p_player_ids':[]}),('update_room_settings',{'p_room':rid,'p_settings':proj['room']['settings']}),('open_trades',{'p_room':rid,'p_minutes':1})]:
    assert (await raw(g,fn,args))['error'],fn
-  anon=await a.evaluate('''async id=>{const {supabase}=await import('/src/integrations/supabase/client.ts');const key=import.meta?.env;return true;}''',rid) if False else True
   checks=await a.evaluate('''async id=>{const {supabase}=await import('/src/integrations/supabase/client.ts');return Promise.all(['rooms','room_players'].map(async t=>{const r=await supabase.from(t).select('*').eq('id',id);return !!r.error;}));}''',rid);assert checks==[True,True]
   s={**proj['room']['settings'],'min_squad':1,'min_wk':0,'min_bat':0,'min_ar':0,'min_bowl':0,'min_spinners':0,'min_pacers':0,'bid_timer':3,'bid_reset':1}
   await rpc(a,'update_room_settings',{'p_room':rid,'p_settings':s})
