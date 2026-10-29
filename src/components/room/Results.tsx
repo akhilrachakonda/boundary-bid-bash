@@ -7,8 +7,12 @@ import { TeamDot } from "@/components/auction/TeamPurseBar";
 import type { RoomData, Derived } from "@/components/auction/derive";
 import { PlayerPortrait } from "@/components/auction/PlayerPortrait";
 import { PlayerProfile } from "@/components/auction/PlayerProfile";
+import { ResultsV2 } from "./ResultsV2";
 
 export function Results({ data, d }: { data: RoomData; d: Derived }) {
+  return data.room?.evaluation_version==='v2.0' ? <ResultsV2 data={data} d={d}/> : <LegacyResults data={data} d={d}/>;
+}
+function LegacyResults({ data, d }: { data: RoomData; d: Derived }) {
   const room = data.room!;
   const ranked = useMemo(
     () => compareTeams(data.participants.map((p) => ({ id: p.id, squad: d.squadOf(p.id), spent: d.spentOf(p.id) })), room.format),
