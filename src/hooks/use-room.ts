@@ -19,6 +19,7 @@ export interface Room {
   paused_remaining_ms: number | null;
   accel_done: boolean;
   trade_ends_at: string | null;
+  evaluation_version?: string;
 }
 export interface Participant {
   id: string;
