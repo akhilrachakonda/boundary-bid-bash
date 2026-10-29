@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { SUB_ROLES, type Player, type Role } from "@/lib/auction-rules";
 import { PlayerPortrait } from "@/components/auction/PlayerPortrait";
 import { withCanonicalPhoto } from "@/lib/player-photos";
+import { EvidenceAdmin } from "@/components/auction/EvidenceAdmin";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -88,6 +89,7 @@ function AdminPage() {
     <div className="min-h-screen">
       <AppHeader />
       <main className="mx-auto max-w-7xl space-y-4 px-4 py-6">
+        <EvidenceAdmin />
         <div className="flex flex-wrap items-center gap-2">
           <h1 className="mr-auto text-4xl font-extrabold uppercase">Player database</h1>
           {["IPL", "T20", "ODI"].map((f) => (
