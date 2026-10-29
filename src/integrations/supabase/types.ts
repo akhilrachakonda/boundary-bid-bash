@@ -63,6 +63,48 @@ export type Database = {
           },
         ]
       }
+      evaluation_lineups: {
+        Row: {
+          captain: string
+          lineup: string[]
+          participant_id: string
+          room_id: string
+          updated_at: string
+          vice_captain: string
+        }
+        Insert: {
+          captain: string
+          lineup: string[]
+          participant_id: string
+          room_id: string
+          updated_at?: string
+          vice_captain: string
+        }
+        Update: {
+          captain?: string
+          lineup?: string[]
+          participant_id?: string
+          room_id?: string
+          updated_at?: string
+          vice_captain?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evaluation_lineups_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evaluation_lineups_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       evaluation_snapshots: {
         Row: {
           cohorts: Json
@@ -206,6 +248,59 @@ export type Database = {
             columns: ["snapshot_id"]
             isOneToOne: false
             referencedRelation: "evaluation_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leadership_reviews: {
+        Row: {
+          captain_rating: number
+          confidence: number
+          created_at: string
+          cutoff: string
+          id: string
+          player_id: string
+          rationale: string
+          reviewer: string
+          rubric_version: string
+          sources: Json
+          status: string
+          vice_captain_rating: number
+        }
+        Insert: {
+          captain_rating?: number
+          confidence?: number
+          created_at?: string
+          cutoff: string
+          id?: string
+          player_id: string
+          rationale?: string
+          reviewer: string
+          rubric_version?: string
+          sources?: Json
+          status?: string
+          vice_captain_rating?: number
+        }
+        Update: {
+          captain_rating?: number
+          confidence?: number
+          created_at?: string
+          cutoff?: string
+          id?: string
+          player_id?: string
+          rationale?: string
+          reviewer?: string
+          rubric_version?: string
+          sources?: Json
+          status?: string
+          vice_captain_rating?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leadership_reviews_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
             referencedColumns: ["id"]
           },
         ]
@@ -948,6 +1043,19 @@ export type Database = {
         Args: { p_action: string; p_trade: string }
         Returns: undefined
       }
+      review_leadership: {
+        Args: {
+          p_captain: number
+          p_confidence: number
+          p_cutoff: string
+          p_player: string
+          p_rationale: string
+          p_sources: Json
+          p_status: string
+          p_vice: number
+        }
+        Returns: string
+      }
       room_projection: { Args: { p_room: string }; Returns: Json }
       server_now: { Args: never; Returns: string }
       set_pool: {
@@ -955,6 +1063,16 @@ export type Database = {
         Returns: number
       }
       start_review: { Args: { p_room: string }; Returns: undefined }
+      submit_evaluation_lineup: {
+        Args: {
+          p_auto?: boolean
+          p_captain: string
+          p_lineup: string[]
+          p_room: string
+          p_vice: string
+        }
+        Returns: undefined
+      }
       tick: { Args: { p_room: string }; Returns: string }
       transfer_host: {
         Args: { p_participant: string; p_room: string }
