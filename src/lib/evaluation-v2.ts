@@ -58,7 +58,7 @@ export function optimizeTeam(squad:MeasuredPlayer[],settings:Settings,format:str
  if(unique.length>16){candidates=[...unique].sort((a,b)=>(performance(b,'established',cohorts).score+performance(b,'recent',cohorts).score)-(performance(a,'established',cohorts).score+performance(a,'recent',cohorts).score)||a.id.localeCompare(b.id)).slice(0,16);
    // Reserve a keeper and five bowling options when a legal XI is feasible.
    const mandatory=[unique.find(p=>p.role==='WK'),...unique.filter(isBowlingOption).slice(0,5)].filter((p):p is MeasuredPlayer=>!!p);
-   const required=new Set(mandatory.map(p=>p.id));for(const p of mandatory){if(!candidates.some(c=>c.id===p.id)){const index=candidates.findLastIndex(c=>!required.has(c.id));if(index>=0)candidates[index]=p;}}
+   const required=new Set(mandatory.map(p=>p.id));for(const p of mandatory){if(!candidates.some(c=>c.id===p.id)){let index=-1;for(let i=candidates.length-1;i>=0;i--){const c=candidates[i];if(c&&!required.has(c.id)){index=i;break;}}if(index>=0)candidates[index]=p;}}
    candidates.sort((a,b)=>a.id.localeCompare(b.id));
  }
 
