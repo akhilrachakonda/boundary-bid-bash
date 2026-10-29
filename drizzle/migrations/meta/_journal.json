@@ -113,6 +113,13 @@
       "when": 1793234797280,
       "tag": "0015_release_lot_binding_and_privilege_hardening",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1793234866076,
+      "tag": "0016_release_endpoint_bounds_and_scoring_patch",
+      "breakpoints": true
     }
   ]
 }

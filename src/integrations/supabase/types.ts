@@ -731,6 +731,7 @@ export type Database = {
           name: string
           paused_remaining_ms: number | null
           review_ends_at: string | null
+          scoring_patch: string | null
           settings: Json
           status: string
           trade_ends_at: string | null
@@ -753,6 +754,7 @@ export type Database = {
           name: string
           paused_remaining_ms?: number | null
           review_ends_at?: string | null
+          scoring_patch?: string | null
           settings: Json
           status?: string
           trade_ends_at?: string | null
@@ -775,6 +777,7 @@ export type Database = {
           name?: string
           paused_remaining_ms?: number | null
           review_ends_at?: string | null
+          scoring_patch?: string | null
           settings?: Json
           status?: string
           trade_ends_at?: string | null
