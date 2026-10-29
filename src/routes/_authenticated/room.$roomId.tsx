@@ -146,6 +146,7 @@ function RoomPage() {
         </Button>
       </AppHeader>
       <main className="mx-auto max-w-7xl space-y-4 px-3 py-5 sm:px-6">
+        {room.evaluation_version==='v2.1'&&<p className="text-xs text-muted-foreground">V2.1 · 35 combination/position + 30 established + 20 recent + 10 bench + 5 leadership · {room.status==='lobby'?'Evidence and leadership freeze before review':'Frozen evidence and leadership rubric'} · <Link to="/scoring" className="text-electric underline">Rules and data coverage</Link></p>}
         {hostAway && !d.isHost && (
           <div className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 p-3 text-sm">
             <Crown className="h-4 w-4 text-primary" /> The host seems to have disconnected.
