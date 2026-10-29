@@ -24,9 +24,9 @@ export const getRoomEvaluation=createServerFn({method:'POST'}).middleware([requi
  if(snapshotRead?.error||evidenceRead?.error)throw new Error('Could not read frozen evidence; retry');
  const snapshot=snapshotRead?.data??null;
  const evidence=evidenceRead?.data??[];
+ const hash=await context.supabase.rpc('evaluation_holdings_hash',{p_room:data.roomId});if(hash.error)throw new Error('Could not verify final holdings');
  const holdings=await context.supabase.from('squads').select('participant_id,player_id').eq('room_id',data.roomId);
  const teams=await context.supabase.from('participants').select('id').eq('room_id',data.roomId);
- const hash=await context.supabase.rpc('evaluation_holdings_hash',{p_room:data.roomId});if(hash.error)throw new Error('Could not verify final holdings');
  const facts=input.data.player_facts as unknown as MeasuredPlayer[];
  const positionRead=sid?await context.supabase.from('evidence_positions').select('*').eq('snapshot_id',sid).eq('format',room.format):null;
  const lineupRead=room.evaluation_version==='v2.1'?await context.supabase.from('evaluation_lineups').select('*').eq('room_id',data.roomId):null;
