@@ -64,6 +64,13 @@
       "when": 1793232381354,
       "tag": "0008_safe_room_notification_record_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793232480535,
+      "tag": "0009_frozen_room_evidence_projection",
+      "breakpoints": true
     }
   ]
 }
