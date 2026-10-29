@@ -1,0 +1,3 @@
+CREATE OR REPLACE FUNCTION public._position_insert_guard() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$ BEGIN IF EXISTS(SELECT 1 FROM public.room_evaluation_inputs WHERE snapshot_id=NEW.snapshot_id) THEN RAISE EXCEPTION 'Position snapshot already frozen in a room; import a new snapshot'; END IF; RETURN NEW; END $$;
+REVOKE ALL ON FUNCTION public._position_insert_guard() FROM PUBLIC,anon,authenticated;
+CREATE TRIGGER guard_position_snapshot_inserts BEFORE INSERT ON public.evidence_positions FOR EACH ROW EXECUTE FUNCTION public._position_insert_guard();
