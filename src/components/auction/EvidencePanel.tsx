@@ -3,7 +3,9 @@ import { useEffect,useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { Evidence } from '@/lib/evaluation-v2';
 import type { Player } from '@/lib/auction-rules';
+import {useRoomSnapshot} from './RoomEvidenceContext';
 export function EvidencePanel({player,snapshotId}:{player:Player;snapshotId?:string|null}){
+ const frozen=useRoomSnapshot(); snapshotId=frozen===undefined?snapshotId:frozen;
  const [data,setData]=useState<{e:Evidence;cutoff:string}|null>(null);
  useEffect(()=>{let alive=true;(async()=>{let sid=snapshotId;let cutoff='';if(!sid){const s=await supabase.from('evaluation_snapshots').select('id,cutoff').eq('status','validated').order('imported_at',{ascending:false}).limit(1).maybeSingle();sid=s.data?.id;cutoff=s.data?.cutoff??'';}else{const s=await supabase.from('evaluation_snapshots').select('cutoff').eq('id',sid).single();cutoff=s.data?.cutoff??'';}if(!sid)return;const p=await supabase.from('evidence_players').select('stats').eq('snapshot_id',sid).eq('identity_key',player.name+'|'+player.country).maybeSingle();const e=(p.data?.stats as unknown as Record<string,Evidence>|undefined)?.[player.format];if(alive&&e)setData({e,cutoff});})();return()=>{alive=false;};},[player.name,player.country,player.format,snapshotId]);
  const a=data?.e.windows["recent"];
