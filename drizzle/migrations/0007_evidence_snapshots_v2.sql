@@ -1,0 +1,60 @@
+CREATE TABLE public.evaluation_snapshots (id uuid PRIMARY KEY, version text NOT NULL, cutoff date NOT NULL, imported_at timestamptz NOT NULL DEFAULT now(), status text NOT NULL DEFAULT 'validated' CHECK(status IN ('validated','draft')), provenance jsonb NOT NULL, coverage jsonb NOT NULL, cohorts jsonb NOT NULL);
+GRANT SELECT ON public.evaluation_snapshots TO authenticated;
+GRANT ALL ON public.evaluation_snapshots TO service_role;
+ALTER TABLE public.evaluation_snapshots ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "authenticated view evidence snapshots" ON public.evaluation_snapshots FOR SELECT TO authenticated USING(status='validated' OR public.has_role(auth.uid(),'admin'));
+CREATE TABLE public.evidence_matches (snapshot_id uuid NOT NULL REFERENCES public.evaluation_snapshots(id), source_id text NOT NULL, competition text NOT NULL, played_on date NOT NULL, revision integer NOT NULL, content_hash text NOT NULL, info jsonb NOT NULL, PRIMARY KEY(snapshot_id,source_id));
+GRANT SELECT ON public.evidence_matches TO authenticated;
+GRANT ALL ON public.evidence_matches TO service_role;
+ALTER TABLE public.evidence_matches ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "read available match provenance" ON public.evidence_matches FOR SELECT TO authenticated USING(true);
+CREATE TABLE public.evidence_players (snapshot_id uuid NOT NULL REFERENCES public.evaluation_snapshots(id), identity_key text NOT NULL, source_player_id text, name text NOT NULL, country text NOT NULL, mapping jsonb NOT NULL, stats jsonb NOT NULL, PRIMARY KEY(snapshot_id,identity_key));
+GRANT SELECT ON public.evidence_players TO authenticated;
+GRANT ALL ON public.evidence_players TO service_role;
+ALTER TABLE public.evidence_players ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "read identical player evidence" ON public.evidence_players FOR SELECT TO authenticated USING(true);
+CREATE TABLE public.evidence_innings (snapshot_id uuid NOT NULL REFERENCES public.evaluation_snapshots(id), source_id text NOT NULL, innings integer NOT NULL, source_player_id text NOT NULL, format text NOT NULL, played_on date NOT NULL, aggregates jsonb NOT NULL, PRIMARY KEY(snapshot_id,source_id,innings,source_player_id,format));
+GRANT SELECT ON public.evidence_innings TO authenticated;
+GRANT ALL ON public.evidence_innings TO service_role;
+ALTER TABLE public.evidence_innings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "read verified innings" ON public.evidence_innings FOR SELECT TO authenticated USING(true);
+CREATE TABLE public.room_evaluation_inputs (room_id uuid PRIMARY KEY REFERENCES public.rooms(id), snapshot_id uuid REFERENCES public.evaluation_snapshots(id), version text NOT NULL, player_facts jsonb NOT NULL, rules jsonb NOT NULL, frozen_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT ON public.room_evaluation_inputs TO authenticated;
+GRANT ALL ON public.room_evaluation_inputs TO service_role;
+ALTER TABLE public.room_evaluation_inputs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "members read frozen scoring inputs" ON public.room_evaluation_inputs FOR SELECT TO authenticated USING(public.is_room_member(room_id));
+CREATE TABLE public.room_evaluations (room_id uuid PRIMARY KEY REFERENCES public.rooms(id), snapshot_id uuid REFERENCES public.evaluation_snapshots(id), version text NOT NULL, holdings_hash text NOT NULL, result jsonb NOT NULL, computed_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT ON public.room_evaluations TO authenticated;
+GRANT ALL ON public.room_evaluations TO service_role;
+ALTER TABLE public.room_evaluations ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "members read canonical result" ON public.room_evaluations FOR SELECT TO authenticated USING(public.is_room_member(room_id));
+ALTER TABLE public.rooms ADD COLUMN evaluation_version text NOT NULL DEFAULT 'v1';
+CREATE OR REPLACE FUNCTION public._new_room_surprise() RETURNS trigger LANGUAGE plpgsql SET search_path=public AS $$ BEGIN NEW.settings:=jsonb_build_object('surprise_reveal',true)||NEW.settings; NEW.evaluation_version:='v2.0'; RETURN NEW; END $$;
+CREATE OR REPLACE FUNCTION public._freeze_evaluation_inputs() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE sid uuid; facts jsonb;
+BEGIN
+ IF OLD.status='lobby' AND NEW.status='review' AND NEW.evaluation_version='v2.0' THEN
+ SELECT id INTO sid FROM public.evaluation_snapshots WHERE status='validated' ORDER BY imported_at DESC,id LIMIT 1;
+ SELECT jsonb_agg(to_jsonb(p) ORDER BY p.id) INTO facts FROM public.room_players rp JOIN public.players p ON p.id=rp.player_id WHERE rp.room_id=NEW.id;
+ INSERT INTO public.room_evaluation_inputs(room_id,snapshot_id,version,player_facts,rules) VALUES(NEW.id,sid,'v2.0',coalesce(facts,'[]'::jsonb),jsonb_build_object('weights',jsonb_build_object('combination',40,'established',30,'recent',20,'bench',10),'recent_months',12,'established_months',24,'solver','exhaustive through 20 players; deterministic bounded candidate search above 20','settings',NEW.settings)) ON CONFLICT(room_id) DO NOTHING;
+ END IF;
+ RETURN NEW;
+END $$;
+REVOKE ALL ON FUNCTION public._freeze_evaluation_inputs() FROM PUBLIC,anon,authenticated;
+CREATE TRIGGER freeze_evaluation_before_review BEFORE UPDATE OF status ON public.rooms FOR EACH ROW EXECUTE FUNCTION public._freeze_evaluation_inputs();
+CREATE OR REPLACE FUNCTION public.commit_room_evaluation(p_room uuid,p_snapshot uuid,p_hash text,p_result jsonb) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE r public.rooms; actual text; saved jsonb;
+BEGIN
+ SELECT * INTO r FROM public.rooms WHERE id=p_room FOR UPDATE;
+ IF r.status<>'results' OR r.evaluation_version<>'v2.0' THEN RAISE EXCEPTION 'Only final V2 results can be committed'; END IF;
+ SELECT md5(coalesce(string_agg(participant_id::text||':'||player_id::text,',' ORDER BY participant_id,player_id),'')) INTO actual FROM public.squads WHERE room_id=p_room;
+ IF actual<>p_hash THEN RAISE EXCEPTION 'Holdings changed; recompute'; END IF;
+ IF NOT EXISTS(SELECT 1 FROM public.room_evaluation_inputs WHERE room_id=p_room AND snapshot_id IS NOT DISTINCT FROM p_snapshot) THEN RAISE EXCEPTION 'Snapshot mismatch'; END IF;
+ INSERT INTO public.room_evaluations(room_id,snapshot_id,version,holdings_hash,result) VALUES(p_room,p_snapshot,'v2.0',p_hash,p_result) ON CONFLICT(room_id) DO NOTHING;
+ SELECT result INTO saved FROM public.room_evaluations WHERE room_id=p_room; RETURN saved;
+END $$;
+REVOKE ALL ON FUNCTION public.commit_room_evaluation(uuid,uuid,text,jsonb) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.commit_room_evaluation(uuid,uuid,text,jsonb) TO service_role;
+CREATE OR REPLACE FUNCTION public.evaluation_holdings_hash(p_room uuid) RETURNS text LANGUAGE plpgsql STABLE SECURITY DEFINER SET search_path=public AS $$ BEGIN PERFORM public._me(p_room); RETURN (SELECT md5(coalesce(string_agg(participant_id::text||':'||player_id::text,',' ORDER BY participant_id,player_id),'')) FROM public.squads WHERE room_id=p_room); END $$;
+REVOKE ALL ON FUNCTION public.evaluation_holdings_hash(uuid) FROM PUBLIC,anon;
+GRANT EXECUTE ON FUNCTION public.evaluation_holdings_hash(uuid) TO authenticated;

@@ -50,6 +50,13 @@
       "when": 1793231892692,
       "tag": "0006_private_queue_projection_and_sales",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793232035886,
+      "tag": "0007_evidence_snapshots_v2",
+      "breakpoints": true
     }
   ]
 }
