@@ -22,6 +22,7 @@ import { getSoundPref, setSoundPref } from "@/lib/sound";
 import { RoomEvidenceContext } from "@/components/auction/RoomEvidenceContext";
 import {RoomEvaluationContext} from '@/components/auction/RoomEvaluationContext';
 import {EvaluationLineup} from '@/components/auction/EvaluationLineup';
+import { hostActionArgs } from '@/lib/room-actions';
 
 export const Route = createFileRoute("/_authenticated/room/$roomId")({
   head: () => ({
@@ -42,7 +43,7 @@ function RoomPage() {
   const { roomId } = Route.useParams();
   const { user } = useAuth();
   const data = useRoom(roomId, user?.id);
-  const now = useNow(data.offset);
+  const now = useNow(data.offset, 250);
   const d = useMemo(() => derive(data, user?.id), [data, user?.id]);
   const [sound, setSound] = useState(false);
   const [selectedTeam,setSelectedTeam] = useState<string|null>(null);
@@ -113,7 +114,7 @@ function RoomPage() {
             <span className="ml-auto font-display text-5xl font-bold text-gold tabular">
               {Math.floor(reviewLeft / 60000)}:{String(Math.floor((reviewLeft % 60000) / 1000)).padStart(2, "0")}
             </span>
-            {d.isHost && <Button onClick={() => rpc("host_control", { p_room: room.id, p_action: "skip_review" })}>Skip review & start</Button>}
+            {d.isHost && <Button onClick={() => rpc("host_control", hostActionArgs(room, "skip_review"))}>Skip review & start</Button>}
           </div>
           <p className="text-sm text-muted-foreground">Auction order is randomized when bidding starts</p>
           <PlayerTable rows={poolRows} currency={s.currency} starred={starred} onStar={toggleStar} />

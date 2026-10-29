@@ -44,6 +44,7 @@ function JoinPage() {
     });
     setBusy(false);
     if (error) { toast.error(error.message); return; }
+    if (!data) { toast.error('Unable to join. Check the code or try again later.'); return; }
     navigate({ to: "/room/$roomId", params: { roomId: data as string } });
   };
 
