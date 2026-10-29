@@ -20,7 +20,7 @@ export function AuctionStage({ player, currency, price, leader, remaining, total
   return <div className="auction-broadcast">
     <div className="broadcast-stage">
       <div className="stage-topline"><span className="flex items-center gap-2"><Radio className="h-3.5 w-3.5 text-electric"/>{label}</span><span>{paused ? "PAUSED" : connection !== "connected" ? "RECONNECTING" : "ON THE BLOCK"}</span></div>
-      <div className="player-stage-body">
+      <div key={player.id} className="player-stage-body lot-reveal">
         <div className="stage-portrait"><PlayerPortrait player={player} priority className="h-full w-full"/><div className="portrait-vignette"/><span className="stage-player-number" aria-hidden="true">{player.rating}</span></div>
         <div className="stage-player-info">
           <div className="mb-3 flex items-center gap-2"><TierBadge tier={player.tier}/><span className="text-xs text-muted-foreground">{player.country}</span></div>

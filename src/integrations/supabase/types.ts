@@ -63,6 +63,153 @@ export type Database = {
           },
         ]
       }
+      evaluation_snapshots: {
+        Row: {
+          cohorts: Json
+          coverage: Json
+          cutoff: string
+          id: string
+          imported_at: string
+          provenance: Json
+          status: string
+          version: string
+        }
+        Insert: {
+          cohorts: Json
+          coverage: Json
+          cutoff: string
+          id: string
+          imported_at?: string
+          provenance: Json
+          status?: string
+          version: string
+        }
+        Update: {
+          cohorts?: Json
+          coverage?: Json
+          cutoff?: string
+          id?: string
+          imported_at?: string
+          provenance?: Json
+          status?: string
+          version?: string
+        }
+        Relationships: []
+      }
+      evidence_innings: {
+        Row: {
+          aggregates: Json
+          format: string
+          innings: number
+          played_on: string
+          snapshot_id: string
+          source_id: string
+          source_player_id: string
+        }
+        Insert: {
+          aggregates: Json
+          format: string
+          innings: number
+          played_on: string
+          snapshot_id: string
+          source_id: string
+          source_player_id: string
+        }
+        Update: {
+          aggregates?: Json
+          format?: string
+          innings?: number
+          played_on?: string
+          snapshot_id?: string
+          source_id?: string
+          source_player_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evidence_innings_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evidence_matches: {
+        Row: {
+          competition: string
+          content_hash: string
+          info: Json
+          played_on: string
+          revision: number
+          snapshot_id: string
+          source_id: string
+        }
+        Insert: {
+          competition: string
+          content_hash: string
+          info: Json
+          played_on: string
+          revision: number
+          snapshot_id: string
+          source_id: string
+        }
+        Update: {
+          competition?: string
+          content_hash?: string
+          info?: Json
+          played_on?: string
+          revision?: number
+          snapshot_id?: string
+          source_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evidence_matches_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evidence_players: {
+        Row: {
+          country: string
+          identity_key: string
+          mapping: Json
+          name: string
+          snapshot_id: string
+          source_player_id: string | null
+          stats: Json
+        }
+        Insert: {
+          country: string
+          identity_key: string
+          mapping: Json
+          name: string
+          snapshot_id: string
+          source_player_id?: string | null
+          stats: Json
+        }
+        Update: {
+          country?: string
+          identity_key?: string
+          mapping?: Json
+          name?: string
+          snapshot_id?: string
+          source_player_id?: string | null
+          stats?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evidence_players_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       participants: {
         Row: {
           color: string
@@ -211,6 +358,90 @@ export type Database = {
           },
         ]
       }
+      room_evaluation_inputs: {
+        Row: {
+          frozen_at: string
+          player_facts: Json
+          room_id: string
+          rules: Json
+          snapshot_id: string | null
+          version: string
+        }
+        Insert: {
+          frozen_at?: string
+          player_facts: Json
+          room_id: string
+          rules: Json
+          snapshot_id?: string | null
+          version: string
+        }
+        Update: {
+          frozen_at?: string
+          player_facts?: Json
+          room_id?: string
+          rules?: Json
+          snapshot_id?: string | null
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_evaluation_inputs_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: true
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "room_evaluation_inputs_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_evaluations: {
+        Row: {
+          computed_at: string
+          holdings_hash: string
+          result: Json
+          room_id: string
+          snapshot_id: string | null
+          version: string
+        }
+        Insert: {
+          computed_at?: string
+          holdings_hash: string
+          result: Json
+          room_id: string
+          snapshot_id?: string | null
+          version: string
+        }
+        Update: {
+          computed_at?: string
+          holdings_hash?: string
+          result?: Json
+          room_id?: string
+          snapshot_id?: string | null
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_evaluations_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: true
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "room_evaluations_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       room_events: {
         Row: {
           created_at: string
@@ -304,6 +535,29 @@ export type Database = {
           },
         ]
       }
+      room_updates: {
+        Row: {
+          revision: number
+          room_id: string
+        }
+        Insert: {
+          revision?: number
+          room_id: string
+        }
+        Update: {
+          revision?: number
+          room_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_updates_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: true
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rooms: {
         Row: {
           accel_done: boolean
@@ -313,6 +567,7 @@ export type Database = {
           current_bid: number | null
           current_bidder: string | null
           current_rp: string | null
+          evaluation_version: string
           first_round_order: string[] | null
           format: string
           host_id: string
@@ -333,6 +588,7 @@ export type Database = {
           current_bid?: number | null
           current_bidder?: string | null
           current_rp?: string | null
+          evaluation_version?: string
           first_round_order?: string[] | null
           format: string
           host_id: string
@@ -353,6 +609,7 @@ export type Database = {
           current_bid?: number | null
           current_bidder?: string | null
           current_rp?: string | null
+          evaluation_version?: string
           first_round_order?: string[] | null
           format?: string
           host_id?: string
@@ -622,6 +879,15 @@ export type Database = {
       }
       _shuffle_player_ids: { Args: { p_ids: string[] }; Returns: string[] }
       _squad_counts: { Args: { p_part: string }; Returns: Json }
+      commit_room_evaluation: {
+        Args: {
+          p_hash: string
+          p_result: Json
+          p_room: string
+          p_snapshot: string
+        }
+        Returns: Json
+      }
       create_room: {
         Args: {
           p_color: string
@@ -633,6 +899,7 @@ export type Database = {
         }
         Returns: Json
       }
+      evaluation_holdings_hash: { Args: { p_room: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -645,6 +912,7 @@ export type Database = {
         Args: { p_action: string; p_room: string }
         Returns: undefined
       }
+      import_evidence_bundle: { Args: { p_bundle: Json }; Returns: string }
       is_room_member: { Args: { p_room: string }; Returns: boolean }
       join_room: {
         Args: {
@@ -655,6 +923,7 @@ export type Database = {
         }
         Returns: string
       }
+      my_rooms: { Args: never; Returns: Json }
       next_bid_amount: {
         Args: { p_base: number; p_current: number; p_settings: Json }
         Returns: number
@@ -679,6 +948,7 @@ export type Database = {
         Args: { p_action: string; p_trade: string }
         Returns: undefined
       }
+      room_projection: { Args: { p_room: string }; Returns: Json }
       server_now: { Args: never; Returns: string }
       set_pool: {
         Args: { p_player_ids: string[]; p_room: string }

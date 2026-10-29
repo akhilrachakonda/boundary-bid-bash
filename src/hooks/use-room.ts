@@ -19,6 +19,8 @@ export interface Room {
   paused_remaining_ms: number | null;
   accel_done: boolean;
   trade_ends_at: string | null;
+  evaluation_version?: string;
+  evaluation_snapshot?: string | null;
 }
 export interface Participant {
   id: string;
@@ -79,7 +81,8 @@ export interface Notes {
   notes: string;
 }
 
-type Table = "rooms" | "participants" | "room_players" | "bids" | "squads" | "trades" | "room_events";
+export interface Sale { id: string; room_player_id: string; participant_id: string | null; price: number | null; undone: boolean; created_at: string }
+type Table = "rooms" | "participants" | "room_players" | "bids" | "squads" | "trades" | "room_events" | "sales";
 
 export function useRoom(roomId: string, userId: string | undefined) {
   const [room, setRoom] = useState<Room | null>(null);
@@ -87,6 +90,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
   const [pool, setPool] = useState<RoomPlayer[]>([]);
   const [bids, setBids] = useState<Bid[]>([]);
   const [squads, setSquads] = useState<SquadRow[]>([]);
+  const [sales, setSales] = useState<Sale[]>([]);
   const [trades, setTrades] = useState<Trade[]>([]);
   const [events, setEvents] = useState<RoomEvent[]>([]);
   const [notes, setNotes] = useState<Notes>({ targets: {}, xi: { order: [], overs: {} }, notes: "" });
@@ -101,11 +105,12 @@ export function useRoom(roomId: string, userId: string | undefined) {
     async (t: Table) => {
       switch (t) {
         case "rooms": {
-          const { data, error } = await supabase.from("rooms").select("*").eq("id", roomId).maybeSingle();
+          const { data, error } = await supabase.rpc("room_projection", { p_room: roomId });
+          const projection = data as unknown as { room: Room; pool: RoomPlayer[] } | null;
           if (error) setError(error.message);
-          else if (!data) setError("Room not found or you are not a member.");
-          else setRoom(data as unknown as Room);
-          return data as unknown as Room | null;
+          else if (!projection) setError("Room not found or you are not a member.");
+          else { setRoom(projection.room); roomRef.current=projection.room; setPool(projection.pool.map(rp=>({...rp,player:withCanonicalPhoto(rp.player)}))); }
+          return projection?.room ?? null;
         }
         case "participants": {
           const { data } = await supabase.from("participants").select("*").eq("room_id", roomId).order("joined_at");
@@ -113,14 +118,14 @@ export function useRoom(roomId: string, userId: string | undefined) {
           return;
         }
         case "room_players": {
-          const { data } = await supabase
-            .from("room_players")
-            .select("*, player:players(*)")
-            .eq("room_id", roomId)
-            .order("round")
-            .order("lot_order");
-          setPool(((data ?? []) as unknown as RoomPlayer[]).map(rp=>({...rp,player:withCanonicalPhoto(rp.player)})));
+          const { data } = await supabase.rpc("room_projection", { p_room: roomId });
+          const projection=data as unknown as {pool:RoomPlayer[]} | null;
+          if(projection)setPool(projection.pool.map(rp=>({...rp,player:withCanonicalPhoto(rp.player)})));
           return;
+        }
+        case "sales": {
+          const {data}=await supabase.from("sales").select("*").eq("room_id",roomId).eq("undone",false).not("participant_id","is",null).order("created_at",{ascending:false}).order("id",{ascending:false});
+          setSales((data??[]) as Sale[]); return;
         }
         case "bids": {
           const rp = roomRef.current?.current_rp;
@@ -201,6 +206,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
         load("room_players"),
         load("bids"),
         load("squads"),
+        load("sales"),
         load("trades"),
         load("room_events"),
         loadNotes(),
@@ -224,7 +230,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
       clearTimeout(timers[t]);
       timers[t] = setTimeout(() => load(t), 80);
     };
-    const tables: Table[] = ["rooms", "participants", "room_players", "bids", "squads", "trades", "room_events"];
+    const tables: Table[] = ["participants", "bids", "squads", "trades", "room_events", "sales"];
     let ch = supabase.channel(`room-${roomId}-${Math.random().toString(36).slice(2)}`);
     for (const t of tables) {
       ch = ch.on(
@@ -233,10 +239,11 @@ export function useRoom(roomId: string, userId: string | undefined) {
         () => queue(t),
       );
     }
+    ch=ch.on("postgres_changes",{event:"*",schema:"public",table:"room_updates",filter:`room_id=eq.${roomId}`},()=>{queue("rooms");queue("sales");});
     ch.subscribe((status) => {
       setConnection(status === "SUBSCRIBED" ? "connected" : "reconnecting");
       // on (re)connect, resync everything so reconnects restore state
-      if (status === "SUBSCRIBED") tables.forEach(queue);
+      if (status === "SUBSCRIBED") { tables.forEach(queue);queue("rooms"); }
     });
     return () => {
       Object.values(timers).forEach((x) => clearTimeout(x));
@@ -272,7 +279,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
     };
   }, [loaded, roomId, offset, load]);
 
-  return { room, participants, pool, bids, squads, trades, events, notes, saveNotes, error, loaded, offset, connection, reload: load };
+  return { room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, reload: load };
 }
 
 export function useNow(offset: number, ms = 100) {

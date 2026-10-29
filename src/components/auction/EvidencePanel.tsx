@@ -1,0 +1,13 @@
+import { Link } from '@tanstack/react-router';
+import { useEffect,useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import type { Evidence } from '@/lib/evaluation-v2';
+import type { Player } from '@/lib/auction-rules';
+import {useRoomSnapshot} from './RoomEvidenceContext';
+export function EvidencePanel({player,snapshotId}:{player:Player;snapshotId?:string|null}){
+ const frozen=useRoomSnapshot(); snapshotId=frozen===undefined?snapshotId:frozen;
+ const [data,setData]=useState<{e:Evidence;cutoff:string}|null>(null);
+ useEffect(()=>{let alive=true;(async()=>{let sid=snapshotId;let cutoff='';if(sid===null){if(alive)setData(null);return;}if(!sid){const s=await supabase.from('evaluation_snapshots').select('id,cutoff').eq('status','validated').order('imported_at',{ascending:false}).limit(1).maybeSingle();sid=s.data?.id;cutoff=s.data?.cutoff??'';}else{const s=await supabase.from('evaluation_snapshots').select('cutoff').eq('id',sid).single();cutoff=s.data?.cutoff??'';}if(!sid)return;const p=await supabase.from('evidence_players').select('stats').eq('snapshot_id',sid).eq('identity_key',player.name+'|'+player.country).maybeSingle();const e=(p.data?.stats as unknown as Record<string,Evidence>|undefined)?.[player.format];if(alive&&e)setData({e,cutoff});})();return()=>{alive=false;};},[player.name,player.country,player.format,snapshotId]);
+ const a=data?.e.windows["recent"];
+ return <section className="space-y-2 border-t pt-3 text-xs"><div className="flex justify-between"><strong>Available-data performance · {player.format}</strong><Link to="/scoring" className="text-electric underline">How scoring works</Link></div><p className="text-muted-foreground">{data?`Cutoff ${data.cutoff} · latest player match ${data.e.latest??'none covered'}`:'Evidence unavailable; unknown, not zero ability.'}</p>{a&&<dl className="grid grid-cols-3 gap-2"><div><dt>Recent runs / balls</dt><dd>{a.runs} / {a.balls}</dd></div><div><dt>SR / average</dt><dd>{a.metrics["sr"]?.toFixed(1)??'Unknown'} / {a.metrics["average"]?.toFixed(1)??'Unknown'}</dd></div><div><dt>Wickets / legal balls</dt><dd>{a.wickets} / {a.legal_balls}</dd></div><div><dt>Economy</dt><dd>{a.metrics["economy"]?.toFixed(2)??'Unknown'}</dd></div><div><dt>Batting innings</dt><dd>{a.innings}</dd></div><div><dt>Catches / stumpings</dt><dd>{a.catches} / {a.stumpings}</dd></div></dl>}<p className="text-muted-foreground">Recent: last 12 months; established: prior 24 months. Cricsheet / ODC-By; incomplete coverage, especially Afghanistan-involving matches. Static rating is legacy display only in V2.</p></section>;
+}

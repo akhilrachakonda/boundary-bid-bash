@@ -19,6 +19,7 @@ import { Trades } from "@/components/room/Trades";
 import { Results } from "@/components/room/Results";
 import { rpc } from "@/components/room/rpc";
 import { getSoundPref, setSoundPref } from "@/lib/sound";
+import { RoomEvidenceContext } from "@/components/auction/RoomEvidenceContext";
 
 export const Route = createFileRoute("/_authenticated/room/$roomId")({
   head: () => ({
@@ -63,7 +64,7 @@ function RoomPage() {
         return {
           player: rp.player,
           set: rp.round === 2 ? "Accelerated" : rp.set_name,
-          order: data.room?.status === "lobby" || data.room?.status === "review" ? undefined : rp.lot_order,
+          order: data.room?.settings.surprise_reveal || data.room?.status === "lobby" || data.room?.status === "review" ? undefined : rp.lot_order,
           round: rp.round,
           status: rp.status,
           owner: owner ? { name: owner.team_name, color: owner.color } : null,
@@ -126,7 +127,7 @@ function RoomPage() {
     );
 
   return (
-    <div className="min-h-screen pb-10">
+    <RoomEvidenceContext.Provider value={room.evaluation_snapshot}><div className="min-h-screen pb-10">
       <AppHeader>
         <div className="min-w-0">
           <div className="truncate text-sm font-semibold">{room.name}</div>
@@ -170,6 +171,6 @@ function RoomPage() {
         )}
       </main>
       <Sheet open={!!selectedTeam} onOpenChange={open=>{if(!open)setSelectedTeam(null);}}><SheetContent className="w-full overflow-y-auto sm:max-w-lg"><SheetTitle className="font-display text-3xl uppercase">{selectedTeam ? d.partById.get(selectedTeam)?.team_name : "Team squad"}</SheetTitle><SheetDescription>{selectedTeam ? `${formatMoney(Number(d.partById.get(selectedTeam)?.purse ?? 0),s.currency)} remaining · ${d.squadOf(selectedTeam).length} players` : ""}</SheetDescription><div className="mt-5 space-y-3">{selectedTeam && d.squadOf(selectedTeam).map(player=><PlayerCard key={player.id} player={player} currency={s.currency}/>)}{selectedTeam && !d.squadOf(selectedTeam).length && <p className="text-sm text-muted-foreground">No signings yet.</p>}</div></SheetContent></Sheet>
-    </div>
+    </div></RoomEvidenceContext.Provider>
   );
 }

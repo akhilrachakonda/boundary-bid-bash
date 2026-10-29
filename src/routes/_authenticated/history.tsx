@@ -27,7 +27,7 @@ const statusLabel: Record<string, string> = {
 function HistoryPage() {
   const [rows, setRows] = useState<Row[] | null>(null);
   useEffect(() => {
-    supabase.from("rooms").select("id, code, name, format, status, created_at").order("created_at", { ascending: false }).then(({ data }) => setRows((data ?? []) as Row[]));
+    supabase.rpc("my_rooms").then(({ data }) => setRows((data ?? []) as unknown as Row[]));
   }, []);
   return (
     <div className="min-h-screen">

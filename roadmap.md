@@ -1,4 +1,12 @@
 # Cricket Auction upgrade
+- [x] Mobile/desktop purse plus conservative legal maximum explanation (360/390/430/1280px verified).
+- [x] Lobby-only surprise setting, private base queue, safe member projection/doorbell and current reveal; surprise-off queue regression verified.
+- [x] Persistent authoritative last sold with reconnect and undo rollback; public player/team details.
+- [x] Real Cricsheet import: 7496 matches, 150 identities, 55644 innings aggregates per immutable snapshot; exact coverage, provenance and owner import workflow.
+- [x] Frozen canonical V2 scoring, valid XI/workload, shared frozen evidence and results/rules; real 11-player auction and cross-client stored result verified.
+- [x] Validation: 38 unit tests + 4 cricket aggregate tests; two-client surprise privacy, sold/undo, canonical valid/incomplete results, mobile widths and public rules page.
+- [ ] Full globally optimal phase/position assignment and phase effectiveness optimization: current deterministic subset/feasible-plan heuristic documented; not a credential blocker.
+- [ ] Positive owner evidence import UI verification: owner admin identity not assigned; no role auto-grant.
 - [x] Persist one random confirmed-pool order at bidding start; shuffle accelerated unsold round once, leaving active rooms unchanged.
 - [x] Align review/upcoming displays and verify sequencing, concurrent starts, reconnect and undo with regression tests (27 unit tests; real two-guest browser regression, including mixed sold/unsold accelerated pool and legacy-room stability).
 - [x] Inspect desktop/mobile live auction and supplied references (first image returned 422; second image and bid trail inspected).
