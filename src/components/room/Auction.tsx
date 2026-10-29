@@ -58,7 +58,9 @@ export function Auction({ data, d, now, sound }: { data: RoomData; d: Derived; n
       previousPrice.current=Number(bid.amount); setPulse(bid.id);
       if(sound)playBid();
     }
-    const event = data.events.find(e => (e.kind === "sold" || e.kind === "unsold") && !eventSeen.current.has(e.id));
+    const freshSales=data.events.filter(e => (e.kind === "sold" || e.kind === "unsold") && !eventSeen.current.has(e.id));
+    freshSales.forEach(e=>eventSeen.current.add(e.id));
+    const event = freshSales.find(e=>resolvedLot(e,data.pool));
     if (event) {
       const lot = resolvedLot(event,data.pool);
       if (lot) {

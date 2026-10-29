@@ -10,6 +10,9 @@
 <!-- LOVABLE:END -->
 
 ## Project rules
+- Release actions bind bids to observed lot ID/version plus unique retry ID, and host actions to observed lot version/status/sale; legacy unbound RPCs are internal-only. Why: delayed requests and retries cannot mutate the next lot or refund twice.
+- New rooms freeze the legal-reserve scoring patch separately from the V2.1 version; historical rooms retain their original optimizer. Why: guarantee legal shortlist reservations without changing existing scores.
+- Direct RPC and table guards enforce bounded room settings, identity/notes/import fields and authenticated-only grants; persisted action quotas complement hosted auth limits. Why: UI validation is not a security boundary.
 - Freeze confirmed player IDs as a server-shuffled first-round array at the locked review-to-auction transition; accelerated unsold IDs get a separate one-time array. Base rooms/pool tables are not client-readable or published in Realtime; member-only projections and revision doorbells hide future order in surprise mode. Why: shared retry-safe queue without network leaks or pool substitution.
 - V2 freezes immutable evidence snapshots and player facts before review; trusted server functions compute final scores from persisted holdings and atomically commit a fingerprint-checked result. Legacy rooms keep V1. Why: no client-score trust or retroactive refresh changes.
 - V2.1 uses its own pure scorer with frozen leadership reviews and immutable grouped-arrival position supplements; V2.0/V1 scorers remain unchanged. Public lineup writes lock the room, validate current ownership and distinct XI C/VC, and include ordered lineup in final fingerprints; invalid traded assignments use disclosed deterministic auto recomputation. Why: preserve historical scores and keep public evaluation separate from private strategy.
