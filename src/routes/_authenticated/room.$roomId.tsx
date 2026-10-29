@@ -20,6 +20,8 @@ import { Results } from "@/components/room/Results";
 import { rpc } from "@/components/room/rpc";
 import { getSoundPref, setSoundPref } from "@/lib/sound";
 import { RoomEvidenceContext } from "@/components/auction/RoomEvidenceContext";
+import {RoomEvaluationContext} from '@/components/auction/RoomEvaluationContext';
+import {EvaluationLineup} from '@/components/auction/EvaluationLineup';
 
 export const Route = createFileRoute("/_authenticated/room/$roomId")({
   head: () => ({
@@ -127,7 +129,7 @@ function RoomPage() {
     );
 
   return (
-    <RoomEvidenceContext.Provider value={room.evaluation_snapshot}><div className="min-h-screen pb-10">
+    <RoomEvaluationContext.Provider value={room.id}><RoomEvidenceContext.Provider value={room.evaluation_snapshot}><div className="min-h-screen pb-10">
       <AppHeader>
         <div className="min-w-0">
           <div className="truncate text-sm font-semibold">{room.name}</div>
@@ -161,16 +163,18 @@ function RoomPage() {
               <TabsTrigger value="main">{live ? "Auction" : room.status === "review" ? "Pool" : room.status === "results" ? "Results" : "Trades"}</TabsTrigger>
               {room.status !== "review" && <TabsTrigger value="pool">Player pool</TabsTrigger>}
               <TabsTrigger value="log">Log</TabsTrigger>
+              {room.evaluation_version==='v2.1'&&['completed','trade'].includes(room.status)&&<TabsTrigger value="evaluation">Evaluation XI</TabsTrigger>}
             </TabsList>
             <TabsContent value="main">{main}</TabsContent>
             <TabsContent value="pool">
               <PlayerTable rows={poolRows} currency={s.currency} starred={starred} onStar={toggleStar} />
             </TabsContent>
             <TabsContent value="log"><AuctionLog data={data} /></TabsContent>
+            <TabsContent value="evaluation"><EvaluationLineup data={data} d={d}/></TabsContent>
           </Tabs>
         )}
       </main>
       <Sheet open={!!selectedTeam} onOpenChange={open=>{if(!open)setSelectedTeam(null);}}><SheetContent className="w-full overflow-y-auto sm:max-w-lg"><SheetTitle className="font-display text-3xl uppercase">{selectedTeam ? d.partById.get(selectedTeam)?.team_name : "Team squad"}</SheetTitle><SheetDescription>{selectedTeam ? `${formatMoney(Number(d.partById.get(selectedTeam)?.purse ?? 0),s.currency)} remaining · ${d.squadOf(selectedTeam).length} players` : ""}</SheetDescription><div className="mt-5 space-y-3">{selectedTeam && d.squadOf(selectedTeam).map(player=><PlayerCard key={player.id} player={player} currency={s.currency}/>)}{selectedTeam && !d.squadOf(selectedTeam).length && <p className="text-sm text-muted-foreground">No signings yet.</p>}</div></SheetContent></Sheet>
-    </div></RoomEvidenceContext.Provider>
+    </div></RoomEvidenceContext.Provider></RoomEvaluationContext.Provider>
   );
 }
