@@ -24,7 +24,6 @@ import {RoomEvaluationContext} from '@/components/auction/RoomEvaluationContext'
 import {EvaluationLineup} from '@/components/auction/EvaluationLineup';
 import { hostActionArgs } from '@/lib/room-actions';
 import { repairsEnabled } from '@/lib/post-launch-controls';
-import { PostLaunchDesk } from '@/components/room/PostLaunchDesk';
 
 export const Route = createFileRoute("/_authenticated/room/$roomId")({
   head: () => ({
@@ -124,10 +123,8 @@ function RoomPage() {
         </div>
         <PrivatePanel data={data} d={d} />
       </div>
-    ) : live ? (
+    ) : live || (repairsEnabled(room,data.capabilities) && room.status==='completed' && room.auction_stage==='final_call') ? (
       <Auction data={data} d={d} sound={sound} />
-    ) : repairsEnabled(room,data.capabilities) && room.status==='completed' && room.auction_stage==='final_call' ? (
-      <PostLaunchDesk data={data} d={d}/>
     ) : room.status === "completed" || room.status === "trade" ? (
       <Trades data={data} d={d} now={now} />
     ) : (
@@ -167,7 +164,7 @@ function RoomPage() {
         ) : (
           <Tabs defaultValue="main">
             <TabsList>
-              <TabsTrigger value="main">{live ? "Auction" : room.status === "review" ? "Pool" : room.status === "results" ? "Results" : "Trades"}</TabsTrigger>
+              <TabsTrigger value="main">{live ? "Auction" : room.auction_stage==='final_call'&&room.status==='completed' ? 'Final call' : room.status === "review" ? "Pool" : room.status === "results" ? "Results" : "Trades"}</TabsTrigger>
               {room.status !== "review" && <TabsTrigger value="pool">Player pool</TabsTrigger>}
               <TabsTrigger value="log">Log</TabsTrigger>
               {room.evaluation_version==='v2.1'&&['completed','trade'].includes(room.status)&&<TabsTrigger value="evaluation">Evaluation XI</TabsTrigger>}
