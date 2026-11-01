@@ -148,7 +148,10 @@ async def main():
             check(not (await raw(host,'auction_command',args)).get('error'),'same command ID replay idempotent')
             after=await project(host,room);check(float(after['room']['current_bid'])==float(current[1]['amount']),'undo restores accepted predecessor')
             original=[b for b in current if b['request_id']][0]
-            owner=next(p for p in pages if await p.evaluate("async()=>{const {supabase}=await import('/src/integrations/supabase/client.ts');return (await supabase.auth.getUser()).data.user.id;}")==next(t['user_id'] for t in await query(host,'participants',room) if t['id']==original['participant_id']))
+            teams=await query(host,'participants',room)
+            owner_id=next(t['user_id'] for t in teams if t['id']==original['participant_id'])
+            user_ids=await asyncio.gather(*[page.evaluate("async()=>{const {supabase}=await import('/src/integrations/supabase/client.ts');return (await supabase.auth.getUser()).data.user.id;}") for page in pages])
+            owner=pages[user_ids.index(owner_id)]
             retry={'p_room':room,'p_lot':original['room_player_id'],'p_amount':original['amount'],'p_version':observed['room']['lot_version'],'p_request':original['request_id']}
             check(not (await raw(owner,'place_bid',retry)).get('error'),'duplicate accepted request does not add bid')
             await command(host,room,'pause');paused=await project(host,room)
