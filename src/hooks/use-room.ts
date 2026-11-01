@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Player, Settings } from "@/lib/auction-rules";
 import { withCanonicalPhoto } from "@/lib/player-photos";
@@ -333,7 +333,8 @@ export function useRoom(roomId: string, userId: string | undefined) {
     };
   }, [loaded, roomId, offset, load]);
 
-  return { room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload };
+  return useMemo(() => ({ room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload }),
+    [room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload]);
 }
 
 export function useNow(offset: number, ms = 100) {

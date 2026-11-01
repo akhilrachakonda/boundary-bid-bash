@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Check, Loader2, Pause, Play, SkipForward, Square, Undo2, Lock, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -23,7 +23,7 @@ import { toast } from 'sonner';
 import { repairsEnabled } from '@/lib/post-launch-controls';
 import { PostLaunchDesk } from './PostLaunchDesk';
 
-export function Auction({ data, d, sound }: { data: RoomData; d: Derived; sound: boolean }) {
+export const Auction = memo(function Auction({ data, d, sound }: { data: RoomData; d: Derived; sound: boolean }) {
   const room = data.room;
   const me = d.me;
   const bidRequest = useBidRequest(async () => { await data.reload('rooms'); await data.reload('bids'); });
@@ -118,7 +118,7 @@ export function Auction({ data, d, sound }: { data: RoomData; d: Derived; sound:
     <Sheet open={strategy} onOpenChange={setStrategy}><SheetContent className="w-full overflow-y-auto sm:max-w-lg"><SheetTitle className="font-display text-3xl uppercase">My strategy</SheetTitle><SheetDescription>{me.team_name} · Private team desk</SheetDescription><div className="mt-5"><PrivatePanel data={data} d={d}/></div></SheetContent></Sheet>
     {sale && <SaleReveal key={sale.id} sale={sale} currency={s.currency}/>}
   </div>;
-}
+});
 
 export function AuctionLog({ data }: { data: RoomData }) {
   return (

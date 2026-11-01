@@ -61,12 +61,12 @@ async def converge(pages,room):
     start=time.monotonic()
     while time.monotonic()-start<8:
         states=await asyncio.gather(*[p.evaluate('''()=>{
-          const h=document.querySelector('.auction-price');return {text:h?.textContent,connecting:document.body.textContent.includes('Reconnecting…')};
+          const h=document.querySelector('.broadcast-price');return {text:h?.textContent,connecting:document.body.textContent.includes('Reconnecting…')};
         }''') for p in pages])
         projections=await asyncio.gather(*[project(p,room) for p in pages])
-        if all((p['room']['current_rp'],p['room']['current_bid'],p['room']['current_bidder'],p['room']['status'])==
+        if all(s['text']==states[0]['text'] and not s['connecting'] for s in states) and all((p['room']['current_rp'],p['room']['current_bid'],p['room']['current_bidder'],p['room']['status'])==
                (expected['current_rp'],expected['current_bid'],expected['current_bidder'],expected['status']) for p in projections):
-            check(True,'all ten authenticated projections agree');return
+            check(True,'all ten authenticated projections and visible bid prices agree');return
         await asyncio.sleep(.15)
     raise AssertionError('Client convergence')
 
@@ -175,8 +175,30 @@ async def main():
             for round_number in [2,3]:
                 await command(host,room,'rerun');await wait_state(host,room,'auction')
                 check((await project(host,room))['room']['auction_round']==round_number,'repeat shuffled round '+str(round_number))
-                await asyncio.sleep(.7);await burst(pages,room,3)
+                await asyncio.sleep(.7)
+                if round_number==2:
+                    # Lose an actual response AFTER the server accepted it. No fabricated RPC result.
+                    before_count=len(await query(host,'bids',room))
+                    request_ids=[]
+                    async def lose_response(route):
+                        request_ids.append(json.loads(route.request.post_data)['p_request'])
+                        response=await route.fetch()
+                        check(response.status==200,'unknown-outcome bid really reached server')
+                        await route.abort('failed')
+                    await pages[2].route('**/rest/v1/rpc/place_bid',lose_response)
+                    await pages[2].get_by_role('button',name='Bid ₹',exact=False).click()
+                    await pages[2].get_by_role('button',name='Bid accepted',exact=True).wait_for(timeout=8000)
+                    await pages[2].unroute('**/rest/v1/rpc/place_bid',lose_response)
+                    check(len(request_ids)==1 and len(await query(host,'bids',room))==before_count+1,'lost ACK reconciles one accepted bid without automatic resend')
+                await burst(pages,room,3)
                 await command(host,room,'skip')
+                if round_number==2:
+                    await pages[1].locator('.sale-unsold').wait_for(timeout=5000)
+                    for width in [360,390,430,1280]:
+                        await pages[1].set_viewport_size({'width':width,'height':900 if width<1000 else 1800})
+                        await pages[1].screenshot(path=str(OUT/('unsold-'+str(width)+'.png')))
+                        check(not await pages[1].evaluate('document.documentElement.scrollWidth>innerWidth'),'UNSOLD fits '+str(width))
+                    await pages[1].set_viewport_size({'width':390,'height':900})
                 await command(host,room,'final_call');await wait_state(host,room,'completed')
             unsold=next(x for x in (await project(host,room))['pool'] if x['status']=='unsold')
             p=await project(host,room)
