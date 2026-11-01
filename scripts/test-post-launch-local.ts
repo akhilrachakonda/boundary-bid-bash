@@ -92,7 +92,8 @@ try{
  await command('undo_sale',{sale_id:latest[0].id});assert(true,'sale undo distinct and refunds buyer');
  await command('close_trades',{pending:[],minutes:10});assert((await projection()).room.status==='trade','explicit close opens trades');
  await denied(()=>command('rerun'),'trading locks all auction purchases');
- await denied(()=>asUser(users[0],'SELECT public.host_control($1,$2,$3,$4,$5) AS value',[room,'undo',(await projection()).room.lot_version,'trade',latest[0].id]),'legacy sale undo denied during trading');
+ const tradeProjection=await projection();
+ await denied(()=>asUser(users[0],'SELECT public.host_control($1,$2,$3,$4,$5) AS value',[room,'undo',tradeProjection.room.lot_version,'trade',latest[0].id]),'legacy sale undo denied during trading');
  const inv=await sql`SELECT (SELECT count(*) FROM public.participants WHERE room_id=${room} AND purse<0)::int AS overspend,(SELECT count(*)-count(DISTINCT player_id) FROM public.squads WHERE room_id=${room})::int AS duplicate`;
  assert(inv[0].overspend===0&&inv[0].duplicate===0,'no overspend or duplicate holdings');
  const lean=await asUser<any>(users[0],'SELECT public.room_live_projection($1) AS value',[room]);assert(!('pool' in lean)&&lean.states.every((x:any)=>!x.player),'lean projection omits repeated player facts');
