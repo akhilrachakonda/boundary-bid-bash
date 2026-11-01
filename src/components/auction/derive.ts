@@ -9,7 +9,7 @@ export function derive(d: RoomData, userId: string | undefined) {
   d.pool.forEach((rp) => playerById.set(rp.player_id, rp.player));
   const partById = new Map(d.participants.map((p) => [p.id, p]));
   const squadOf = (pid: string) =>
-    d.squads.filter((s) => s.participant_id === pid).map((s) => playerById.get(s.player_id)!).filter(Boolean);
+    d.squads.filter((s) => s.participant_id === pid).map((s) => playerById.get(s.player_id)).filter((p): p is Player => p !== undefined);
   const mySquad = me ? squadOf(me.id) : [];
   const ownerOf = (playerId: string) => {
     const s = d.squads.find((x) => x.player_id === playerId);

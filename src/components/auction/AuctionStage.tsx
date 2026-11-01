@@ -4,16 +4,17 @@ import { PlayerPortrait } from "./PlayerPortrait";
 import { PlayerProfile } from "./PlayerProfile";
 import { TierBadge } from "./PlayerCard";
 import { TeamCrest } from "./TeamCrest";
-import { TimerRing } from "./TimerRing";
+import { LotTimer, type LotClock } from "./TimerRing";
 import { formatMoney, ROLE_LABEL, type Player, type Settings } from "@/lib/auction-rules";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef } from "react";
 
 export interface StageBid { id: string; amount: number; team: string; color: string; time?: string }
-export function AuctionStage({ player, currency, price, leader, remaining, total, paused, connection = "connected", bids, pulse, increment, starred, onStar, label, children }: {
+export function AuctionStage({ player, currency, price, leader, remaining, total, paused, connection = "connected", bids, pulse, increment, starred, onStar, label, children, clock }: {
   player: Player; currency: Settings["currency"]; price: number; leader?: { name: string; color: string } | null;
   remaining: number; total: number; paused?: boolean; connection?: string; bids: StageBid[]; pulse?: string; increment?: number;
   starred?: boolean; onStar?: () => void; label: string; children?: React.ReactNode;
+  clock?: LotClock;
 }) {
   const priceRef=useRef<HTMLElement>(null);
   useEffect(()=>{if(!pulse || window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;priceRef.current?.animate([{opacity:.4,transform:"translateY(10px)"},{opacity:1,transform:"translateY(0)"}],{duration:300,easing:"ease-out"});},[pulse]);
@@ -34,7 +35,7 @@ export function AuctionStage({ player, currency, price, leader, remaining, total
       <div className={cn("price-desk",pulse && "price-desk-active")}>
         <div className="min-w-0 flex-1"><span className="stat-label">{leader ? "Current highest bid" : "Opening bid"}</span><div className="flex items-center gap-3"><strong ref={priceRef} className="broadcast-price tabular">{formatMoney(price,currency)}</strong>{!!increment && <span className="increment-rise text-sm font-bold text-success"><ArrowUp className="inline h-3 w-3"/>{formatMoney(increment,currency)}</span>}</div>
         <div className={cn("leading-team",pulse && "team-sweep")} style={leader ? {"--team-color":leader.color} as React.CSSProperties : undefined}>{leader ? <><TeamCrest name={leader.name} color={leader.color} className="h-8 w-8"/><span>{leader.name}</span><TrendingUp className="ml-auto h-4 w-4"/></> : <span className="text-sm text-muted-foreground">The floor is open</span>}</div></div>
-        <TimerRing remainingMs={remaining} totalMs={total} paused={paused}/>
+        <LotTimer clock={clock} remainingMs={remaining} totalMs={total} paused={paused}/>
       </div>
       {children}
     </div>

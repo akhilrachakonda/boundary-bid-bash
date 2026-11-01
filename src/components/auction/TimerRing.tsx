@@ -1,4 +1,15 @@
 import { cn } from "@/lib/utils";
+import { useNow } from "@/hooks/use-room";
+
+export interface LotClock { endsAt: string | null; offset: number; paused: boolean; pausedRemaining: number }
+function LiveTimer({ clock, totalMs }: { clock: LotClock; totalMs: number }) {
+  const now = useNow(clock.offset, 250);
+  const remaining = clock.paused ? clock.pausedRemaining : clock.endsAt ? new Date(clock.endsAt).getTime() - now : 0;
+  return <TimerRing remainingMs={remaining} totalMs={totalMs} paused={clock.paused}/>;
+}
+export function LotTimer({ clock, remainingMs, totalMs, paused }: { clock?: LotClock | undefined; remainingMs: number; totalMs: number; paused?: boolean | undefined }) {
+  return clock ? <LiveTimer clock={clock} totalMs={totalMs}/> : <TimerRing remainingMs={remainingMs} totalMs={totalMs} paused={paused}/>;
+}
 
 export function TimerRing({ remainingMs, totalMs, paused }: { remainingMs: number; totalMs: number; paused?: boolean | undefined }) {
   const secs = Math.max(0, Math.ceil(remainingMs / 1000));

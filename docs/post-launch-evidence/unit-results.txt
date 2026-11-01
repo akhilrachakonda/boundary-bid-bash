@@ -1,0 +1,24 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - `__dirname` (vitest.config.ts:14:32). Use `import.meta.dirname` instead
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.12 [39m[90m/dev-server[39m
+
+ [32m✓[39m src/test/auction-presentation.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/test/post-launch-requests.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m src/test/auction-rules.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m src/test/evaluation-v2.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m src/test/room-actions.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/test/auction-order.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/test/player-photos.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/test/evaluation-v21.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 221[2mms[22m[39m
+ [32m✓[39m src/test/app-routing.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/test/post-launch-ui.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1545[2mms[22m[39m
+     [33m[2m✓[22m[39m shows pending immediately, ignores repeated clicks and unlocks on authoritative acceptance [33m 444[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps host pause independent of a pending bid and coalesces duplicate host presses [33m 1056[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[32m63 passed[39m[22m[90m (63)[39m
+[2m   Start at [22m 18:11:13
+[2m   Duration [22m 7.58s[2m (transform 1.82s, setup 12.35s, import 4.07s, tests 1.91s, environment 31.39s)[22m
+
