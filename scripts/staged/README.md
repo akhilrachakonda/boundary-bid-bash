@@ -9,7 +9,6 @@ existing schema migrations.
 
 `0018_post_launch_auction_controls.sql` adds the capability marker, guarded host
 commands, final-call nominations, unlimited explicit rounds, bid undo history,
-next-lot timers and lean projections. Existing rooms keep their old progression
-unless the host explicitly enables the repair flow in a completed room; new
-rooms use it automatically once this migration is installed. Scoring is not
-changed.
+next-lot timers and lean projections. Existing rooms keep their old progression;
+new rooms use it automatically once this migration is installed. Scoring is not
+changed. Existing-room opt-in is deliberately not implemented.

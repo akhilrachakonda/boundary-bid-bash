@@ -101,7 +101,7 @@ END $$;
 
 CREATE FUNCTION public.auction_command(p_room uuid,p_action text,p_lot uuid,p_version bigint,p_status text,p_revision bigint,p_request uuid,p_payload jsonb DEFAULT '{}'::jsonb) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE r public.rooms; saved public.auction_commands; a jsonb; b public.bids; prev public.bids;
- ids uuid[]; sl public.sales; n integer; summary uuid[]; result jsonb; timers jsonb;
+ ids uuid[]; sl public.sales; summary uuid[]; result jsonb;
 BEGIN
  PERFORM public._me(p_room); SELECT * INTO r FROM public.rooms WHERE id=p_room FOR UPDATE;
  IF auth.uid() IS NULL OR r.host_id IS DISTINCT FROM auth.uid() THEN RAISE EXCEPTION 'Only the host can do that'; END IF;
@@ -199,6 +199,9 @@ DO $$ DECLARE d text; BEGIN
  d:=replace(d,'if r.status <> ''completed''', 'if r.repair_flow then raise exception ''Confirm close with pending nomination summary''; end if; if r.status <> ''completed'''); EXECUTE d;
  d:=pg_get_functiondef('public.place_bid(uuid,numeric)'::regprocedure);
  d:=replace(d,'now()', 'clock_timestamp()'); EXECUTE d;
+ d:=pg_get_functiondef('public._resolve_lot(uuid,boolean)'::regprocedure);
+ d:=replace(d,'where id = p_room;', 'where id = p_room for update;');
+ d:=replace(d,'if r.current_rp is null then return; end if;', 'if r.current_rp is null then return; end if; IF NOT EXISTS(SELECT 1 FROM public.room_players WHERE id=r.current_rp AND room_id=p_room AND status=''live'') THEN RETURN; END IF;'); EXECUTE d;
 END $$;
 REVOKE EXECUTE ON FUNCTION public._advance_lot_pre_repair(uuid),public._room_projection_full(uuid),public._repair_new_room(),public._repair_live_lot(),public._repair_bid_session(),public._repair_eligible(uuid,uuid,uuid) FROM PUBLIC,anon,authenticated;
 REVOKE EXECUTE ON FUNCTION public.auction_command(uuid,text,uuid,bigint,text,bigint,uuid,jsonb),public.nominate_unsold(uuid,uuid,bigint,bigint),public.room_live_projection(uuid) FROM PUBLIC,anon;
