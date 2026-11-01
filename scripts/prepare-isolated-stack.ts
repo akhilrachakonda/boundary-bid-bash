@@ -18,7 +18,7 @@ const values=localEnvironment(path);
 const sql=postgres(values['DB_URL'] ?? '',{max:1});
 try {
   const [identity]=await sql`SELECT inet_server_addr()::text host,inet_server_port() port,current_database() database`;
-  if(identity?.host!=='127.0.0.1/32'||identity.port!==54322) throw Error('Isolation identity mismatch');
+  if(!['127.0.0.1','127.0.0.1/32'].includes(identity?.host??'')||identity.port!==54322) throw Error('Isolation identity mismatch');
   console.log('ISOLATION',identity);
   if(!(await sql`SELECT to_regclass('storage.objects') object`)[0]?.object) throw Error('Start official native storage service before setup; no stand-in tables');
   const installed=(await sql`SELECT to_regclass('public.auction_commands') present`)[0]?.present;
