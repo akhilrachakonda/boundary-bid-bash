@@ -17,9 +17,9 @@ if(!path) throw Error('Usage: bun scripts/prepare-isolated-stack.ts /tmp/local-s
 const values=localEnvironment(path);
 const sql=postgres(values['DB_URL'] ?? '',{max:1});
 try {
-  const [identity]=await sql`SELECT inet_server_addr()::text host,inet_server_port() port,current_database() database`;
+  const [identity]=await sql`SELECT inet_server_addr()::text host,inet_server_port() port,current_database() database,current_setting('data_directory') data_directory`;
   console.log('Local server identity',identity);
-  if(!['127.0.0.1','127.0.0.1/32'].includes(identity?.host??'')||Number(identity.port)!==54322) throw Error('Isolation identity mismatch');
+  if(!String(identity?.data_directory).startsWith('/tmp/cricket-native/home/stacks/')) throw Error('Isolation data-directory mismatch');
   console.log('ISOLATION',identity);
   if(!(await sql`SELECT to_regclass('storage.objects') object`)[0]?.object) throw Error('Start official native storage service before setup; no stand-in tables');
   const installed=(await sql`SELECT to_regclass('public.auction_commands') present`)[0]?.present;
