@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Player, Settings } from "@/lib/auction-rules";
 import { withCanonicalPhoto } from "@/lib/player-photos";
+import type { RepairCapabilities } from '@/lib/post-launch-controls';
 
 export interface Room {
   id: string;
@@ -22,6 +23,11 @@ export interface Room {
   trade_ends_at: string | null;
   evaluation_version?: string;
   evaluation_snapshot?: string | null;
+  repair_flow?: boolean;
+  auction_stage?: 'round' | 'final_call' | 'closed';
+  auction_round?: number;
+  control_revision?: number;
+  next_lot_settings?: { bid_timer?: number; bid_reset?: number };
 }
 export interface Participant {
   id: string;
@@ -50,6 +56,8 @@ export interface Bid {
   participant_id: string;
   amount: number;
   created_at: string;
+  undone?: boolean;
+  request_id?: string | null;
 }
 export interface SquadRow {
   id: string;
@@ -97,6 +105,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
   const [notes, setNotes] = useState<Notes>({ targets: {}, xi: { order: [], overs: {} }, notes: "" });
   const [error, setError] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const [capabilities,setCapabilities]=useState<RepairCapabilities>({});
   const [offset, setOffset] = useState(0);
   const [connection, setConnection] = useState("connecting");
   const roomRef = useRef<Room | null>(null);
@@ -107,10 +116,10 @@ export function useRoom(roomId: string, userId: string | undefined) {
       switch (t) {
         case "rooms": {
           const { data, error } = await supabase.rpc("room_projection", { p_room: roomId });
-          const projection = data as unknown as { room: Room; pool: RoomPlayer[] } | null;
+          const projection = data as unknown as { room: Room; pool: RoomPlayer[]; capabilities?: RepairCapabilities } | null;
           if (error) setError(error.message);
           else if (!projection) setError("Room not found or you are not a member.");
-          else { setRoom(projection.room); roomRef.current=projection.room; setPool(projection.pool.map(rp=>({...rp,player:withCanonicalPhoto(rp.player)}))); }
+          else { setCapabilities(projection.capabilities??{});setRoom(projection.room); roomRef.current=projection.room; setPool(projection.pool.map(rp=>({...rp,player:withCanonicalPhoto(rp.player)}))); }
           return projection?.room ?? null;
         }
         case "participants": {
@@ -137,7 +146,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
             .eq("room_player_id", rp)
             .order("created_at", { ascending: false })
             .limit(30);
-          setBids((data ?? []) as Bid[]);
+          setBids(((data ?? []) as Bid[]).filter(b=>!b.undone));
           return;
         }
         case "squads": {
@@ -279,7 +288,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
     };
   }, [loaded, roomId, offset, load]);
 
-  return { room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, reload: load };
+  return { room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload: load };
 }
 
 export function useNow(offset: number, ms = 100) {
