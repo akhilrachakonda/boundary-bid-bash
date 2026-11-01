@@ -36,7 +36,7 @@ export function PostLaunchDesk({data,d}:{data:RoomData;d:Derived}) {
  const run=async(action:string,payload:Record<string,unknown>={})=>{
   if(flight.current)return;flight.current=true;setBusy(true);
   try{
-   const result=await rpc(action==='nominate'?'nominate_unsold':'auction_command',action==='nominate'?{p_room:room.id,p_lot:payload.lot,p_version:room.lot_version,p_revision:room.control_revision??0}:auctionCommandArgs(room,action,crypto.randomUUID(),payload),{timeoutMs:8000});
+   const result=await rpc(action==='nominate'?'nominate_unsold':'auction_command',action==='nominate'?{p_room:room.id,p_lot:payload['lot'],p_version:room.lot_version,p_revision:room.control_revision??0}:auctionCommandArgs(room,action,crypto.randomUUID(),payload),{timeoutMs:8000});
    if(result&&action==='settings'){toast.success('Saved for the next player');setOpen(false);}
   }catch{toast.warning('Action outcome unconfirmed. Refreshing; no automatic retry.');}
   finally{
