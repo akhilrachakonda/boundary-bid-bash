@@ -76,6 +76,7 @@ export function Auction({ data, d, now, sound }: { data: RoomData; d: Derived; n
   useEffect(()=>{if(!sale)return;const t=setTimeout(()=>setSale(null),2700);return()=>clearTimeout(t);},[sale]);
   useEffect(()=>{if(!pulse)return;const t=setTimeout(()=>{setPulse("");setIncrement(0);},1400);return()=>clearTimeout(t);},[pulse]);
   useEffect(()=>{previousPrice.current=null;},[room?.current_rp]);
+  useEffect(()=>{setAccepted(false);clearTimeout(acceptedTimer.current);},[room?.current_rp]);
   if(!room || !me) return null;
   const s=room.settings;
   const paused=room.status === "paused";
@@ -87,6 +88,7 @@ export function Auction({ data, d, now, sound }: { data: RoomData; d: Derived; n
     if(block || pending.current || paused || remaining<=0 || data.connection!=="connected")return;
     pending.current=true;setBusy(true);
     try { const result=await rpc("place_bid",bidArgs(room,amount,crypto.randomUUID())); if(result!==undefined){setAccepted(true);clearTimeout(acceptedTimer.current);acceptedTimer.current=setTimeout(()=>setAccepted(false),700);} }
+    catch { await data.reload('rooms'); await data.reload('bids'); }
     finally {pending.current=false;setBusy(false);}
   };
   const toggleStar=()=>{if(!player)return;const targets={...data.notes.targets};if(targets[player.id])delete targets[player.id];else targets[player.id]={};data.saveNotes({...data.notes,targets});};
@@ -94,7 +96,7 @@ export function Auction({ data, d, now, sound }: { data: RoomData; d: Derived; n
   const roundPool=data.pool.filter(x=>x.round===(rp?.round ?? 1));
   const done=roundPool.filter(x=>x.status==="sold"||x.status==="unsold").length;
   return <div className="auction-room space-y-5">
-    <div className="flex flex-wrap items-center justify-between gap-2"><div className="flex items-center gap-3"><span className="live-indicator"/><h1 className="text-xl font-bold uppercase">Live auction</h1><span className="text-xs text-muted-foreground">{rp?.round===2 ? "Accelerated" : "First round"} · {done+1} / {roundPool.length} lots</span></div><Button variant="outline" size="sm" onClick={()=>setStrategy(true)}><Lock className="h-3.5 w-3.5"/>My strategy<ChevronRight className="h-3.5 w-3.5"/></Button></div>
+    <div className="flex flex-wrap items-center justify-between gap-2"><div className="flex flex-wrap items-center gap-3"><span className="live-indicator"/><h1 className="text-xl font-bold uppercase">Live auction</h1><span className="text-xs text-muted-foreground">{room.repair_flow ? `Round ${room.auction_round??1}` : rp?.round===2 ? "Accelerated" : "First round"} · {done+1} / {roundPool.length} lots</span></div><Button variant="outline" size="sm" onClick={()=>setStrategy(true)}><Lock className="h-3.5 w-3.5"/>My strategy<ChevronRight className="h-3.5 w-3.5"/></Button></div>
     {player && <AuctionStage player={player} currency={s.currency} price={room.current_bid == null ? Number(player.base_price):Number(room.current_bid)} leader={leader ? {name:leader.team_name,color:leader.color}:null} remaining={remaining} total={s.bid_timer*1000} paused={paused} connection={data.connection} label={`${room.format} / ${rp?.round===2 ? "Accelerated round" : "First round"}`} bids={data.bids.filter(b=>b.room_player_id===room.current_rp).map(b=>({id:b.id,amount:Number(b.amount),team:d.partById.get(b.participant_id)?.team_name??"Team",color:d.partById.get(b.participant_id)?.color??"var(--electric)",time:new Date(b.created_at).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"})}))} pulse={pulse} increment={increment} starred={!!data.notes.targets[player.id]} onStar={toggleStar}>
       <div className="bid-bar bid-bar-budget"><BidBudget settings={s} purse={Number(me.purse)} counts={d.myCounts} player={player} blocked={d.myCounts.total>=s.max_squad || (player.nationality_type==="Overseas" && d.myCounts.overseas>=s.max_overseas)} /><Button onClick={bid} disabled={!!block||busy||paused||remaining<=0||data.connection!=="connected"} className={cn("bid-action h-16 w-full flex-1 bg-gold font-display text-2xl font-bold uppercase text-primary-foreground",accepted&&"bid-accepted")} aria-busy={busy}>{busy ? <><Loader2 className="h-5 w-5 animate-spin"/>Confirming bid…</> : accepted ? <><Check className="h-5 w-5"/>Bid accepted</> : paused ? "Auction paused" : data.connection!=="connected" ? "Reconnecting…" : remaining<=0 ? "Hammer falling…" : block ?? `Bid ${formatMoney(amount,s.currency)}`}</Button></div>
     </AuctionStage>}

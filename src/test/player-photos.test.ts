@@ -7,4 +7,5 @@ describe("complete identity matched portrait catalogue",()=>{
   it("never counts a provider default shirt as a portrait",()=>{expect(photos.filter(p=>/\/default-player|\/default-avatar/i.test(p.original_url))).toEqual([]);});
   it("matches Mohsin Khan India rather than a similar name",()=>{expect(photos.find(p=>p.name==='Mohsin Khan')?.country).toBe('India');});
   it("preserves owner replacement photos",()=>{const p={name:'Virat Kohli',country:'India',photo_url:'https://example.org/owner.jpg'} as Player;expect(withCanonicalPhoto(p).photo_url).toBe('https://example.org/owner.jpg');});
+  it('upgrades the old canonical Kohli portrait across formats without replacing owner overrides',()=>{const old=photos.find(p=>p.name==='Virat Kohli');const result=withCanonicalPhoto({name:'Virat Kohli',country:'India',format:'IPL',photo_url:old?.url} as Player);expect(result.photo_source).toBe('https://commons.wikimedia.org/wiki/File:Virat_Kohli_portrait.jpg');expect(result.photo_url).not.toBe(old?.url);});
 });
