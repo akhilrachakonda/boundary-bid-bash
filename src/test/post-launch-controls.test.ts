@@ -5,6 +5,7 @@ const room = { id:'room',current_rp:'lot',lot_version:7,status:'auction',control
 describe('repair activation and guards',()=>{
  it('never enables absent backend functions',()=>expect(repairsEnabled(room,{})).toBe(false));
  it('keeps historical rooms on old flow',()=>expect(repairsEnabled({...room,repair_flow:false},{auction_controls:1})).toBe(false));
- it('binds host commands to observed lot, version, stage and revision',()=>expect(auctionCommandArgs(room,'undo_bid','retry',{bid_id:'bid'})).toEqual({p_room:'room',p_action:'undo_bid',p_lot:'lot',p_version:7,p_status:'auction',p_revision:4,p_request:'retry',p_payload:{bid_id:'bid'}}));
+ it('binds host commands to observed lot, version, stage and revision',()=>expect(auctionCommandArgs(room,'undo_bid','retry',{bid_id:'bid'})).toEqual({p_room:'room',p_action:'undo_bid',p_lot:'lot',p_version:7,p_status:'auction',p_revision:4,p_request:'retry',p_payload:{bid_id:'bid',observed_bid_revision:0}}));
+ it('captures the observed accepted-bid revision so a delayed skip cannot discard a new bid',()=>expect(auctionCommandArgs({...room,bid_revision:19},'skip','retry').p_payload).toEqual({observed_bid_revision:19}));
  it('accepts exact timer bounds',()=>{expect(validTimers(1,120)).toBe(true);expect(validTimers(0,120)).toBe(false);expect(validTimers(121,1)).toBe(false);expect(validTimers(1,1.5)).toBe(false);});
 });

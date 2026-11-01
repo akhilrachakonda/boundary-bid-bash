@@ -12,7 +12,7 @@ export function saleSnapshot(record: Sale, pool: RoomPlayer[], participants: Par
 
 /** Match the server's queue, including accelerated lots and explicit undo priority. */
 export function pendingLots(pool: RoomPlayer[]) {
-  return pool.filter(p => p.status === "pending").sort((a, b) => a.round - b.round || a.lot_order - b.lot_order);
+  return pool.filter(p => p.status === "pending").sort((a, b) => a.round - b.round || a.lot_order - b.lot_order || a.id.localeCompare(b.id));
 }
 
 /** Baseline historic IDs once; an initially empty feed must still celebrate its first event. */
