@@ -1,4 +1,25 @@
-# Unified repair verification — 2026-11-01, 18:51 UTC
+# Production activation — 2026-11-01, 19:02 UTC
+
+## Database installed and verified; matching accepted app ready for publishing — NOT published
+
+Accepted main source confirmed at `4603d80b9bda008213b79cead525d5a211ebbc99`, initially clean. No draft creation, feature rewrites, production fixtures/load, catalogue replay, customer-game writes, admin assignment, Auth/storage changes or deployment.
+
+- Installed through the supported transactional migration tool: `drizzle/migrations/0018_post_launch_auction_controls.sql`, once, registered database migration ID19 / timestamp1793559637679. All18 earlier migration hashes/timestamps already matched the source journal; none replayed.
+- Every dynamic replacement prerequisite was found exactly once in actual production definitions before installation. Historical advancement/full projection copies match the original definition fingerprints after normalizing only their names. All expected replacements were inspected after installation.
+- Approved staged file SHA256 `42424464ee04ce83ef5cb4324c68716cac3af25cdb963bb56e06af2d48fa3cdb`. Submitted/registered file SHA256 `24192f69f14b032d320138eca3dab8975949a05beb531b5c1e99b1a8474cbc99`: SQL is identical; the submitted payload has one final newline absent in the staged source. This discrepancy is explicitly disclosed, not a second application. Keep the staged file as historical evidence only; never install it again.
+- Necessary installation fix: production inherited default grants gave anon/member access to new tables and UPDATE on the acceptance sequence, despite explicit grants in0018. RLS blocked table writes, but direct sequence changes were reachable. Applied `drizzle/migrations/0019_post_launch_inherited_access_hardening.sql`, ID20 / timestamp1793559709388, hash `861c215b60eca26e6553b4ab120543b6782c1fdface83ccf892e376dc83446a5`. It revokes inherited caller access, restores only member nomination SELECT and service access, and raises/rolls back on ACL/RLS verification failure. No gameplay runtime code changed.
+- Final ACLs: nominations member SELECT only, commands service-only, neither table anon-readable/writable; both RLS enabled, member nomination policy uses `is_room_member(room_id)`. Acceptance sequence inaccessible to anon/authenticated; owner/service authority retained. New RPCs authenticated-only, internal helper RPCs inaccessible to anon/authenticated, all SECURITY DEFINER search paths fixed to public.
+- All40 existing rooms remain `repair_flow=false` with historical defaults. All3425 existing bids retain `undone=false`, session0 and NULL acceptance order. Before/after fingerprints match for40 rooms,87 participants/purses,3425 bids,240 holdings,403 sales and6 private notes. No existing record changed, excluding newly added default columns.
+- Verified enabled insert-only new-room trigger sets repair_flow=true, while column default remains false. Session/acceptance triggers installed and ordered after lot-version trigger. Full/lean membership checks and capability marker installed; hidden queue arrays remain excluded. Host ownership, observed lot/status/control/bid revision, retry identity, next-lot-only timers, nomination eligibility/summary and trade closure guards inspected in installed definitions.
+- Latest automatic build/typecheck inspected: **build OK 19:01:53Z**. Previously recorded69 unit,7 importer,75 real isolated browser checks retained, not rerun or relabeled production testing. No production gameplay mutation was used to test installation.
+
+Exact inspection queries and preservation fingerprints: `docs/post-launch-evidence/production-activation.md`. Activation source save before final documentation: `9f942b801e8575860dc14c14b1f0b67d1dc24520`; final platform-managed commit is returned in chat after these documentation saves.
+
+**Next action:** publish this matching accepted main app through the user's deployment connector. Database activation is complete, not a claim of exhaustive production gameplay/performance clearance. Previously documented race-matrix, real-device and portrait/data limits remain. Do not deploy an older client into newly created repair rooms or reapply0018.
+
+---
+
+# Unified repair verification — 2026-11-01, 18:51 UTC (historical)
 
 ## Current result: implemented and tested locally; NOT activated on production
 

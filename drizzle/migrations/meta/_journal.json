@@ -127,6 +127,20 @@
       "when": 1793235385124,
       "tag": "0017_release_scoring_request_quota",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1793559637679,
+      "tag": "0018_post_launch_auction_controls",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1793559709388,
+      "tag": "0019_post_launch_inherited_access_hardening",
+      "breakpoints": true
     }
   ]
 }

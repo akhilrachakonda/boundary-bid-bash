@@ -35,33 +35,120 @@ export type Database = {
         }
         Relationships: []
       }
-      bids: {
+      auction_commands: {
         Row: {
-          amount: number
+          args: Json
           created_at: string
-          id: string
+          request_id: string
+          result: Json
+          room_id: string
+          user_id: string
+        }
+        Insert: {
+          args: Json
+          created_at?: string
+          request_id: string
+          result: Json
+          room_id: string
+          user_id: string
+        }
+        Update: {
+          args?: Json
+          created_at?: string
+          request_id?: string
+          result?: Json
+          room_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auction_commands_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      auction_nominations: {
+        Row: {
+          created_at: string
           participant_id: string
-          request_id: string | null
           room_id: string
           room_player_id: string
         }
         Insert: {
-          amount: number
           created_at?: string
-          id?: string
           participant_id: string
-          request_id?: string | null
           room_id: string
           room_player_id: string
         }
         Update: {
+          created_at?: string
+          participant_id?: string
+          room_id?: string
+          room_player_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auction_nominations_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auction_nominations_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auction_nominations_room_player_id_fkey"
+            columns: ["room_player_id"]
+            isOneToOne: false
+            referencedRelation: "room_players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bids: {
+        Row: {
+          accepted_order: number | null
+          amount: number
+          created_at: string
+          id: string
+          lot_session: number
+          participant_id: string
+          request_id: string | null
+          room_id: string
+          room_player_id: string
+          undone: boolean
+        }
+        Insert: {
+          accepted_order?: number | null
+          amount: number
+          created_at?: string
+          id?: string
+          lot_session?: number
+          participant_id: string
+          request_id?: string | null
+          room_id: string
+          room_player_id: string
+          undone?: boolean
+        }
+        Update: {
+          accepted_order?: number | null
           amount?: number
           created_at?: string
           id?: string
+          lot_session?: number
           participant_id?: string
           request_id?: string | null
           room_id?: string
           room_player_id?: string
+          undone?: boolean
         }
         Relationships: [
           {
@@ -716,7 +803,12 @@ export type Database = {
         Row: {
           accel_done: boolean
           accelerated_order: string[] | null
+          auction_round: number
+          auction_stage: string
+          bid_revision: number
+          bid_session: number
           code: string
+          control_revision: number
           created_at: string
           current_bid: number | null
           current_bidder: string | null
@@ -729,7 +821,9 @@ export type Database = {
           lot_ends_at: string | null
           lot_version: number
           name: string
+          next_lot_settings: Json
           paused_remaining_ms: number | null
+          repair_flow: boolean
           review_ends_at: string | null
           scoring_patch: string | null
           settings: Json
@@ -739,7 +833,12 @@ export type Database = {
         Insert: {
           accel_done?: boolean
           accelerated_order?: string[] | null
+          auction_round?: number
+          auction_stage?: string
+          bid_revision?: number
+          bid_session?: number
           code: string
+          control_revision?: number
           created_at?: string
           current_bid?: number | null
           current_bidder?: string | null
@@ -752,7 +851,9 @@ export type Database = {
           lot_ends_at?: string | null
           lot_version?: number
           name: string
+          next_lot_settings?: Json
           paused_remaining_ms?: number | null
+          repair_flow?: boolean
           review_ends_at?: string | null
           scoring_patch?: string | null
           settings: Json
@@ -762,7 +863,12 @@ export type Database = {
         Update: {
           accel_done?: boolean
           accelerated_order?: string[] | null
+          auction_round?: number
+          auction_stage?: string
+          bid_revision?: number
+          bid_session?: number
           code?: string
+          control_revision?: number
           created_at?: string
           current_bid?: number | null
           current_bidder?: string | null
@@ -775,7 +881,9 @@ export type Database = {
           lot_ends_at?: string | null
           lot_version?: number
           name?: string
+          next_lot_settings?: Json
           paused_remaining_ms?: number | null
+          repair_flow?: boolean
           review_ends_at?: string | null
           scoring_patch?: string | null
           settings?: Json
@@ -993,6 +1101,7 @@ export type Database = {
     }
     Functions: {
       _advance_lot: { Args: { p_room: string }; Returns: undefined }
+      _advance_lot_pre_repair: { Args: { p_room: string }; Returns: undefined }
       _check_after_trade: {
         Args: { p_before: Json; p_part: string; p_settings: Json }
         Returns: undefined
@@ -1037,13 +1146,31 @@ export type Database = {
         Args: { p_action: string; p_limit: number; p_seconds: number }
         Returns: boolean
       }
+      _repair_eligible: {
+        Args: { p_lot: string; p_part: string; p_room: string }
+        Returns: boolean
+      }
       _resolve_lot: {
         Args: { p_force_unsold: boolean; p_room: string }
         Returns: undefined
       }
+      _room_projection_full: { Args: { p_room: string }; Returns: Json }
       _shuffle_player_ids: { Args: { p_ids: string[] }; Returns: string[] }
       _squad_counts: { Args: { p_part: string }; Returns: Json }
       allow_evaluation: { Args: { p_room: string }; Returns: boolean }
+      auction_command: {
+        Args: {
+          p_action: string
+          p_lot: string
+          p_payload?: Json
+          p_request: string
+          p_revision: number
+          p_room: string
+          p_status: string
+          p_version: number
+        }
+        Returns: Json
+      }
       commit_room_evaluation: {
         Args: {
           p_hash: string
@@ -1105,6 +1232,15 @@ export type Database = {
         Args: { p_base: number; p_current: number; p_settings: Json }
         Returns: number
       }
+      nominate_unsold: {
+        Args: {
+          p_lot: string
+          p_revision: number
+          p_room: string
+          p_version: number
+        }
+        Returns: undefined
+      }
       open_trades: {
         Args: { p_minutes: number; p_room: string }
         Returns: undefined
@@ -1149,6 +1285,7 @@ export type Database = {
         }
         Returns: string
       }
+      room_live_projection: { Args: { p_room: string }; Returns: Json }
       room_projection: { Args: { p_room: string }; Returns: Json }
       server_now: { Args: never; Returns: string }
       set_pool: {
