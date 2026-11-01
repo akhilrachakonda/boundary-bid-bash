@@ -35,7 +35,7 @@ async function denied(fn:()=>Promise<unknown>,message:string){let fail=false;try
 async function projection(user=users[0]){return asUser<any>(user,'SELECT public.room_projection($1) AS value',[room]);}
 async function command(action:string,payload={},user=users[0],request=randomUUID(),observed?:any){
  const p=observed??await projection(user); const r=p.room;
- return asUser(user,'SELECT public.auction_command($1,$2,$3,$4,$5,$6,$7,$8::text::jsonb) AS value',[room,action,r.current_rp,r.lot_version,r.status,r.control_revision,request,JSON.stringify(payload)]);
+ return asUser(user,'SELECT public.auction_command($1,$2,$3,$4,$5,$6,$7,$8::text::jsonb) AS value',[room,action,r.current_rp,r.lot_version,r.status,r.control_revision,request,JSON.stringify({...payload,observed_bid_revision:r.bid_revision})]);
 }
 async function bid(user:string,amount:number,p:any,request=randomUUID()){
  return asUser(user,'SELECT public.place_bid($1,$2,$3,$4,$5) AS value',[room,amount,p.room.current_rp,p.room.lot_version,request]);

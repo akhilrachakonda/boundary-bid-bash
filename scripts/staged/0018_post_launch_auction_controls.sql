@@ -5,8 +5,12 @@ ALTER TABLE public.rooms ADD COLUMN auction_round integer NOT NULL DEFAULT 1;
 ALTER TABLE public.rooms ADD COLUMN control_revision bigint NOT NULL DEFAULT 0;
 ALTER TABLE public.rooms ADD COLUMN next_lot_settings jsonb NOT NULL DEFAULT '{}'::jsonb;
 ALTER TABLE public.rooms ADD COLUMN bid_session bigint NOT NULL DEFAULT 0;
+ALTER TABLE public.rooms ADD COLUMN bid_revision bigint NOT NULL DEFAULT 0;
 ALTER TABLE public.bids ADD COLUMN undone boolean NOT NULL DEFAULT false;
 ALTER TABLE public.bids ADD COLUMN lot_session bigint NOT NULL DEFAULT 0;
+-- Existing timestamps remain untouched. New acceptance order is allocated under the room lock.
+CREATE SEQUENCE public.bid_acceptance_order;
+ALTER TABLE public.bids ADD COLUMN accepted_order bigint;
 
 CREATE TABLE public.auction_nominations (
  room_id uuid NOT NULL REFERENCES public.rooms(id),
@@ -49,8 +53,26 @@ END $$;
 -- Alphabetical trigger ordering: release_lot_version runs before zz_repair_session.
 CREATE TRIGGER zz_repair_session AFTER UPDATE OF status ON public.room_players FOR EACH ROW EXECUTE FUNCTION public._repair_live_lot();
 CREATE FUNCTION public._repair_bid_session() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
-BEGIN SELECT bid_session INTO NEW.lot_session FROM public.rooms WHERE id=NEW.room_id; RETURN NEW; END $$;
+BEGIN
+ PERFORM 1 FROM public.rooms WHERE id=NEW.room_id FOR UPDATE;
+ SELECT bid_session INTO NEW.lot_session FROM public.rooms WHERE id=NEW.room_id;
+ NEW.accepted_order:=nextval('public.bid_acceptance_order');
+ UPDATE public.rooms SET bid_revision=bid_revision+1 WHERE id=NEW.room_id;
+ RETURN NEW;
+END $$;
 CREATE TRIGGER repair_bid_session BEFORE INSERT ON public.bids FOR EACH ROW EXECUTE FUNCTION public._repair_bid_session();
+
+-- Bind the retry ID to this exact INSERT, not transaction-start timestamps.
+DO $$ DECLARE d text; BEGIN
+ d:=pg_get_functiondef('public.place_bid(uuid,numeric)'::regprocedure);
+ d:=replace(d,'values (p_room, rp.id, me.id, nxt);',
+  'values (p_room, rp.id, me.id, nxt); PERFORM set_config(''cricket.accepted_bid_id'',currval(''public.bid_acceptance_order'')::text,true);');
+ EXECUTE d;
+ d:=pg_get_functiondef('public.place_bid(uuid,numeric,uuid,bigint,uuid)'::regprocedure);
+ d:=replace(d,'WHERE id=(SELECT id FROM public.bids WHERE participant_id=me.id AND room_player_id=p_lot ORDER BY created_at DESC,id DESC LIMIT 1)',
+  'WHERE participant_id=me.id AND room_player_id=p_lot AND accepted_order=current_setting(''cricket.accepted_bid_id'')::bigint');
+ EXECUTE d;
+END $$;
 
 CREATE OR REPLACE FUNCTION public._advance_lot(p_room uuid) RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE r public.rooms; nxt uuid;
@@ -101,7 +123,7 @@ END $$;
 
 CREATE FUNCTION public.auction_command(p_room uuid,p_action text,p_lot uuid,p_version bigint,p_status text,p_revision bigint,p_request uuid,p_payload jsonb DEFAULT '{}'::jsonb) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE r public.rooms; saved public.auction_commands; a jsonb; b public.bids; prev public.bids;
- ids uuid[]; sl public.sales; summary uuid[]; result jsonb;
+ ids uuid[]; sl public.sales; summary uuid[]; result jsonb; v_now timestamptz; next_order integer;
 BEGIN
  PERFORM public._me(p_room); SELECT * INTO r FROM public.rooms WHERE id=p_room FOR UPDATE;
  IF auth.uid() IS NULL OR r.host_id IS DISTINCT FROM auth.uid() THEN RAISE EXCEPTION 'Only the host can do that'; END IF;
@@ -110,26 +132,39 @@ BEGIN
  SELECT * INTO saved FROM public.auction_commands WHERE room_id=p_room AND request_id=p_request;
  IF FOUND THEN IF saved.user_id IS DISTINCT FROM auth.uid() OR saved.args IS DISTINCT FROM a THEN RAISE EXCEPTION 'Request ID already used'; END IF; RETURN saved.result; END IF;
  IF NOT r.repair_flow OR r.lot_version IS DISTINCT FROM p_version OR r.status IS DISTINCT FROM p_status OR r.current_rp IS DISTINCT FROM p_lot OR r.control_revision IS DISTINCT FROM p_revision THEN RAISE EXCEPTION 'Auction changed; refresh before acting'; END IF;
+ IF p_action IN ('skip','final_call','pause','undo_bid') AND r.bid_revision IS DISTINCT FROM (p_payload->>'observed_bid_revision')::bigint THEN RAISE EXCEPTION 'Bid state changed; refresh before acting'; END IF;
+ v_now:=clock_timestamp();
  IF NOT public._release_limit('host_command',120,60) THEN RAISE EXCEPTION 'Host command limit reached'; END IF;
  IF p_action='settings' THEN
   IF r.status NOT IN ('auction','paused','completed') OR r.auction_stage='closed' THEN RAISE EXCEPTION 'Settings locked'; END IF;
-  IF jsonb_typeof(p_payload) IS DISTINCT FROM 'object' OR p_payload-'bid_timer'-'bid_reset'<>'{}'::jsonb OR p_payload->>'bid_timer' IS NULL OR p_payload->>'bid_reset' IS NULL OR p_payload->>'bid_timer' !~ '^[0-9]{1,3}$' OR p_payload->>'bid_reset' !~ '^[0-9]{1,3}$' THEN RAISE EXCEPTION 'Only next-lot timers may change'; END IF;
+  IF jsonb_typeof(p_payload) IS DISTINCT FROM 'object' OR p_payload-'bid_timer'-'bid_reset'-'observed_bid_revision'<>'{}'::jsonb OR p_payload->>'bid_timer' IS NULL OR p_payload->>'bid_reset' IS NULL OR p_payload->>'bid_timer' !~ '^[0-9]{1,3}$' OR p_payload->>'bid_reset' !~ '^[0-9]{1,3}$' THEN RAISE EXCEPTION 'Only next-lot timers may change'; END IF;
   IF (p_payload->>'bid_timer')::int NOT BETWEEN 1 AND 120 OR (p_payload->>'bid_reset')::int NOT BETWEEN 1 AND 120 THEN RAISE EXCEPTION 'Timers must be 1–120 seconds'; END IF;
-  UPDATE public.rooms SET next_lot_settings=p_payload WHERE id=p_room;
+  UPDATE public.rooms SET next_lot_settings=p_payload-'observed_bid_revision' WHERE id=p_room;
   PERFORM public._log(p_room,'settings','Saved next-lot timer '||(p_payload->>'bid_timer')||'s; extension '||(p_payload->>'bid_reset')||'s; active deadline unchanged');
  ELSIF p_action='undo_bid' THEN
   IF r.status NOT IN ('auction','paused') OR r.current_rp IS NULL OR (r.status='auction' AND clock_timestamp()>=r.lot_ends_at) THEN RAISE EXCEPTION 'Only an unresolved open lot can undo a bid'; END IF;
-  SELECT * INTO b FROM public.bids WHERE room_id=p_room AND room_player_id=r.current_rp AND lot_session=r.bid_session AND NOT undone ORDER BY created_at DESC,id DESC LIMIT 1;
+  SELECT * INTO b FROM public.bids WHERE room_id=p_room AND room_player_id=r.current_rp AND lot_session=r.bid_session AND NOT undone ORDER BY accepted_order DESC NULLS LAST,created_at DESC,id DESC LIMIT 1;
   IF NOT FOUND OR b.id IS DISTINCT FROM (p_payload->>'bid_id')::uuid THEN RAISE EXCEPTION 'Latest bid changed'; END IF;
-  SELECT * INTO prev FROM public.bids WHERE room_id=p_room AND room_player_id=r.current_rp AND lot_session=r.bid_session AND NOT undone AND id<>b.id ORDER BY created_at DESC,id DESC LIMIT 1;
+  SELECT * INTO prev FROM public.bids WHERE room_id=p_room AND room_player_id=r.current_rp AND lot_session=r.bid_session AND NOT undone AND id<>b.id ORDER BY accepted_order DESC NULLS LAST,created_at DESC,id DESC LIMIT 1;
   UPDATE public.bids SET undone=true WHERE id=b.id;
-  UPDATE public.rooms SET current_bid=prev.amount,current_bidder=prev.participant_id,lot_version=lot_version+1,
+  UPDATE public.rooms SET current_bid=prev.amount,current_bidder=prev.participant_id,lot_version=lot_version+1,bid_revision=bid_revision+1,
    lot_ends_at=CASE WHEN r.status='auction' THEN greatest(r.lot_ends_at,clock_timestamp()+make_interval(secs=>(r.settings->>'bid_reset')::int)) ELSE r.lot_ends_at END,
    paused_remaining_ms=CASE WHEN r.status='paused' THEN greatest(coalesce(r.paused_remaining_ms,0),(r.settings->>'bid_reset')::int*1000) ELSE r.paused_remaining_ms END WHERE id=p_room;
   PERFORM public._log(p_room,'bid_undo','Bid '||b.id||' withdrawn; prior leader restored; at least one extension window remains');
  ELSIF p_action IN ('pause','resume','skip') THEN
-  IF p_action='pause' AND (r.status<>'auction' OR clock_timestamp()>=r.lot_ends_at) THEN RAISE EXCEPTION 'Lot already closed'; END IF;
-  PERFORM public.host_control(p_room,p_action);
+  IF p_action='pause' THEN
+   IF r.status<>'auction' OR r.lot_ends_at IS NULL OR v_now>=r.lot_ends_at THEN RAISE EXCEPTION 'Lot already closed'; END IF;
+   UPDATE public.rooms SET status='paused',paused_remaining_ms=greatest(1,ceil(extract(epoch FROM (r.lot_ends_at-v_now))*1000)::int) WHERE id=p_room;
+   PERFORM public._log(p_room,'info','Auction paused');
+  ELSIF p_action='resume' THEN
+   IF r.status<>'paused' THEN RAISE EXCEPTION 'Not paused'; END IF;
+   UPDATE public.rooms SET status='auction',lot_ends_at=v_now+make_interval(secs=>coalesce(r.paused_remaining_ms,10000)/1000.0),paused_remaining_ms=null WHERE id=p_room;
+   PERFORM public._log(p_room,'info','Auction resumed');
+  ELSE
+   IF r.status NOT IN ('auction','paused') OR (r.status='auction' AND v_now>=r.lot_ends_at) THEN RAISE EXCEPTION 'Lot already closed'; END IF;
+   PERFORM public._resolve_lot(p_room,true);
+   PERFORM public._advance_lot(p_room);
+  END IF;
  ELSIF p_action='final_call' THEN
   IF r.status NOT IN ('auction','paused') THEN RAISE EXCEPTION 'No active auction'; END IF;
   -- Resolve the active bid normally, never discard a fair winning bid on close.
@@ -162,7 +197,12 @@ BEGIN
   DELETE FROM public.squads WHERE room_player_id=sl.room_player_id;
   UPDATE public.participants SET purse=purse+sl.price WHERE id=sl.participant_id;
   UPDATE public.sales SET undone=true WHERE id=sl.id;
-  UPDATE public.room_players SET status=CASE WHEN r.auction_stage='round' AND r.status<>'completed' THEN 'pending' ELSE 'unsold' END,sold_to=null,sold_price=null WHERE id=sl.room_player_id;
+  IF r.auction_stage='round' AND r.status<>'completed' THEN
+   SELECT coalesce(min(lot_order),1)-1 INTO next_order FROM public.room_players WHERE room_id=p_room AND round=r.auction_round AND status='pending';
+   UPDATE public.room_players SET status='pending',round=r.auction_round,lot_order=next_order,sold_to=null,sold_price=null WHERE id=sl.room_player_id;
+  ELSE
+   UPDATE public.room_players SET status='unsold',sold_to=null,sold_price=null WHERE id=sl.room_player_id;
+  END IF;
   PERFORM public._log(p_room,'sale_undo','Sale '||sl.id||' undone; buyer refunded');
  ELSIF p_action='close_trades' THEN
   IF r.status<>'completed' OR r.auction_stage<>'final_call' THEN RAISE EXCEPTION 'Resolve the current lot first'; END IF;

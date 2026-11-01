@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Player, Settings } from "@/lib/auction-rules";
 import { withCanonicalPhoto } from "@/lib/player-photos";
 import { createRefetchCoordinator } from "@/lib/refetch-coordinator";
-import type { RepairCapabilities } from "@/lib/post-launch-controls";
+import { repairsEnabled, type RepairCapabilities } from "@/lib/post-launch-controls";
 
 export interface Room {
   id: string;
@@ -16,6 +16,8 @@ export interface Room {
   review_ends_at: string | null;
   current_rp: string | null;
   lot_version: number;
+  bid_session?: number;
+  bid_revision?: number;
   current_bid: number | null;
   current_bidder: string | null;
   lot_ends_at: string | null;
@@ -52,6 +54,8 @@ export interface RoomPlayer {
   player: Player;
 }
 export interface Bid {
+  lot_session?: number;
+  accepted_order?: number | null;
   undone?: boolean;
   request_id?: string | null;
   id: string;
@@ -122,12 +126,12 @@ export function useRoom(roomId: string, userId: string | undefined) {
       const current = () => epoch === generation.current;
       switch (t) {
         case "rooms": {
-          if(capabilitiesRef.current.auction_controls===1 && poolRef.current.length && roomRef.current?.status!=="lobby") {
+          if(repairsEnabled(roomRef.current,capabilitiesRef.current) && poolRef.current.length && roomRef.current?.status!=="lobby") {
             try {
               const {data,error}=await supabase.rpc("room_live_projection" as never,{p_room:roomId} as never).abortSignal(AbortSignal.timeout(5000));
               if(!current())return null;
               const live=data as unknown as {room:Room;states:Partial<RoomPlayer>[]} | null;
-              if(!error && live){
+              if(!error && live && live.room.evaluation_snapshot===roomRef.current?.evaluation_snapshot && live.states.length===poolRef.current.length && live.states.every(state=>poolRef.current.some(player=>player.id===state.id))){
                 const states=new Map(live.states.map(state=>[state.id,state]));
                 const merged=poolRef.current.map(player=>({...player,...states.get(player.id)}));
                 const changed=merged.some((player,index)=>JSON.stringify(player)!==JSON.stringify(poolRef.current[index]));
@@ -166,13 +170,19 @@ export function useRoom(roomId: string, userId: string | undefined) {
         case "bids": {
           const rp = roomRef.current?.current_rp;
           if (!rp) return setBids([]);
-          const { data } = await supabase
+          let query = supabase
             .from("bids")
             .select("*")
-            .eq("room_player_id", rp)
+            .eq("room_player_id", rp);
+          const session = roomRef.current?.bid_session;
+          if (repairsEnabled(roomRef.current,capabilitiesRef.current)) {
+            query = query.eq("lot_session" as never, session ?? 0).eq("undone" as never, false)
+              .order("accepted_order" as never, { ascending: false, nullsFirst: false });
+          }
+          const { data } = await query
             .order("created_at", { ascending: false })
             .limit(30).abortSignal(AbortSignal.timeout(5000));
-          if (current() && data && rp === roomRef.current?.current_rp) setBids((data as Bid[]).filter(b=>!b.undone));
+          if (current() && data && rp === roomRef.current?.current_rp && session===roomRef.current?.bid_session) setBids((data as Bid[]).filter(b=>!b.undone));
           return;
         }
         case "squads": {
@@ -267,7 +277,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
   // reload bids when lot changes
   useEffect(() => {
     void reload("bids").catch(() => {});
-  }, [room?.current_rp, reload]);
+  }, [room?.current_rp, room?.bid_session, reload]);
 
   // realtime
   useEffect(() => {
@@ -323,7 +333,8 @@ export function useRoom(roomId: string, userId: string | undefined) {
     };
   }, [loaded, roomId, offset, load]);
 
-  return { room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload };
+  return useMemo(() => ({ room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload }),
+    [room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload]);
 }
 
 export function useNow(offset: number, ms = 100) {
