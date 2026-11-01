@@ -156,7 +156,7 @@ async def main():
             check(not (await raw(owner,'place_bid',retry)).get('error'),'duplicate accepted request does not add bid')
             await command(host,room,'pause');paused=await project(host,room)
             await host.get_by_role('button',name='Lot settings',exact=True).click()
-            await host.get_by_label('Timer · seconds',exact=True).fill('4');await host.get_by_label('Bid extension · seconds',exact=True).fill('1')
+            await host.get_by_label('Timer · seconds',exact=True).fill('10');await host.get_by_label('Bid extension · seconds',exact=True).fill('1')
             await host.get_by_role('button',name='Save for next lot').click();await host.get_by_role('dialog').wait_for(state='hidden')
             after=await project(host,room);check(after['room']['paused_remaining_ms']==paused['room']['paused_remaining_ms'],'settings preserve paused deadline')
             await command(host,room,'resume')
