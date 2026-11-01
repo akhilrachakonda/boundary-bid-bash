@@ -24,7 +24,12 @@ Conflicting generated Python bytecode is intentionally deleted at
   heading includes an icon; screenshot evidence confirms the reveal instead.
 - `lovable drafts verify --json --base 45568c1cdb0f --ref
   origin/_pre-refresh/drft_01m6c4f3fze3g98vf03xa4akft --refreshed-base 83e0edbc2a0c`:
-  **needs_review**, zero dropped changes. Deliberate merges preserve both sides
+  Initial result: **needs_review**, zero dropped changes. Final result flags
+  `src/test/post-launch-ui.test.tsx` as **dropped** solely because the necessary
+  `capabilities:{}` fixture addition differs from its byte-exact draft version;
+  every original test and assertion is retained, and all68 tests pass. This is
+  an intentionally reviewed compatibility edit, not missing draft work.
+  Deliberate merges preserve both sides
   in AGENTS.md, this report, roadmap.md, Auction.tsx, use-room.ts,
   player-photos.ts and room.$roomId.tsx; the two generated caches are removed.
   No manual Git commit was made; source saves are managed by the platform.
