@@ -1,9 +1,14 @@
 # Cricket Auction upgrade
-- [ ] Continue existing post-launch draft: saved draft source inaccessible from main; preserve its files and do not publish.
+- [x] Recover and reconcile existing post-launch draft with newer main source; preserve both sets of repairs and do not publish.
 - [x] Stage and locally verify guarded final call, unlimited unsold rounds, distinct bid undo and next-lot settings; never apply to production.
 - [x] Add capability-gated repair controls and lean projection support without enabling absent RPCs.
 - [x] Run 32 isolated SQL checks, 56 unit/7 importer regressions and public phone/laptop checks; document limits and one licensed portrait improvement.
-- [ ] Authenticated ten-browser-team tests, overlay/race/latency verification and prior 63 draft regressions: blocked by unavailable draft source and isolated Auth/Realtime endpoint.
+- [ ] Authenticated ten-browser-team tests and real overlay/race/latency verification: blocked by unavailable isolated Auth/Realtime endpoint; never use shared customer data.
+- [ ] Install staged auction controls: shared live database prevents installation and hosted integration verification in this draft.
+- [x] Client responsiveness: isolated countdown controls, bounded refetch scheduling, pending/coalesced bid and independent host requests, explicit same-ID ambiguous-outcome reconciliation; local mocked tests only.
+- [x] Portrait/sale presentation: all150 natural dimensions measured; sale-record keyed2600ms portal reveals and phone/laptop demo layouts checked; retain main's licensed Kohli improvement.
+- [ ] Real-photo2x coverage: prior survey found79/150 widths below200; one main improvement retained, remaining verified higher-resolution sources/reuse clearance unavailable.
+- [x] Preserve prior draft evidence/report:63 local unit/UI tests +7 importer checks, four-width demo checks and150 decoded portraits; rerun combined-source regressions after reconciliation.
 - [x] Release audit: scanners/grants, stale lot and null-auth fixes, bounded inputs, 51 unit/7 importer tests, guest gameplay and 10-team fixtures, canonical lineup/history checks; no publication. See docs/RELEASE-AUDIT.md for limitations and unverified production/owner gates.
 - [x] Separate evidence indices from legacy setup estimates throughout scouting/live UI; preserve prices and pool selection with explicit estimate labels.
 - [x] Future-only frozen V2.1 leadership rubric, owner review and exact coverage: 6 evidence-only format entries, zero owner-rated, all450 neutral C/VC.

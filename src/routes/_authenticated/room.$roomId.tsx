@@ -45,7 +45,8 @@ function RoomPage() {
   const { roomId } = Route.useParams();
   const { user } = useAuth();
   const data = useRoom(roomId, user?.id);
-  const now = useNow(data.offset, 250);
+  // Presence/review need only seconds; the live lot clock lives inside TimerRing.
+  const now = useNow(data.offset, 1000);
   const d = useMemo(() => derive(data, user?.id), [data, user?.id]);
   const [sound, setSound] = useState(false);
   const [selectedTeam,setSelectedTeam] = useState<string|null>(null);
@@ -124,7 +125,7 @@ function RoomPage() {
         <PrivatePanel data={data} d={d} />
       </div>
     ) : live ? (
-      <Auction data={data} d={d} now={now} sound={sound} />
+      <Auction data={data} d={d} sound={sound} />
     ) : repairsEnabled(room,data.capabilities) && room.status==='completed' && room.auction_stage==='final_call' ? (
       <PostLaunchDesk data={data} d={d}/>
     ) : room.status === "completed" || room.status === "trade" ? (
