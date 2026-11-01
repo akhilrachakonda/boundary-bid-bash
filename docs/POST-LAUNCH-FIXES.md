@@ -6,7 +6,28 @@ Neither report below is silently replaced: they are historical records of separa
 verification runs, not current combined-source verification or production proof.
 The 2600ms draft queue duration is retained over main's 2700ms duration because both
 meet the required 2–3 seconds and the draft's queued reveal behavior stays exact.
-Generated Python bytecode retains main's copies; source importer changes are unaffected.
+Conflicting generated Python bytecode is intentionally deleted at
+`scripts/__pycache__/import-cricsheet.cpython-313.pyc` and
+`scripts/__pycache__/import-positions.cpython-313.pyc`; importer source is unchanged.
+
+### Combined-source verification after reconciliation
+
+- `bunx vitest run`: **68 passed, 11 files** after adding the missing capability
+  field to the restored local UI fixture; no test assertions removed.
+- `python3 src/test/cricsheet-import.test.py`: **4 passed**.
+- `python3 src/test/positions-import.test.py`: **3 passed**.
+- Automatic harness log: **build OK**, 18:31:04 UTC.
+- `python3 /tmp/browser/reconcile/check_demo.py`: localhost-only demo
+  bid → expiry → sold → restart at360/390/430/1280px; no horizontal overflow or
+  page errors.390px and1280px screenshots visually confirm the SOLD reveal and
+  unobstructed restart control. The text-count probe returned0 because the
+  heading includes an icon; screenshot evidence confirms the reveal instead.
+- `lovable drafts verify --json --base 45568c1cdb0f --ref
+  origin/_pre-refresh/drft_01m6c4f3fze3g98vf03xa4akft --refreshed-base 83e0edbc2a0c`:
+  **needs_review**, zero dropped changes. Deliberate merges preserve both sides
+  in AGENTS.md, this report, roadmap.md, Auction.tsx, use-room.ts,
+  player-photos.ts and room.$roomId.tsx; the two generated caches are removed.
+  No manual Git commit was made; source saves are managed by the platform.
 
 Shared database restrictions still apply: staged SQL remains unapplied, and genuine
 hosted authenticated multiplayer/latency verification remains blocked. No publish,
