@@ -6,11 +6,17 @@ import { DEFAULT_SETTINGS } from '../src/lib/auction-rules';
 
 const sql = postgres({ host: '127.0.0.1', port: 55439, username: 'cricket_test', database: 'postgres', max: 20 });
 async function setup() {
+ const exists=await sql`SELECT to_regclass('public.auction_commands') AS present`;
+ if(exists[0]?.present) return;
  await sql.unsafe(`CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role; CREATE SCHEMA auth; CREATE TABLE auth.users(id uuid PRIMARY KEY); CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS $$ SELECT nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$; GRANT USAGE ON SCHEMA auth TO authenticated; GRANT EXECUTE ON FUNCTION auth.uid() TO authenticated; CREATE SCHEMA extensions; CREATE EXTENSION pgcrypto WITH SCHEMA extensions; CREATE PUBLICATION supabase_realtime; CREATE SCHEMA storage; CREATE TABLE storage.objects(id uuid,bucket_id text);`);
  for (const file of readdirSync('drizzle/migrations').filter(f=>f.endsWith('.sql')).sort()) {
   // No public catalogue seed or customer/evidence data is needed for rule tests.
   if(file.startsWith('0001_')) continue;
   await sql.unsafe(readFileSync(`drizzle/migrations/${file}`,'utf8'));
+  if(file.startsWith('0000_')) {
+   // Managed Cloud normally supplies these grants; replicate only in this new local cluster.
+   await sql.unsafe(`GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO authenticated;`);
+  }
  }
  await sql.unsafe(readFileSync('scripts/staged/0018_post_launch_auction_controls.sql','utf8'));
 }
@@ -37,7 +43,8 @@ async function bid(user:string,amount:number,p:any,request=randomUUID()){
 async function expire(){await sql`UPDATE public.rooms SET lot_ends_at=clock_timestamp()-interval '1 second' WHERE id=${room}`;await asUser(users[0],'SELECT public.tick($1) AS value',[room]);}
 try{
  await setup();
- console.log('ISOLATION',await sql`SELECT inet_server_addr()::text AS host,inet_server_port() AS port,current_database() AS database`);
+ const separation=await sql`SELECT inet_server_addr()::text AS host,inet_server_port() AS port,current_database() AS database`;
+ console.log('ISOLATION',JSON.stringify(separation.map(x=>({host:x.host,port:x.port,database:x.database}))));
  const settings={...DEFAULT_SETTINGS,max_teams:10,min_squad:1,max_squad:5,min_wk:0,min_bat:0,min_ar:0,min_bowl:0,min_spinners:0,min_pacers:0,max_overseas:5,pool_size:10,bid_timer:20,bid_reset:3,review_seconds:1};
  const created=await asUser<any>(users[0],'SELECT public.create_room($1,$2,$3,$4,$5,$6) AS value',['DISPOSABLE LOCAL REPAIR TEST','IPL',JSON.stringify(settings),'Test host','Disposable 1','#22d3ee']); room=created.room_id;
  for(let i=1;i<10;i++)await asUser(users[i],'SELECT public.join_room($1,$2,$3,$4) AS value',[created.code,`Test ${i}`,`Disposable ${i+1}`,'#22d3ee']);
