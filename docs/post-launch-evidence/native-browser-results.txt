@@ -1,0 +1,77 @@
+Skipping host requirements validation logic because `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS` env variable is set.
+PASS real Auth guest 1
+PASS real Auth guest 2
+PASS real Auth guest 3
+PASS real Auth guest 4
+PASS real Auth guest 5
+PASS real Auth guest 6
+PASS real Auth guest 7
+PASS real Auth guest 8
+PASS real Auth guest 9
+PASS real Auth guest 10
+PASS update_room_settings accepted
+PASS set_pool accepted
+PASS start_review accepted
+PASS repair controls actually activated
+PASS surprise queue network redaction
+PASS pause denied
+PASS 20 rapid presses/team have no request backlog
+PASS 20 rapid presses/team have no request backlog
+PASS 20 rapid presses/team have no request backlog
+PASS 20 rapid presses/team have no request backlog
+PASS 20 rapid presses/team have no request backlog
+PASS all ten authenticated projections and visible bid prices agree
+PASS skip denied
+PASS sustained burst accepted multiple competitive bids
+PASS undo_bid accepted
+PASS same command ID replay idempotent
+PASS undo restores accepted predecessor
+PASS duplicate accepted request does not add bid
+PASS pause accepted
+PASS settings preserve paused deadline
+PASS resume accepted
+PASS final_call accepted
+PASS no sale overflow 360
+PASS no sale overflow 390
+PASS no sale overflow 430
+PASS no sale overflow 1280
+PASS celebration expires without blocking final call
+PASS reconnect does not replay sales
+PASS rerun accepted
+PASS repeat shuffled round 2
+PASS unknown-outcome bid really reached server
+PASS lost ACK reconciles one accepted bid without automatic resend
+PASS 20 rapid presses/team have no request backlog
+PASS 20 rapid presses/team have no request backlog
+PASS 20 rapid presses/team have no request backlog
+PASS all ten authenticated projections and visible bid prices agree
+PASS skip accepted
+PASS UNSOLD fits 360
+PASS UNSOLD fits 390
+PASS UNSOLD fits 430
+PASS UNSOLD fits 1280
+PASS final_call accepted
+PASS rerun accepted
+PASS repeat shuffled round 3
+PASS 20 rapid presses/team have no request backlog
+PASS 20 rapid presses/team have no request backlog
+PASS 20 rapid presses/team have no request backlog
+PASS all ten authenticated projections and visible bid prices agree
+PASS skip accepted
+PASS final_call accepted
+PASS ten real nominations contend successfully
+PASS nominations deduplicate one competitive lot
+PASS close_trades denied
+PASS open_nomination accepted
+PASS 20 rapid presses/team have no request backlog
+PASS 20 rapid presses/team have no request backlog
+PASS 20 rapid presses/team have no request backlog
+PASS all ten authenticated projections and visible bid prices agree
+PASS undo_sale accepted
+PASS sale undo recorded separately
+PASS close_trades accepted
+PASS rerun denied
+PASS stale bid after trade denied
+PASS zero overspend and duplicate ownership
+PASS zero browser page errors
+METRICS {"bid_ack_ms": {"n": 131, "p50": 30.158707000055074, "p95": 63.539171999991595, "max": 88.57532399997581}, "host_ms": {"n": 17, "p50": 20.460002000163513, "p95": 31.192786000019623, "max": 31.192786000019623}, "pending_visual_ms": {"n": 129, "p50": 34.4000000001397, "p95": 45.5, "max": 131.30000000004657}}

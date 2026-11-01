@@ -1,3 +1,81 @@
+# Unified repair verification — 2026-11-01, 18:51 UTC
+
+## Current result: implemented and tested locally; NOT activated on production
+
+Draft Update is complete (`status: ready`, base `83e0edbc2a0c8f9ea2d87e73b454ed0841960305`). Combined saved source before this report: `eaadea3ef2bcfb2c85a87d5e319d42b0b466c0a2` from `git rev-parse HEAD`; report/final harness saves can follow. Initial combined tip was `4d5089131dbe8eae71461de7852a98bc30126ac9`. No conflict markers or discarded regression suites. Original63 draft and56 main suites overlap; their combined union was68 tests, now69 with an observed-bid-state regression. Both single-flight ambiguous bids,80ms coordinator/timer decoupling/2600ms portal queue AND staged0018 controls, lean projection and licensed Kohli remain.
+
+The managed draft still shares the live database. **It was never repointed or migrated.** Instead a genuine official experimental native stack now runs under `/tmp/cricket-native/home`, with Auth, PostgREST, Realtime, PostgreSQL and Storage. Local gateway127.0.0.1:54321, database proxy127.0.0.1:54322, separate app127.0.0.1:8081. TCP proxy reports null server address/port; verified actual PostgreSQL data_directory is beneath the native stack's private temporary root before writes. No customer dump/data/accounts, production load, admin assignment, emails, purchase, publication or hosted configuration changes.
+
+### Integration defects fixed
+
+- New accepted bids receive a monotonically allocated order under the room lock. Retry-ID attachment uses that exact allocation instead of transaction-start timestamps; bid undo/display use acceptance order. Historical timestamps remain untouched.
+- Destructive/pause/bid-undo commands capture `observed_bid_revision`: stale skip cannot discard a newly accepted bid. Lot version remains a separate lot/session guard. Accepted command retries still resolve before stale guards.
+- Repair pause/resume compute time after acquiring the room lock using clock_timestamp; no transaction-start deadline drift. Settings remain1–120 seconds, apply next lot only.
+- Current bid reads filter live bid_session and non-undone rows BEFORE limit30; reopening never offers a previous session's bid undo.
+- Sale undo during a later round explicitly requeues next in the current round; final-call undo returns unsold without starting a round.
+- Lean reads only enable for repair rooms and validate complete ID set/frozen snapshot before cache merge. Historical rooms keep full reads and historical advancement.
+- Repair desk now bounds commands8s and nominations5s, coalesces polling, catches transport exceptions and refreshes room/bids/sales/squads/purses independently of bid pending.
+- Final call keeps the Auction mounted: final-lot SOLD no longer vanishes when status becomes completed. Phone/laptop portal remains nonblocking.
+- Stable useRoom return and memoized Auction prevent the parent presence clock alone from rebuilding the auction. This does not eliminate necessary bid/revision rendering or promise zero buffering.
+
+### Actual commands and results
+
+Official CLI2.121.0 standard `supabase start` failed (Docker/Podman absent). Installed Podman5.8.8 then failed `cannot set user namespace` under gVisor. Official native runtime succeeded; it is experimental, not a stable production deployment runtime.
+
+```
+supabase init --workdir /tmp/cricket-stack --yes
+# Scratch config ONLY: enable_anonymous_sign_ins=true; anonymous_users=200
+# Use sanitized environment: retain PATH/HOME only plus these native controls.
+SUPABASE_HOME=/tmp/cricket-native/home SUPABASE_EXPERIMENTAL_STACK=1 \
+SUPABASE_NATIVE_POSTGRES_USER=lovable supabase stack start \
+ --runtime native --stack cricket-isolated \
+ --exclude functions,studio,mail,analytics,pooler --eager
+# Run from /tmp/cricket-stack. Export credentials privately, never echo them.
+supabase stack status --stack cricket-isolated --env > /tmp/cricket-native/local.env
+chmod 600 /tmp/cricket-native/local.env
+bun scripts/prepare-isolated-stack.ts /tmp/cricket-native/local.env
+python3 scripts/start-isolated-app.py /tmp/cricket-native/local.env
+python3 scripts/test-isolated-browsers.py
+bunx vitest run
+python3 src/test/cricsheet-import.test.py
+python3 src/test/positions-import.test.py
+```
+
+Native services loaded source0000–0017, skipping catalogue0001, and exact updated scripts/staged0018.16 synthetic names, real separate Auth anonymous sessions, no SQL identity substitutes. Scratch Storage is real and needed for baseline policies; no managed storage settings changed. Durable setup refuses non-loopback endpoints; test browser blocks managed-backend/production URLs. Secrets/session files remain temporary and are not copied to evidence.
+
+**Final checks:**69 Vitest across11 files,4 Cricsheet and3 position tests passed. Harness build/typecheck OK18:51:24Z. Ten-browser run75 assertions,14 rapid bursts across first/second/third rounds plus nominated final-call lot. Each participating team presses20 times per burst, at most one in-flight bid per team.132 actual bid requests:15 HTTP acceptances,116 expected competitive rejections,1 deliberately lost response. Lost response was fetched through the real server, verified200, then aborted to browser; one accepted row reconciled, no automatic resend. Current UI prices and all ten projections converged. Verified nonhost denial, surprise redaction, stale skip, separate bid undo/idempotent retry/predecessor, settings sheet paused deadline, repeated rounds2/3, ten-way nominations/one lot, changed-summary close denial, nominated competitive purchase/expiry, sale refund, trade lock/stale bid denial, reconnect no replay and zero overspend/duplicate ownership. Zero page errors.
+
+| Measurement, final full run | n | p50 | p95 | max |
+|---|---:|---:|---:|---:|
+| Browser network bid response/ACK, ms |131|30.16|63.54|88.58|
+| Guarded host RPC round trip, ms |17|20.46|31.19|31.19|
+| Visible pending after rapid click, ms |129|34.40|45.50|131.30|
+
+Environment: warm local Vite8 development, headless Chromium10 contexts on one sandbox CPU, native loopback services, synthetic16-player pool. Not public-production latency, actual phones or CPU/network geography. Earlier complete pre-memo run ACK p95275.67ms/max439.45; pending p95138.70/max295.40. Final pending maximum still exceeds100ms; no universal <100ms or zero-buffering claim. The deliberately aborted response is excluded from ACK stats, included request total. No click backlog observed in bounded bursts, not proof under arbitrary load.
+
+Failure distinctions: initial guest form fill before hydration caused no signin (test waited); one Python async-generator account lookup failed (test fixed);4-second lot expired during added network scenario and correctly rejected skip (test uses10s). Earlier successful complete run preserved in temporary logs; final durable sanitized metrics/screenshots are in docs/post-launch-evidence/native-*. Production is not exercised.
+
+### Known limits / remaining verification
+
+- This is meaningful central-flow verification, **not the entire requested race matrix**. Lock-wait timestamp inversion, exhaustive expiry-vs-all-controls races, all-disconnected/host takeover, full offline unknown/explicit same-ID retry UI, broad slow-network throttling, affordability/role combinations and historical-room SQL fixture matrix were not all newly exercised. Existing unit/security/history tests preserved; old results not relabeled fresh proof.
+- Isolated screenshot shows stale host-away banner when many headless background pages are throttled; no host takeover attempted. Do not call that production disconnected recovery verified.
+- Canonical stored scoring was not recomputed in this synthetic run. Frozen V1/V2/V2.1 code and69 regressions preserved; no new historical data touched.
+- Public draft controls stay capability-gated OFF until installation. Do not fake missing RPCs or label the shared preview as activated. Future isolated native restart needs rebuilding temporary services/synthetic accounts, with commands above.
+- Portraits: one licensed Kohli1899×2012 improvement retained;149 identities not newly improved or cleared. Original survey79/150 widths<200 remains79 (Kohli original width480).149 cannot meet both dimensions600; not all have license clearance.2x adequacy depends on crop/frame, not just width; no artificial upscale/srcset variants or exhaustive new image search.
+
+### Non-destructive rollout / rollback proposal — NOT executed
+
+1. Review/accept combined source separately; accepting is not publication. Keep0018 outside automatic migration acceptance until its explicit installation is approved. Do not copy into both migration journals or apply twice.
+2. On a fresh official isolated stack, replay durable setup,69+7 tests and ten-browser suite; close remaining race/history gates above before declaring fully release-ready.
+3. With explicit production approval, apply additive0018 once in a transaction, preserving all existing room rows `repair_flow=false`. Only subsequently created rooms use repaired transitions. Inspect function definitions/grants and member projection capability, then publish matching client (separate approval).
+4. Rollback without destructive DDL/data rewind: stop creating repaired rooms, keep guarded server functions deployed for any repair rooms already created, and keep compatible client for those rooms. Historical rooms use preserved `_advance_lot_pre_repair`. Do not undo purchases, drop columns/tables, or publish an old client lacking repair controls into active repair rooms. No automatic safe complete rollback is claimed once new-flow rooms are active.
+
+Draft preview: https://id-preview-1--12e67a6e-aa29-4c54-9e2a-6b7bd68976db.lovable.app
+
+---
+
+Historical reports below are retained, not the current activation/testing verdict.
+
 # Reconciled draft status — 2026-11-01
 
 The existing draft has now recovered its client repairs alongside main's newer

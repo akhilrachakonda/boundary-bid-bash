@@ -3,8 +3,8 @@
 - [x] Stage and locally verify guarded final call, unlimited unsold rounds, distinct bid undo and next-lot settings; never apply to production.
 - [x] Add capability-gated repair controls and lean projection support without enabling absent RPCs.
 - [x] Run 32 isolated SQL checks, 56 unit/7 importer regressions and public phone/laptop checks; document limits and one licensed portrait improvement.
-- [ ] Continue unified repairs after completed draft update; fix accepted-bid ordering/session, observed host bid-state guards and bounded repair-desk reconciliation.
-- [ ] Authenticated ten-browser-team tests and real overlay/race/latency verification using official native isolated Auth/PostgREST/Realtime services; never use shared customer data.
+- [x] Continue unified repairs after completed draft update; fix accepted-bid ordering/session, observed host bid-state guards and bounded repair-desk reconciliation.
+- [x] Authenticated ten-browser-team central flow: official isolated native services,14 bursts/3 rounds/final nominations, lost-response reconciliation,75 checks and measured timings; no production traffic.
 - [ ] Install staged auction controls: shared live database prevents installation and hosted integration verification in this draft.
 - [x] Client responsiveness: isolated countdown controls, bounded refetch scheduling, pending/coalesced bid and independent host requests, explicit same-ID ambiguous-outcome reconciliation; local mocked tests only.
 - [x] Portrait/sale presentation: all150 natural dimensions measured; sale-record keyed2600ms portal reveals and phone/laptop demo layouts checked; retain main's licensed Kohli improvement.
@@ -35,3 +35,4 @@
 - [x] Verify two-client bidding, sale states, reconnect, mobile, reduced motion and existing tests.
 - [ ] Positive owner photo upload/edit verification: requires an assigned owner admin identity.
 - [ ] Public-distribution photo reuse clearance: most editorial provider images have no verified permission.
+- [ ] Remaining exhaustive network/offline/expiry/host-takeover/history race matrix and real-device timing: not newly verified; no production release readiness claim.
