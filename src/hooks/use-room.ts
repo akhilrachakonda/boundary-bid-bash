@@ -106,6 +106,8 @@ export function useRoom(roomId: string, userId: string | undefined) {
   const [error, setError] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [capabilities,setCapabilities]=useState<RepairCapabilities>({});
+  const capabilitiesRef=useRef<RepairCapabilities>({});
+  const poolRef=useRef<RoomPlayer[]>([]);
   const [offset, setOffset] = useState(0);
   const [connection, setConnection] = useState("connecting");
   const roomRef = useRef<Room | null>(null);
@@ -115,11 +117,16 @@ export function useRoom(roomId: string, userId: string | undefined) {
     async (t: Table) => {
       switch (t) {
         case "rooms": {
+          if(capabilitiesRef.current.auction_controls===1 && poolRef.current.length && roomRef.current?.status!=='lobby') {
+            const {data,error}=await (supabase.rpc as unknown as (name:string,args:object)=>Promise<{data:unknown;error:unknown}>)('room_live_projection',{p_room:roomId});
+            const live=data as {room:Room;states:Partial<RoomPlayer>[]} | null;
+            if(!error&&live){const states=new Map(live.states.map(s=>[s.id,s]));const merged=poolRef.current.map(p=>({...p,...states.get(p.id)}));poolRef.current=merged;setPool(merged);setRoom(live.room);roomRef.current=live.room;return live.room;}
+          }
           const { data, error } = await supabase.rpc("room_projection", { p_room: roomId });
           const projection = data as unknown as { room: Room; pool: RoomPlayer[]; capabilities?: RepairCapabilities } | null;
           if (error) setError(error.message);
           else if (!projection) setError("Room not found or you are not a member.");
-          else { setCapabilities(projection.capabilities??{});setRoom(projection.room); roomRef.current=projection.room; setPool(projection.pool.map(rp=>({...rp,player:withCanonicalPhoto(rp.player)}))); }
+          else { capabilitiesRef.current=projection.capabilities??{};setCapabilities(capabilitiesRef.current);setRoom(projection.room); roomRef.current=projection.room; poolRef.current=projection.pool.map(rp=>({...rp,player:withCanonicalPhoto(rp.player)}));setPool(poolRef.current); }
           return projection?.room ?? null;
         }
         case "participants": {
