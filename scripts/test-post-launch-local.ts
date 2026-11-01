@@ -35,7 +35,7 @@ async function denied(fn:()=>Promise<unknown>,message:string){let fail=false;try
 async function projection(user=users[0]){return asUser<any>(user,'SELECT public.room_projection($1) AS value',[room]);}
 async function command(action:string,payload={},user=users[0],request=randomUUID(),observed?:any){
  const p=observed??await projection(user); const r=p.room;
- return asUser(user,'SELECT public.auction_command($1,$2,$3,$4,$5,$6,$7,$8) AS value',[room,action,r.current_rp,r.lot_version,r.status,r.control_revision,request,JSON.stringify(payload)]);
+ return asUser(user,'SELECT public.auction_command($1,$2,$3,$4,$5,$6,$7,$8::text::jsonb) AS value',[room,action,r.current_rp,r.lot_version,r.status,r.control_revision,request,JSON.stringify(payload)]);
 }
 async function bid(user:string,amount:number,p:any,request=randomUUID()){
  return asUser(user,'SELECT public.place_bid($1,$2,$3,$4,$5) AS value',[room,amount,p.room.current_rp,p.room.lot_version,request]);
@@ -46,7 +46,7 @@ try{
  const separation=await sql`SELECT inet_server_addr()::text AS host,inet_server_port() AS port,current_database() AS database`;
  console.log('ISOLATION',JSON.stringify(separation.map(x=>({host:x.host,port:x.port,database:x.database}))));
  const settings={...DEFAULT_SETTINGS,max_teams:10,min_squad:1,max_squad:5,min_wk:0,min_bat:0,min_ar:0,min_bowl:0,min_spinners:0,min_pacers:0,max_overseas:5,pool_size:10,bid_timer:20,bid_reset:3,review_seconds:1};
- const created=await asUser<any>(users[0],'SELECT public.create_room($1,$2,$3,$4,$5,$6) AS value',['DISPOSABLE LOCAL REPAIR TEST','IPL',JSON.stringify(settings),'Test host','Disposable 1','#22d3ee']); room=created.room_id;
+ const created=await asUser<any>(users[0],'SELECT public.create_room($1,$2,$3::text::jsonb,$4,$5,$6) AS value',['DISPOSABLE LOCAL REPAIR TEST','IPL',JSON.stringify(settings),'Test host','Disposable 1','#22d3ee']); room=created.room_id;
  for(let i=1;i<10;i++)await asUser(users[i],'SELECT public.join_room($1,$2,$3,$4) AS value',[created.code,`Test ${i}`,`Disposable ${i+1}`,'#22d3ee']);
  const ids=[];
  for(let i=0;i<10;i++){const id=randomUUID();ids.push(id);await sql`INSERT INTO public.players(id,name,country,format,role,sub_role,rating,base_price,nationality_type,tier) VALUES(${id},${'Disposable Player '+i},'Test','IPL','BAT','Top order',60,0.2,'Indian','C')`;}
