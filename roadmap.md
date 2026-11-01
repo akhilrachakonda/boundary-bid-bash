@@ -5,7 +5,7 @@
 - [x] Run 32 isolated SQL checks, 56 unit/7 importer regressions and public phone/laptop checks; document limits and one licensed portrait improvement.
 - [x] Continue unified repairs after completed draft update; fix accepted-bid ordering/session, observed host bid-state guards and bounded repair-desk reconciliation.
 - [x] Authenticated ten-browser-team central flow: official isolated native services,14 bursts/3 rounds/final nominations, lost-response reconciliation,75 checks and measured timings; no production traffic.
-- [ ] Authorized production activation: verify accepted source and exact 0018 prerequisites, atomically install once, confirm historical records and access guards, document evidence; do not publish.
+- [x] Authorized production activation: accepted4603d80 source confirmed; registered0018 once plus necessary0019 inherited-ACL hardening; historical record fingerprints/defaults and installed guards verified; evidence saved. Not published; deployment remains user-controlled.
 - [x] Client responsiveness: isolated countdown controls, bounded refetch scheduling, pending/coalesced bid and independent host requests, explicit same-ID ambiguous-outcome reconciliation; local mocked tests only.
 - [x] Portrait/sale presentation: all150 natural dimensions measured; sale-record keyed2600ms portal reveals and phone/laptop demo layouts checked; retain main's licensed Kohli improvement.
 - [ ] Real-photo2x coverage: prior survey found79/150 widths below200; one main improvement retained, remaining verified higher-resolution sources/reuse clearance unavailable.

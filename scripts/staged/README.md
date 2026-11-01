@@ -1,11 +1,13 @@
 # Post-launch development migrations
 
-These SQL files are deliberately outside the managed migration journal. They are
-**unapplied to Lovable Cloud** and must not be applied to the shared production
-database during repair testing. Apply through the supported migration tool only
-after that tool is connected to a verified isolated backend, preserving the SQL
-byte-for-byte. Local disposable PostgreSQL tests load them explicitly after the
-existing schema migrations.
+Production installation was explicitly authorized and completed on2026-11-01.
+`0018_post_launch_auction_controls.sql` is now registered in
+`drizzle/migrations/0018_post_launch_auction_controls.sql`; **DO NOT APPLY THIS
+STAGED COPY AGAIN**. It remains historical isolated-test evidence only. The
+registered copy differs only by a final newline. Production-specific inherited
+ACL hardening is registered as0019. See `docs/POST-LAUNCH-FIXES.md` for hashes,
+installation evidence and preserved historical records. Local disposable tests
+may still load the staged copy into fresh isolated databases only.
 
 `0018_post_launch_auction_controls.sql` adds the capability marker, guarded host
 commands, final-call nominations, unlimited explicit rounds, bid undo history,
