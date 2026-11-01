@@ -23,6 +23,8 @@ import { RoomEvidenceContext } from "@/components/auction/RoomEvidenceContext";
 import {RoomEvaluationContext} from '@/components/auction/RoomEvaluationContext';
 import {EvaluationLineup} from '@/components/auction/EvaluationLineup';
 import { hostActionArgs } from '@/lib/room-actions';
+import { repairsEnabled } from '@/lib/post-launch-controls';
+import { PostLaunchDesk } from '@/components/room/PostLaunchDesk';
 
 export const Route = createFileRoute("/_authenticated/room/$roomId")({
   head: () => ({
@@ -123,6 +125,8 @@ function RoomPage() {
       </div>
     ) : live ? (
       <Auction data={data} d={d} now={now} sound={sound} />
+    ) : repairsEnabled(room,data.capabilities) && room.status==='completed' && room.auction_stage==='final_call' ? (
+      <PostLaunchDesk data={data} d={d}/>
     ) : room.status === "completed" || room.status === "trade" ? (
       <Trades data={data} d={d} now={now} />
     ) : (
