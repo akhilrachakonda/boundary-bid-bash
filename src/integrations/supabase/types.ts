@@ -1171,6 +1171,7 @@ export type Database = {
         }
         Returns: Json
       }
+      can_read_snapshot: { Args: { p_snapshot: string }; Returns: boolean }
       commit_room_evaluation: {
         Args: {
           p_hash: string
