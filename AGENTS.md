@@ -24,3 +24,6 @@
 - Admin rights come only from `public.user_roles`; never auto-grant.
 - Canonical portraits match name and country and share one sourced asset across formats; database photo overrides take precedence. Why: preserve IDs and support owner replacement without duplicate media.
 - Presentation deduplicates accepted bid IDs and sale event IDs and freezes resolved lot snapshots; sale reveals never block a new live lot. Why: avoid false bids, reconnect replay and next-player face mixups.
+- Post-launch SQL stays in scripts/staged until verified isolated-backend installation; repair controls use a projection capability marker, observed control revision and lot/version, and command retry IDs. Why: absent RPCs never run on the shared live database and competing actions serialize safely.
+- Repair rooms use explicit final-call/round/closed stages alongside existing room statuses; historical rooms retain the old advancement routine. Why: add unlimited host rounds without changing saved scoring or active historical auctions.
+- Local repair tests connect explicitly to loopback port 55439 with synthetic catalogue and SQL identity claims, never managed PG environment variables. Why: isolate rule tests without pretending SQL identities verify hosted browser authentication.
