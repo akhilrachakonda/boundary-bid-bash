@@ -1,0 +1,74 @@
+[
+  {
+    "viewport": 360,
+    "sale_bounds": {
+      "x": 12,
+      "y": 68,
+      "width": 336,
+      "height": 143.328125
+    },
+    "portrait": {
+      "width": 480,
+      "height": 349,
+      "renderWidth": 124,
+      "renderHeight": 270
+    },
+    "overflow": false,
+    "errors": [],
+    "url": "http://localhost:8080/"
+  },
+  {
+    "viewport": 390,
+    "sale_bounds": {
+      "x": 18,
+      "y": 68,
+      "width": 360,
+      "height": 143.328125
+    },
+    "portrait": {
+      "width": 480,
+      "height": 349,
+      "renderWidth": 135,
+      "renderHeight": 254
+    },
+    "overflow": false,
+    "errors": [],
+    "url": "http://localhost:8080/"
+  },
+  {
+    "viewport": 430,
+    "sale_bounds": {
+      "x": 58,
+      "y": 68,
+      "width": 360,
+      "height": 143.328125
+    },
+    "portrait": {
+      "width": 480,
+      "height": 349,
+      "renderWidth": 150,
+      "renderHeight": 226
+    },
+    "overflow": false,
+    "errors": [],
+    "url": "http://localhost:8080/"
+  },
+  {
+    "viewport": 1280,
+    "sale_bounds": {
+      "x": 796,
+      "y": 76,
+      "width": 460,
+      "height": 158
+    },
+    "portrait": {
+      "width": 480,
+      "height": 349,
+      "renderWidth": 391,
+      "renderHeight": 310
+    },
+    "overflow": false,
+    "errors": [],
+    "url": "http://localhost:8080/"
+  }
+]

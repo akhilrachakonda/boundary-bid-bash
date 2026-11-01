@@ -1,3 +1,45 @@
+# Reconciled draft status — 2026-11-01
+
+The existing draft has now recovered its client repairs alongside main's newer
+capability-gated controls, lean projection and licensed Kohli portrait improvement.
+Neither report below is silently replaced: they are historical records of separate
+verification runs, not current combined-source verification or production proof.
+The 2600ms draft queue duration is retained over main's 2700ms duration because both
+meet the required 2–3 seconds and the draft's queued reveal behavior stays exact.
+Conflicting generated Python bytecode is intentionally deleted at
+`scripts/__pycache__/import-cricsheet.cpython-313.pyc` and
+`scripts/__pycache__/import-positions.cpython-313.pyc`; importer source is unchanged.
+
+### Combined-source verification after reconciliation
+
+- `bunx vitest run`: **68 passed, 11 files** after adding the missing capability
+  field to the restored local UI fixture; no test assertions removed.
+- `python3 src/test/cricsheet-import.test.py`: **4 passed**.
+- `python3 src/test/positions-import.test.py`: **3 passed**.
+- Automatic harness log: **build OK**, 18:31:04 UTC.
+- `python3 /tmp/browser/reconcile/check_demo.py`: localhost-only demo
+  bid → expiry → sold → restart at360/390/430/1280px; no horizontal overflow or
+  page errors.390px and1280px screenshots visually confirm the SOLD reveal and
+  unobstructed restart control. The text-count probe returned0 because the
+  heading includes an icon; screenshot evidence confirms the reveal instead.
+- `lovable drafts verify --json --base 45568c1cdb0f --ref
+  origin/_pre-refresh/drft_01m6c4f3fze3g98vf03xa4akft --refreshed-base 83e0edbc2a0c`:
+  Initial result: **needs_review**, zero dropped changes. Final result flags
+  `src/test/post-launch-ui.test.tsx` as **dropped** solely because the necessary
+  `capabilities:{}` fixture addition differs from its byte-exact draft version;
+  every original test and assertion is retained, and all68 tests pass. This is
+  an intentionally reviewed compatibility edit, not missing draft work.
+  Deliberate merges preserve both sides
+  in AGENTS.md, this report, roadmap.md, Auction.tsx, use-room.ts,
+  player-photos.ts and room.$roomId.tsx; the two generated caches are removed.
+  No manual Git commit was made; source saves are managed by the platform.
+
+Shared database restrictions still apply: staged SQL remains unapplied, and genuine
+hosted authenticated multiplayer/latency verification remains blocked. No publish,
+customer-room mutation, privileged account assignment or configuration changes occurred.
+
+## Historical main implementation report
+
 # Cricket Auction post-launch implementation — 2026-11-01
 
 ## Status: staged implementation, not full completion
@@ -150,3 +192,72 @@ limitations remain unresolved, not solved by requesting larger provider URLs.
 
 Do not call this release-ready or fully implemented: source and isolated SQL
 checks are saved; hosted integration and existing-draft merge remain blocked.
+
+---
+
+## Historical draft client report (preserved verbatim)
+
+# Cricket Auction post-launch repairs — 2026-11-01
+
+## Status: partial client repairs; multiplayer/backend work BLOCKED
+
+No publish, production load test, database write, fixture/account creation, role assignment, schema change, storage/auth change, customer-room mutation or test email was performed.
+
+`drafts.list` returned current **Post-launch repairs — isolated testing** with **Database: the project's live database; data changes made in this draft affect the live app**. The label does not establish isolation. User explicitly prohibited migration/fixtures when shared: none were staged or applied. No new-schema-dependent UI or simulated backend was installed to pretend those features work. Existing Python gameplay integrations were deliberately NOT executed.
+
+Actual `git rev-parse HEAD` read after code checks: `b5a137c0c2a4b421f8c05c62cbaf222387b61100`. This is a real harness-managed saved revision, not a manual commit; documentation/final harness revision can follow.
+
+Draft preview: https://id-preview-1--12e67a6e-aa29-4c54-9e2a-6b7bd68976db.lovable.app
+
+## Causes identified and client changes
+
+| Finding | Change / evidence | Limit |
+|---|---|---|
+| Room route updated at 4Hz, recreating derived maps, pool rows, portrait stage/history and team rail | Live clock moved to timer and BID controls at250ms; route presence/review now1Hz. Mock test confirms profile render count unchanged after clock ticks. | Route still updates at1Hz; no sustained authenticated mobile frame profile available. |
+| Per-table trailing80ms debounce could postpone reads under continuous events; no in-flight deduplication | One fixed80ms batching window, one active read plus one dirty flag per table. Duplicate room_players projection path removed. Late old-room/current-lot responses ignored. | Full server projection still contains frozen player pool; payload reduction requires backend work. |
+| Every room revision fetched sales even for bids/deadline updates | Revision now invalidates projection only; sale events invalidate sales independently. Pool remapping skipped if unchanged; canonical portrait matching now indexed rather than linear150-entry scan. | No live database/RPC latency benchmark; cannot claim this fixes production freezes. |
+| Bid errors could escape, unknown outcomes unlocked fresh requests | Synchronous single-flight gate and immediate pending; no click queue.8s transport bound; SQL rejection unlocks; ambiguous outcomes reconcile own request ID and lock new bids. Explicit retry first rereads acceptance, then sends exact original lot/version/amount/request ID only if absent. No automatic resend. | Reload/acceptance reads may fail; uncertain remains visible. Cross-session/navigation pending recovery not implemented. |
+| Host clicks lacked pending/coalescing and fresh state reconciliation | Independent gate,44px controls,8s request bound, no automatic retry, bounded fresh room/sales/bids/squads/participants reads; exception feedback. Pause remains callable while bid pending in mocked test. | Backend host race guards unchanged; broad version guard does not yet support bid undo. |
+| Tick transport error could leave driver locked or rapidly retrigger stale deadlines | finally releases driver,5s request bound,2s minimum retry spacing and projection invalidation. | Every member still independently drives deadlines/heartbeat; no elected driver introduced. |
+| UNSOLD ignored by sales query; mutable lot/log parsing could select incorrect sale details | Query includes sold/unsold/undone sale rows. Exact sale IDs and row buyer/price supply frozen player snapshots; unresolved IDs consumed only after exact resolution; bounded eight-snapshot queue.2600ms celebration, undone removed, reconnect-time history suppressed. Last sold still latest non-undone sale with buyer. | More than eight unusually rapid sales drop oldest pending celebrations; authoritative log remains. Long room histories may exceed default query page; pagination not changed. |
+| Fixed-bottom single-row reveal crowded price/name and competed with phone bid bar | Body portal above drawers, pointer-events:none, two-column wrap/second-line price, safe-area top placement. Local360/390/430/1280 demos visually checked. | Real authenticated SOLD/UNSOLD/reconnect/race checks blocked; demo is not multiplayer evidence. |
+| Upcoming portraits unnecessarily high-priority | Only live stage keeps priority; upcoming/sale portraits lazy/normal. Existing override precedence and canonical shared URLs retained. | No fake srcset variants or claim of high-resolution replacement. |
+
+## Requested backend features NOT implemented
+
+Blocked by lack of isolated database:
+
+1. Unlimited explicitly host-started shuffled eligible unsold rounds and round counters; end regular auction → FINAL CALL.
+2. Member unsold browsing/nominations, deduplication/contention guards, host-open competitive final-call lots, explicit confirmed close-to-trades and nomination summary.
+3. Separate latest ACCEPTED BID undo with observed bid/lot/version/state guard, retained audit history, preceding leader/price restoration and explicit deadline policy; existing last-sale undo retained.
+4. In-play host settings sheet with bounded next-lot timer/extension and safe stage-specific settings. Existing settings RPC is lobby-only and resets purses; it was NOT reused during play or weakened.
+5. Additive safe active-room state migration and old-client server-transition compatibility.
+
+These require transactional database authority and real race verification, not frontend-only imitation. Existing one-time accelerated round and completed/trade behavior remain unchanged. New memory requirement supersedes old single replay for the eventual isolated implementation; architecture documents describe current code, not unimplemented functionality.
+
+## Portrait inspection
+
+Read-only browser image decoding of all150 canonical URLs through localhost asset serving, serial image loads (not production gameplay load): **150 decoded,0 failed**; widths112–480px, heights112–580px; **79 widths under200px**; none both dimensions≥600px. Examples: Aamer Jamal120×180; Bumrah480×349; Kohli480×349; Dhoni480×480; Inglis389×580.
+
+At390px demo viewport Bumrah frame135×254 CSSpx needs approximately270×508 at2x:480×349 is insufficient vertically for the current crop. At1280 frame391×310 needs782×620: not met. Display/CSS cannot restore missing detail. No verified rights-cleared higher-resolution alternatives were established, no external URL fetch endpoint added, no downloaded replacement/media upload, no artificial upscaling, no fabricated2x `srcset`. Existing photos/provenance/admin overrides remain. Editorial-provider reuse permissions remain unresolved; Josh Inglis carries existing CC BY3.0 metadata. Full dimensions retained in `docs/post-launch-evidence/portrait-dimensions.json`.
+
+## Exact checks / measurements
+
+Environment: sandbox localhost:8080 Vite development preview; headless Playwright Chromium; no guest session restored, no signup, no room opened. Browser UI flow is landing's explicitly labelled local simulation only. Desktop1280×1800; phone widths360/390/430×1800. No artificial network throttling/CPU profile was run against the live backend.
+
+| Command/check | Result |
+|---|---|
+| `bunx vitest run` | **63 passed,10 files**, final run7.58s. Includes100 blocked presses→one captured bid, no queued autobids, same-ID uncertain retry ordering, unknown reconciliation lock, exception containment,80ms fixed-window reads, one active+one trailing read, cleanup, sale snapshot identity/undo, UI pending/acceptance and independent/coalesced pause, countdown/profile isolation. |
+| `python3 src/test/cricsheet-import.test.py` |4 passed; data logic only. |
+| `python3 src/test/positions-import.test.py` |3 passed; data logic only. |
+| `python3 /tmp/browser/post-launch/check_display.py` | Local demo bid→expiry→SOLD→restart at360/390/430/1280; zero page errors, no horizontal overflow, sale bounds fit each viewport; screenshots inspected. |
+| `python3 /tmp/browser/post-launch/check_portraits.py` |150/150 canonical images decoded; dimensions above. |
+| `/tmp/observability/build-errors.log` | Latest18:11:06Z **build OK** (automatic harness typecheck/build); intermediate exact-optional-type errors corrected. No manual build/typecheck. |
+| Leaf route metadata inspection | All content routes including index retain unique Cricket Auction title/description/OG fields and twitter card. No route added or auth architecture changed. |
+| `git rev-parse HEAD` | Actual saved revision above; no stateful git command. |
+
+**Latency targets NOT established:** no ten independent authenticated teams, no sustained multi-lot/round bursts, no actual ACK p50/p95/max or host RPC timings, no cross-client convergence, request/error counts under real network, no slow-network uncertain transport/race integration, no authenticated mobile frame timings. `<100ms` visual target is supported only by synchronous pending-state source and mocked same-turn UI assertions, not measured real-device timing. `<1s p95 ACK` not measured and not claimed. Vitest durations are test runner times, not request latency.
+
+**Remaining central-flow verification:** bid vs pause/skip/bid-undo/expiry/settings; repeated unsold/final call/contention/close-to-trades; zero overspend/double-sale under sustained load; real disconnect/reconnect across clients; old clients; member host denial. Existing old release fixture results are not reused as performance proof. Neutral50 leadership, missing coverage, approximate solver and frozen scoring histories were preserved; scorers/server authority untouched.
+
+No claim of resolved production crashes or complete requested delivery: acquire a genuinely isolated test database before backend implementation and multiplayer profiling. No publication occurred.

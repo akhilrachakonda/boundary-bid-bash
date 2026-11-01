@@ -1,0 +1,43 @@
+{
+  "count": 150,
+  "decoded": 150,
+  "failed": 0,
+  "width_below_200": 79,
+  "both_at_least_600": 0,
+  "min_width": 112,
+  "max_width": 480,
+  "min_height": 112,
+  "max_height": 580,
+  "examples": [
+    {
+      "name": "Aamer Jamal",
+      "country": "Pakistan",
+      "width": 120,
+      "height": 180
+    },
+    {
+      "name": "Jasprit Bumrah",
+      "country": "India",
+      "width": 480,
+      "height": 349
+    },
+    {
+      "name": "Josh Inglis",
+      "country": "Australia",
+      "width": 389,
+      "height": 580
+    },
+    {
+      "name": "MS Dhoni",
+      "country": "India",
+      "width": 480,
+      "height": 480
+    },
+    {
+      "name": "Virat Kohli",
+      "country": "India",
+      "width": 480,
+      "height": 349
+    }
+  ]
+}

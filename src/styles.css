@@ -169,7 +169,10 @@
 .live-indicator { width:7px; height:7px; border-radius:50%; background:var(--success); box-shadow:0 0 0 4px color-mix(in oklab,var(--success) 12%,transparent); }
 .upcoming-strip { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(210px,1fr); gap:18px; overflow:auto; padding-bottom:6px; }
 .upcoming-player { display:flex; align-items:center; gap:12px; width:100%; }
-.sale-reveal { position:fixed; z-index:45; right:24px; bottom:28px; display:flex; align-items:center; gap:14px; padding:18px; width:460px; max-width:calc(100vw - 24px); border:1px solid var(--team-color,var(--border)); border-left:4px solid var(--team-color,var(--muted-foreground)); border-radius:8px; background:var(--card); box-shadow:var(--shadow-broadcast); animation:reveal-in .3s ease-out both; overflow:hidden; pointer-events:none; }
+.sale-reveal { position:fixed; z-index:70; right:24px; top:calc(76px + env(safe-area-inset-top)); display:grid; grid-template-columns:64px minmax(0,1fr); align-items:center; column-gap:14px; row-gap:4px; padding:18px; width:460px; max-width:calc(100vw - 24px); border:1px solid var(--team-color,var(--border)); border-left:4px solid var(--team-color,var(--muted-foreground)); border-radius:8px; background:var(--card); box-shadow:var(--shadow-broadcast); animation:reveal-in .3s ease-out both; overflow:hidden; pointer-events:none; }
+.sale-reveal > .portrait {grid-row:1 / span 2;}
+.sale-reveal .sale-price {grid-column:2;}
+.sale-reveal p {white-space:normal;overflow-wrap:anywhere;}
 .sale-unsold { border-left-color:var(--muted-foreground); }
 .sale-sold .sale-stamp { color:var(--primary); animation:stamp .4s ease-out both; }
 .sale-unsold .sale-stamp { color:var(--muted-foreground); }
@@ -218,7 +221,7 @@
   .timeline-list {max-height:250px;}
   .bid-bar {position:fixed;z-index:40;bottom:0;left:0;right:0;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--background);border-top:1px solid var(--border);}
   .auction-room {padding-bottom:155px;}
-  .sale-reveal {right:12px;bottom:165px;padding:12px;gap:10px;width:360px;}
+  .sale-reveal {right:12px;top:calc(68px + env(safe-area-inset-top));padding:12px;column-gap:10px;width:360px;}
   .sale-reveal .text-2xl {font-size:22px;}
   .landing-masthead {display:block;padding-top:28px;}
   .landing-masthead h1 {font-size:46px;}

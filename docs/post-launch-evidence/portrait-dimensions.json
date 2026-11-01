@@ -1,0 +1,902 @@
+[
+  {
+    "name": "Aamer Jamal",
+    "country": "Pakistan",
+    "width": 120,
+    "height": 180
+  },
+  {
+    "name": "Abdul Samad",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Abhishek Sharma",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Abishek Porel",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Adam Zampa",
+    "country": "Australia",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Adil Rashid",
+    "country": "England",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Aiden Markram",
+    "country": "South Africa",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Ajinkya Rahane",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Alex Carey",
+    "country": "Australia",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Andre Russell",
+    "country": "West Indies",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Anrich Nortje",
+    "country": "South Africa",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Arshdeep Singh",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Ashutosh Sharma",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Avesh Khan",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Axar Patel",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Azmatullah Omarzai",
+    "country": "Afghanistan",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Babar Azam",
+    "country": "Pakistan",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Ben Duckett",
+    "country": "England",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Bhuvneshwar Kumar",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Cameron Green",
+    "country": "Australia",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Charith Asalanka",
+    "country": "Sri Lanka",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Chris Woakes",
+    "country": "England",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Daryl Mitchell",
+    "country": "New Zealand",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "David Miller",
+    "country": "South Africa",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "David Warner",
+    "country": "Australia",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Deepak Chahar",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Devon Conway",
+    "country": "New Zealand",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Dewald Brevis",
+    "country": "South Africa",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Dhruv Jurel",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Dinesh Karthik",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Fazalhaq Farooqi",
+    "country": "Afghanistan",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Gerald Coetzee",
+    "country": "South Africa",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Glenn Maxwell",
+    "country": "Australia",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Glenn Phillips",
+    "country": "New Zealand",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Hardik Pandya",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Harry Brook",
+    "country": "England",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Harshal Patel",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Harshit Rana",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Heinrich Klaasen",
+    "country": "South Africa",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Ish Sodhi",
+    "country": "New Zealand",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Ishan Kishan",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Jamie Smith",
+    "country": "England",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Jason Holder",
+    "country": "West Indies",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Jasprit Bumrah",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Jitesh Sharma",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Joe Root",
+    "country": "England",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Jofra Archer",
+    "country": "England",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Jos Buttler",
+    "country": "England",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Josh Hazlewood",
+    "country": "Australia",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Josh Inglis",
+    "country": "Australia",
+    "width": 389,
+    "height": 580
+  },
+  {
+    "name": "KL Rahul",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Kagiso Rabada",
+    "country": "South Africa",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Kamindu Mendis",
+    "country": "Sri Lanka",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Kane Williamson",
+    "country": "New Zealand",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Keshav Maharaj",
+    "country": "South Africa",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Khaleel Ahmed",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Krunal Pandya",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Kuldeep Yadav",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Kusal Mendis",
+    "country": "Sri Lanka",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Kyle Jamieson",
+    "country": "New Zealand",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Liam Livingstone",
+    "country": "England",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Lockie Ferguson",
+    "country": "New Zealand",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "MS Dhoni",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Maheesh Theekshana",
+    "country": "Sri Lanka",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Marco Jansen",
+    "country": "South Africa",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Marcus Stoinis",
+    "country": "Australia",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Mark Wood",
+    "country": "England",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Matheesha Pathirana",
+    "country": "Sri Lanka",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Mayank Yadav",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Mitchell Marsh",
+    "country": "Australia",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Mitchell Santner",
+    "country": "New Zealand",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Mitchell Starc",
+    "country": "Australia",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Moeen Ali",
+    "country": "England",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Mohammad Nabi",
+    "country": "Afghanistan",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Mohammad Rizwan",
+    "country": "Pakistan",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Mohammed Shami",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Mohammed Siraj",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Mohsin Khan",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Mujeeb Ur Rahman",
+    "country": "Afghanistan",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Mukesh Kumar",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Mustafizur Rahman",
+    "country": "Bangladesh",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Nathan Ellis",
+    "country": "Australia",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Naveen-ul-Haq",
+    "country": "Afghanistan",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Nehal Wadhera",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Nicholas Pooran",
+    "country": "West Indies",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Nitish Kumar Reddy",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Noor Ahmad",
+    "country": "Afghanistan",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Pat Cummins",
+    "country": "Australia",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Pathum Nissanka",
+    "country": "Sri Lanka",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Phil Salt",
+    "country": "England",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Prabhsimran Singh",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Prasidh Krishna",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Priyansh Arya",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Quinton de Kock",
+    "country": "South Africa",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Rachin Ravindra",
+    "country": "New Zealand",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Rahmanullah Gurbaz",
+    "country": "Afghanistan",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Rahul Chahar",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Rahul Tewatia",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Rajat Patidar",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Ramandeep Singh",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Rashid Khan",
+    "country": "Afghanistan",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Rassie van der Dussen",
+    "country": "South Africa",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Ravi Bishnoi",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Ravichandran Ashwin",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Ravindra Jadeja",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Rinku Singh",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Rishabh Pant",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Riyan Parag",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Rohit Sharma",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Rovman Powell",
+    "country": "West Indies",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Ruturaj Gaikwad",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Ryan Rickelton",
+    "country": "South Africa",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Sai Kishore",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Sai Sudharsan",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Sam Curran",
+    "country": "England",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Sanju Samson",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Shaheen Afridi",
+    "country": "Pakistan",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Shai Hope",
+    "country": "West Indies",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Shakib Al Hasan",
+    "country": "Bangladesh",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Shardul Thakur",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Shashank Singh",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Sherfane Rutherford",
+    "country": "West Indies",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Shimron Hetmyer",
+    "country": "West Indies",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Shivam Dube",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Shreyas Iyer",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Shubman Gill",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Sikandar Raza",
+    "country": "Zimbabwe",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Steve Smith",
+    "country": "Australia",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Sunil Narine",
+    "country": "West Indies",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Suryakumar Yadav",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Suyash Sharma",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "T Natarajan",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Tabraiz Shamsi",
+    "country": "South Africa",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Tilak Varma",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Tim David",
+    "country": "Australia",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Tom Latham",
+    "country": "New Zealand",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Travis Head",
+    "country": "Australia",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Trent Boult",
+    "country": "New Zealand",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Tristan Stubbs",
+    "country": "South Africa",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Tushar Deshpande",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Varun Chakaravarthy",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Venkatesh Iyer",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Virat Kohli",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  },
+  {
+    "name": "Vyshak Vijaykumar",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Wanindu Hasaranga",
+    "country": "Sri Lanka",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Washington Sundar",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Will Jacks",
+    "country": "England",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Yash Dayal",
+    "country": "India",
+    "width": 480,
+    "height": 480
+  },
+  {
+    "name": "Yashasvi Jaiswal",
+    "country": "India",
+    "width": 112,
+    "height": 112
+  },
+  {
+    "name": "Yuzvendra Chahal",
+    "country": "India",
+    "width": 480,
+    "height": 349
+  }
+]
