@@ -31,7 +31,10 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment files (the managed .env is already tracked; this does not untrack it)
+# Environment files. The managed .env is already tracked; ignoring it does NOT untrack it.
+# These rules protect fresh exports and any additional env files.
+.env
+.env.*
 .env.local
 .env.*.local
 !.env.example
