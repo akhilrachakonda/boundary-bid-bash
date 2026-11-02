@@ -2,7 +2,7 @@
 
 ## Current status (2026-11-02)
 
-- No GitHub remote is connected. The checkout only has Lovable's internal sync remotes. Nothing has been pushed to GitHub.
+- This checkout only shows Lovable's internal sync remotes. A GitHub connection, if one exists, can't be seen from here, and no push to GitHub has been verified.
 - To export, use Lovable **Project settings → Git → Connect**. This creates a **new private** repository and syncs it both ways. Keep it private until the items below are done.
 - Lovable keeps the repository history. Do not force-push or rewrite history.
 
