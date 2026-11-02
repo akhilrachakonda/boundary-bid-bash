@@ -2,7 +2,7 @@
 
 A real-time, mobile-first multiplayer cricket player auction. A host creates a room and shares a 6-character code; friends join as guests, review a confirmed player pool, bid live against server-enforced timers and purses, trade players, set a public batting order with Captain/Vice-Captain, and compare teams using a transparent evidence-based evaluation.
 
-Built with AI assistance in [Lovable](https://lovable.dev) (prompt-driven development with an AI agent that wrote most of the code, migrations and tests). The project owner directed requirements, reviewed results and approved releases.
+Developed with AI assistance using [Lovable](https://lovable.dev).
 
 ## Screenshots
 
@@ -25,7 +25,7 @@ SOLD/UNSOLD overlays: [`docs/post-launch-evidence/`](docs/post-launch-evidence/)
 
 ## Stack
 
-- TanStack Start v1 (React 19, TypeScript, Vite 7, SSR + server functions), targeting an edge (Cloudflare Workers-style) runtime.
+- TanStack Start v1 (React 19, TypeScript, Vite 8, SSR + server functions).
 - Tailwind CSS v4 with semantic design tokens; shadcn/Radix UI components.
 - Lovable Cloud backend (Supabase): Postgres, Auth (anonymous guests + email), Realtime, Storage (private photo bucket), Row Level Security.
 - Tests: Vitest + Testing Library; Python importer tests; Python/Playwright integration scripts.
@@ -45,7 +45,7 @@ SOLD/UNSOLD overlays: [`docs/post-launch-evidence/`](docs/post-launch-evidence/)
 Requirements: [Bun](https://bun.sh), a Supabase-compatible backend with the migrations in `drizzle/migrations/` applied, anonymous sign-ins enabled, and the player catalogue/evidence data loaded (see `src/data/` and `scripts/`).
 
 ```bash
-cp .env.example .env   # fill in your own project's values
+cp .env.example .env.local   # public VITE_ values only; .env.local is git-ignored
 bun install
 bun run dev
 ```
@@ -54,7 +54,16 @@ Environment variables (see `.env.example`):
 
 - `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PROJECT_ID` — **public** browser config. The publishable key is designed to ship in the frontend bundle; access is enforced by RLS and function checks.
 - `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` — same values for server-side rendering.
-- `SUPABASE_SERVICE_ROLE_KEY` — **private**, server-only, used by trusted evaluation functions. Never commit it or expose it to the browser.
+- `SUPABASE_SERVICE_ROLE_KEY` — **private**, server-only, required at runtime by trusted evaluation functions.
+
+Keep the managed, tracked `.env` unchanged. The Vite config only loads `VITE_`-prefixed values from env files, so the server variables (`SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`) are read from the real process environment. Supply them from your shell or a secret manager when starting the server, for example:
+
+```bash
+export SUPABASE_URL=... SUPABASE_PUBLISHABLE_KEY=... SUPABASE_SERVICE_ROLE_KEY=...
+bun run dev
+```
+
+Never put the service-role key in the tracked `.env`, any committed file, or a `VITE_`-prefixed variable (those are bundled into the browser).
 
 On Lovable these are managed automatically. Code export does **not** copy the backend (database, auth users, storage) — see [`docs/GITHUB-EXPORT.md`](docs/GITHUB-EXPORT.md).
 

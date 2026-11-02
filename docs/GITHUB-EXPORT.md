@@ -8,9 +8,9 @@
 
 ## Tracked files and environment
 
-- `.env` is **tracked** and managed by Lovable Cloud. It contains only public values: the backend URL, the project ID and the **publishable** key (`sb_publishable_…`). That key is meant to appear in the frontend bundle, and RLS plus function checks enforce access. No service-role key, database password or other private credential was found in `.env` or source. No credential rotation is needed.
-- `.env` was deliberately left tracked and unchanged. Untracking or editing it could disrupt the managed configuration. The new `.gitignore` entries do **not** untrack files that are already committed.
-- The private `SUPABASE_SERVICE_ROLE_KEY` exists only in the hosted runtime. It is not in the repository.
+- `.env` is **tracked** and managed by Lovable Cloud. It contains only public values: the backend URL, the project ID and the **publishable** key (`sb_publishable_…`). That key is meant to appear in the frontend bundle, and RLS plus function checks enforce access. No private credentials were detected in the inspected files (`.env` and source).
+- `.env` was deliberately left tracked and unchanged. Untracking or editing it could disrupt the managed configuration. `.gitignore` now ignores `.env` and `.env.*` (except `.env.example`) to protect fresh exports and extra env files, but this does **not** untrack the already committed `.env`.
+- The server code requires `SUPABASE_SERVICE_ROLE_KEY` at runtime; it must be supplied only through the server environment or a secret manager, never a committed file. Its presence in the hosted runtime was not verified here.
 - Three Python bytecode files under `scripts/__pycache__/` and `src/test/__pycache__/` are still tracked. They are harmless, but they are noise. Removing them needs a normal file deletion commit. No history rewrite is needed.
 
 ## What code sync does not export
