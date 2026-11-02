@@ -1,45 +1,86 @@
 # Cricket Auction
 
-Real-time IPL-style auction for friends: create a room, share the 6-character code, review a balanced player pool, bid live, trade, and compare teams.
+A real-time, mobile-first multiplayer cricket player auction. A host creates a room and shares a 6-character code; friends join as guests, review a confirmed player pool, bid live against server-enforced timers and purses, trade players, set a public batting order with Captain/Vice-Captain, and compare teams using a transparent evidence-based evaluation.
+
+Built with AI assistance in [Lovable](https://lovable.dev) (prompt-driven development with an AI agent that wrote most of the code, migrations and tests). The project owner directed requirements, reviewed results and approved releases.
+
+## Screenshots
+
+| Phone (390px) | Laptop (1280px) | Results | 10-team auction |
+| --- | --- | --- | --- |
+| ![Auction on phone](docs/release-evidence/auction-390.png) | ![Auction on laptop](docs/release-evidence/auction-1280.png) | ![Results](docs/release-evidence/results-390.png) | ![Ten teams](docs/release-evidence/ten-team-auction.png) |
+
+SOLD/UNSOLD overlays: [`docs/post-launch-evidence/`](docs/post-launch-evidence/). Screenshots show sourced player portraits — see licensing limitations below.
+
+## Features
+
+- **Rooms:** create/join by code, 2–10 teams, team colours, host transfer, device-persistent guest accounts with optional email linking.
+- **Pool review:** balanced pool builder (role/spin/pace quotas), shared confirmation, then a server-shuffled random order frozen once at auction start. Optional *surprise reveal* (default on) hides the future queue from the network as well as the UI.
+- **Live auction:** server-validated bid steps, purse/max-affordable-bid guard, squad size and overseas limits, database-held deadlines, auto-pause when everyone disconnects, SOLD/UNSOLD reveals and a persistent “Last sold” card.
+- **Host controls (rooms created after the post-launch repair):** pause/resume/skip, *Undo last bid* separate from *Undo last sale* (with refund), next-lot timer settings, unlimited reshuffled unsold rounds, a Final Call stage where teams nominate unsold players, and Close auction & open trades.
+- **Trades:** proposals/counters with players and cash, atomic acceptance; trading closes auction purchases.
+- **Evaluation:** room-frozen scoring versions. Current rooms use V2.1: 35% XI combination, 30% established performance, 20% recent form, 10% bench, 5% leadership (`3×C/100 + 2×VC/100`). Inputs come from imported [Cricsheet](https://cricsheet.org) scorecards (aggregates and observed batting-position arrivals). Older rooms keep V1/V2.0 results unchanged. The seeded legacy rating is display-only and not a V2 input.
+- **Private strategy:** per-user notes, targets and draft XI visible only to their owner.
+- **Admin (owner only):** player/photo editing and evidence import, gated by `public.user_roles`.
 
 ## Stack
-- TanStack Start (React 19 + TypeScript) + Tailwind v4, deployed by Lovable.
-- Lovable Cloud backend: Postgres, Auth (guest + email magic link), Realtime, Row Level Security.
-- No API keys in the frontend: the client reads `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` from `.env` (managed by Lovable Cloud).
 
-## How it works
-- **Server authority.** Every state change (create/join room, set pool, bid, tick, host controls, trades) is a `SECURITY DEFINER` Postgres function that locks the room row (`FOR UPDATE`). Two simultaneous bids at the same amount serialise; the second gets "Someone bid first". Timer expiry is decided by `now()` in the database, never by the browser.
-- **Tick driver.** Connected clients call `tick(room)` once the server deadline passes. If nobody was connected when a lot expired (deadline passed by >15 s), the lot timer restarts instead of resolving, so the auction effectively pauses when everyone leaves.
-- **RLS.** Room tables are readable only by room members; direct writes are not granted (all writes go through functions). `private_notes` (targets, max prices, XI, notes) is readable and writable only by its owner. Players are readable by all signed-in users and editable only by admins.
-- **Pool selection** (`src/lib/auction-rules.ts`): proportional quotas per sub-role, auto-raised to cover `teams × min squad` and per-role/spin/pace minimums, top-rated picks plus a tier spread, seeded random tie-breaks for "Regenerate". The database re-validates the pool in `set_pool`.
-- **Team Rating**: Playing XI 50%, role balance 20%, combinations 15%, bench 10%, budget efficiency 5% (auto-picked XI for fairness).
+- TanStack Start v1 (React 19, TypeScript, Vite 7, SSR + server functions), targeting an edge (Cloudflare Workers-style) runtime.
+- Tailwind CSS v4 with semantic design tokens; shadcn/Radix UI components.
+- Lovable Cloud backend (Supabase): Postgres, Auth (anonymous guests + email), Realtime, Storage (private photo bucket), Row Level Security.
+- Tests: Vitest + Testing Library; Python importer tests; Python/Playwright integration scripts.
 
-## Owner admin setup
-Only users with the `admin` role can edit the player database (no auto-grant). After you sign in with your email once, ask Lovable to run:
+## Architecture and server authority
 
-```sql
-insert into public.user_roles (user_id, role)
-select id, 'admin' from auth.users where email = 'you@example.com';
+- **All game mutations are `SECURITY DEFINER` Postgres functions** that lock the room row (`FOR UPDATE`) with a fixed `search_path`. Clients have no INSERT/UPDATE/DELETE grants on game tables; anon has no table access.
+- **Bids are bound** to the observed lot ID, a monotonic `lot_version` and a unique request ID, so a delayed or retried bid cannot land on the next lot or apply twice. Host commands bind to observed status/version/revision (and sale ID for undo) and are idempotent via a command log.
+- **Time is server-owned:** deadlines live in the database; clients call `tick` only after a deadline, using a skew-corrected server clock.
+- **Scoring is server-computed:** trusted server functions score persisted holdings and lineups against frozen evidence snapshots and commit one fingerprint-checked result shared by all participants; clients never submit scores.
+- **Reads:** member-only projections (full and lean) through one single-flight read coordinator; Realtime is used as a revision “doorbell”, not to stream base tables.
+- **Abuse limits:** bounded settings/text/import sizes via table and RPC guards, persisted per-user action quotas, request-body cap on the server.
+- Rule logic in `src/lib/auction-rules.ts` is mirrored in SQL. Migrations live in `drizzle/migrations/`. Further design rules: [`AGENTS.md`](AGENTS.md).
+
+## Setup
+
+Requirements: [Bun](https://bun.sh), a Supabase-compatible backend with the migrations in `drizzle/migrations/` applied, anonymous sign-ins enabled, and the player catalogue/evidence data loaded (see `src/data/` and `scripts/`).
+
+```bash
+cp .env.example .env   # fill in your own project's values
+bun install
+bun run dev
 ```
 
-Then open **/admin** (shield icon in the header).
+Environment variables (see `.env.example`):
 
-## Testing
-- `bunx vitest run` — rules tests (increments, purse guard, pool requirements, rating).
-- Two browser windows (one incognito) are the quickest way to try a full auction.
+- `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PROJECT_ID` — **public** browser config. The publishable key is designed to ship in the frontend bundle; access is enforced by RLS and function checks.
+- `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` — same values for server-side rendering.
+- `SUPABASE_SERVICE_ROLE_KEY` — **private**, server-only, used by trusted evaluation functions. Never commit it or expose it to the browser.
 
-## Player portraits
-- `src/data/player-photos.json` is the canonical name + country catalogue for all 150 identities, reused across all 450 format entries. It includes cached asset URLs, original provider URL, source profile and credits.
-- `src/data/player-photos-backfill.sql` is a reproducible data update, not a schema migration. Apply through Lovable's database data-write tool after schema migrations; never run it at page load.
-- Every selected image was downloaded, decoded and visually checked; 30 provider shirt/silhouette placeholders were replaced with actual portraits.
-- Most photos are editorial provider assets with **no verified open reuse licence**. Attribution is not permission; obtain permission or replace with licensed portraits before public distribution. Josh Inglis is CC BY 3.0, Prime Video AU & NZ.
-- Owner photo URL/source/credit editing and replacement upload are in `/admin`; photo replacements update all format rows for the same identity. The workspace blocks public storage buckets, so uploads use a private bucket and long-lived signed sharing links. Only existing owner admins may upload/edit; links expire and may need replacement.
+On Lovable these are managed automatically. Code export does **not** copy the backend (database, auth users, storage) — see [`docs/GITHUB-EXPORT.md`](docs/GITHUB-EXPORT.md).
 
-## Upgrade verification
-- Desktop and 390px mobile auction: accepted bids, first SOLD with correct frozen portrait, next live lot, UNSOLD, pause, no sale replay on reload, strategy/squad drawers, reduced motion, broken-image fallback.
-- 24 local tests plus 26 live backend invariant checks passed (concurrent bids, membership/private-note isolation and atomic trades).
-- Positive owner upload/edit flow remains unverified because no owner admin identity is assigned; non-admin editing was confirmed ineffective.
-- Project workspace display name could not be changed with available tools; in-app branding, page metadata, favicon and exports use Cricket Auction.
+Owner admin is never auto-granted; insert an `admin` row into `public.user_roles` for your own user via a trusted database session.
 
-## Deploying
-Click **Publish** in Lovable. To host elsewhere (e.g. Vercel), export the repo, set the two `VITE_SUPABASE_*` variables, and run `bun install && bun run build`.
+## Tests
+
+```bash
+bunx vitest run                              # unit/UI tests
+python3 src/test/cricsheet-import.test.py    # importer tests
+python3 src/test/positions-import.test.py
+bun run build
+```
+
+Run on 2026-11-02 for this documentation commit: Vitest **69 passed (11 files)**; both importer test files **OK**.
+
+`src/test/*.integration.py` and `scripts/test-*` are integration/browser scripts that require a running app and a disposable isolated backend; their results are historical and recorded in [`docs/RELEASE-AUDIT.md`](docs/RELEASE-AUDIT.md) and [`docs/POST-LAUNCH-FIXES.md`](docs/POST-LAUNCH-FIXES.md). They were not rerun for this commit. No load/scalability benchmark is claimed beyond what those reports measured in their stated environments.
+
+## Known limitations
+
+- **Player portraits:** most are editorial provider images with no verified redistribution licence. Attribution is not permission. Replace or obtain permission before any public redistribution. Portrait quality is uneven; many originals are low resolution.
+- **Leadership ratings:** all entries use disclosed neutral 50 priors pending owner review; no ratings were invented.
+- **Data coverage is incomplete** (some players lack IPL/ODI evidence or batting-position data); the UI labels coverage and provisional values.
+- **Automatic lineup selection** is an approximate solver and is labelled as such.
+- Positive owner/admin flows were only verified in isolated test fixtures, not against a production admin account.
+
+## Licences and attribution
+
+Match data: Cricsheet, see [`docs/CRICSHEET-LICENSE.txt`](docs/CRICSHEET-LICENSE.txt). Portrait sources and credits are recorded in `src/data/player-photos.json` and `src/lib/portrait-improvements.ts`. No licence is granted for third-party assets; the repository has no blanket open-source licence.

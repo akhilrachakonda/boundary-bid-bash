@@ -30,3 +30,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files (the managed .env is already tracked; this does not untrack it)
+.env.local
+.env.*.local
+!.env.example
+
+# Python caches
+__pycache__/
+*.py[cod]
