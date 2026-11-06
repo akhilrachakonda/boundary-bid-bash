@@ -64,7 +64,7 @@ export const DEFAULT_SETTINGS: Settings = {
   min_spinners: 1,
   min_pacers: 2,
   purse: 100,
-  pool_size: 70,
+  pool_size: 60,
   bid_timer: 20,
   bid_reset: 10,
   increments: [

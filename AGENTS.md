@@ -34,3 +34,4 @@
 
 - New bids allocate accepted_order under the room lock; guarded host actions bind observed_bid_revision independently of lot version and reads filter current bid_session before limits. Why: transaction-start timestamps and reopened history cannot select the wrong retry row or undo leader.
 - Keep the Auction mounted during repair final call and memoize stable room data/auction rendering. Why: final-lot reveals survive status transitions and presence clock alone cannot rebuild the auction.
+- New rooms (pool_rules random-80-20-v1) get pools only from server `generate_pool`: exact round(N*0.2) emerging from per-snapshot `pool_groups`, fresh stored seed, constraint-first random sampling, honest capacity failure; legacy rooms keep the client builder. Why: server-authoritative, reproducible composition without legacy ratings.

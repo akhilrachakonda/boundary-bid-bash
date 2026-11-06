@@ -47,7 +47,7 @@ export function TargetList({
                   {owner && rp.sold_price != null && ` · ${formatMoney(Number(rp.sold_price), currency)}`}
                 </div>
               </div>
-              <span className="font-display text-lg font-bold">{rp.player.rating}</span>
+              <span className="font-display text-lg font-bold">{rp.player.rating > 0 ? rp.player.rating : "—"}</span>
               <button
                 aria-label="Remove target"
                 onClick={() => {

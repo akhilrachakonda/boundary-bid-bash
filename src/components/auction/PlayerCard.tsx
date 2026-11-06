@@ -11,9 +11,11 @@ const tierStyle: Record<string, string> = {
   B: "bg-success/20 text-success",
   C: "bg-secondary text-secondary-foreground",
   Uncapped: "bg-muted text-muted-foreground",
+  Unrated: "bg-muted text-muted-foreground",
 };
 
 export function TierBadge({ tier }: { tier: string }) {
+  if (tier === "Unrated") return null; // newer catalogue players carry no legacy tier
   return (
     <span className={cn("rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider", tierStyle[tier])}>
       {tier}

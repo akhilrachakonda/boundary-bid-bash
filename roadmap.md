@@ -1,4 +1,10 @@
 # Cricket Auction upgrade
+- [x] Roster 200: 50 register-ID-verified additions, refreshed snapshot, pool groups, server random 80/20 generator (docs/REAL-DATA-ROSTER-UPDATE.md).
+- [ ] 10-team / ODI 80/20 capacity: needs product decision (more identities or wider established rule).
+- [ ] Room-configured opening price replacing tier base prices (core bid SQL change).
+- [ ] BAT/BOWL/form/sample on main cards and results; remove legacy tiers from new-room UI.
+- [ ] Team evaluation rework (separate bat/bowl/order/overs, drop neutral-prior leadership bonus).
+- [ ] Portraits for 50 new players and Rohit/Bumrah Commons upgrades.
 - [x] Recover and reconcile existing post-launch draft with newer main source; preserve both sets of repairs and do not publish.
 - [x] Stage and locally verify guarded final call, unlimited unsold rounds, distinct bid undo and next-lot settings; never apply to production.
 - [x] Add capability-gated repair controls and lean projection support without enabling absent RPCs.

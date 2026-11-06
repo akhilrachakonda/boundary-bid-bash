@@ -1,0 +1,99 @@
+{
+  "IPL": {
+    "competitions": [
+      "IPL"
+    ],
+    "matched": 200,
+    "with_data": 192,
+    "missing": [
+      "Aamer Jamal",
+      "Babar Azam",
+      "Ben Duckett",
+      "Charith Asalanka",
+      "Jamie Smith",
+      "Mohammad Rizwan",
+      "Shaheen Afridi",
+      "Tom Latham"
+    ],
+    "latest": "2026-05-31",
+    "archive_latest": "2026-05-31",
+    "matches": 1243
+  },
+  "T20": {
+    "competitions": [
+      "T20I",
+      "IPL"
+    ],
+    "matched": 200,
+    "with_data": 200,
+    "missing": [],
+    "latest": "2026-11-01",
+    "archive_latest": "2026-11-01",
+    "matches": 4892
+  },
+  "ODI": {
+    "competitions": [
+      "ODI"
+    ],
+    "matched": 200,
+    "with_data": 147,
+    "missing": [
+      "Abdul Samad",
+      "Abhishek Sharma",
+      "Abishek Porel",
+      "Ashutosh Sharma",
+      "Azmatullah Omarzai",
+      "Dhruv Jurel",
+      "Fazalhaq Farooqi",
+      "Harshal Patel",
+      "Jitesh Sharma",
+      "Mayank Yadav",
+      "Mohammad Nabi",
+      "Mohsin Khan",
+      "Mujeeb Ur Rahman",
+      "Naveen-ul-Haq",
+      "Nehal Wadhera",
+      "Noor Ahmad",
+      "Prabhsimran Singh",
+      "Priyansh Arya",
+      "Rahmanullah Gurbaz",
+      "Rahul Tewatia",
+      "Ramandeep Singh",
+      "Rashid Khan",
+      "Sai Kishore",
+      "Shashank Singh",
+      "Suyash Sharma",
+      "Tushar Deshpande",
+      "Vyshak Vijaykumar",
+      "Yash Dayal",
+      "Ayush Mhatre",
+      "Vaibhav Suryavanshi",
+      "Angkrish Raghuvanshi",
+      "Vipraj Nigam",
+      "Digvesh Rathi",
+      "Vaibhav Arora",
+      "Devdutt Padikkal",
+      "Sandeep Sharma",
+      "Urvil Patel",
+      "Anuj Rawat",
+      "Kumar Kushagra",
+      "Vishnu Vinod",
+      "Robin Minz",
+      "Rahul Tripathi",
+      "Shahrukh Khan",
+      "Ayush Badoni",
+      "Harpreet Brar",
+      "Shreyas Gopal",
+      "Anukul Roy",
+      "Manav Suthar",
+      "Nishant Sindhu",
+      "Allah Mohammad Ghazanfar",
+      "Ashwani Kumar",
+      "Rasikh Salam",
+      "Nuwan Thushara"
+    ],
+    "latest": "2026-10-31",
+    "archive_latest": "2026-11-02",
+    "matches": 2617
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "coverage": {
+    "IPL": 189,
+    "T20": 199,
+    "ODI": 145
+  },
+  "accepted_innings": 14873,
+  "excluded_innings": 127,
+  "method": "Grouped simultaneous openers; unique subsequent arrival; missing opening/discontinuous overs excluded; observed usage not finishing ability"
+}

@@ -12,6 +12,7 @@ import { PlayerTable } from "@/components/auction/PlayerTable";
 import { TeamDot } from "@/components/auction/TeamPurseBar";
 import type { RoomData, Derived } from "@/components/auction/derive";
 import { rpc } from "./rpc";
+import { POOL_RULES, ratioCounts, type PoolGeneration } from "@/lib/pool-ratio";
 
 export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: number }) {
   const room = data.room!;
@@ -44,6 +45,16 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
   const enoughTeams = data.participants.length >= 2;
   const poolReady = data.pool.length > 0;
 
+  const ratioRoom = (room as { pool_rules?: string | null }).pool_rules === POOL_RULES;
+  const generation = (room as { pool_generation?: PoolGeneration | null }).pool_generation ?? null;
+  const [generating, setGenerating] = useState(false);
+  const generateServer = async () => {
+    if (s.pool_size === "all") { toast.error("Choose a numeric pool size: random 80/20 pools need an exact size."); return; }
+    setGenerating(true);
+    const res = await rpc<PoolGeneration>("generate_pool", { p_room: room.id, p_size: s.pool_size });
+    setGenerating(false);
+    if (res) toast.success(`Pool saved: ${res.established} established + ${res.emerging} emerging`);
+  };
   const gen = (sd: number) => {
     setSeed(sd);
     setPreview(generateBalancedPool(all, s, sd));
@@ -115,6 +126,25 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
 
         {d.isHost && (
           <div className="panel space-y-3 p-5">
+            {ratioRoom ? (
+              <>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="mr-auto text-2xl font-bold uppercase">Player pool</h3>
+                  <Button variant="outline" onClick={generateServer} disabled={generating}>
+                    <RefreshCw className="h-4 w-4" /> {generating ? "Generating…" : poolReady ? "Regenerate random pool" : "Generate random pool"}
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {s.pool_size === "all" ? "Set a numeric pool size first." : `${s.pool_size} players = ${ratioCounts(s.pool_size).established} established + ${ratioCounts(s.pool_size).emerging} emerging, drawn at random.`} Needs at least {req.total} players · WK {req.WK} · BAT {req.BAT} · AR {req.AR} · BOWL {req.BOWL} · spin {req.spin} · pace {req.pace}
+                </p>
+                <PoolMixExplainer />
+                {poolReady && generation ? (
+                  <p className="text-sm text-success">Pool saved: {generation.size} players — {generation.established} established + {generation.emerging} emerging (WK {poolCounts.WK}, BAT {poolCounts.BAT}, AR {poolCounts.AR}, BOWL {poolCounts.BOWL}). Available for {room.format}: {generation.capacity.established} established, {generation.capacity.emerging} emerging.</p>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Generate a pool; it is saved straight away and stays fixed on refresh or reconnect until you regenerate it.</p>
+                )}
+              </>
+            ) : (<>
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="mr-auto text-2xl font-bold uppercase">Player pool</h3>
               <Button variant="outline" onClick={() => gen(Math.floor(Math.random() * 1e9))} disabled={!all.length}>
@@ -147,6 +177,7 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
             ) : (
               <p className="text-sm text-muted-foreground">Generate a pool to preview it.</p>
             )}
+            </>)}
           </div>
         )}
       </div>
@@ -216,5 +247,14 @@ function PoolSummary({ players }: { players: Player[] }) {
       <div className="flex flex-wrap gap-1">{by((p) => p.sub_role).map(([k, v]) => <span key={k} className="rounded bg-secondary px-2 py-1">{k}: <b>{v}</b></span>)}</div>
       <div className="flex flex-wrap gap-1">{by((p) => p.tier).map(([k, v]) => <span key={k} className="rounded bg-secondary px-2 py-1">{k}: <b>{v}</b></span>)}</div>
     </div>
+  );
+}
+
+function PoolMixExplainer() {
+  return (
+    <details className="text-xs text-muted-foreground">
+      <summary className="cursor-pointer">How players are grouped</summary>
+      <p className="mt-1">Established: enough recent matches in this format (last 36 months of covered Cricsheet data) and a top-half Cricket Auction performance score for their batting or bowling. Emerging: a small covered sample in every format so far. Experienced players outside the top half, or with no covered matches, are left out of random 80/20 pools. These groups only shape the pool — they are not official rankings.</p>
+    </details>
   );
 }
