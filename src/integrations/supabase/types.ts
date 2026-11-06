@@ -857,6 +857,7 @@ export type Database = {
           lot_version: number
           name: string
           next_lot_settings: Json
+          opening_price: number | null
           paused_remaining_ms: number | null
           pool_generation: Json | null
           pool_rules: string | null
@@ -889,6 +890,7 @@ export type Database = {
           lot_version?: number
           name: string
           next_lot_settings?: Json
+          opening_price?: number | null
           paused_remaining_ms?: number | null
           pool_generation?: Json | null
           pool_rules?: string | null
@@ -921,6 +923,7 @@ export type Database = {
           lot_version?: number
           name?: string
           next_lot_settings?: Json
+          opening_price?: number | null
           paused_remaining_ms?: number | null
           pool_generation?: Json | null
           pool_rules?: string | null
