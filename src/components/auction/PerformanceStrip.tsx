@@ -37,7 +37,7 @@ const fmt = (v: number | undefined) => (v === undefined ? "—" : Math.round(v).
 
 export function PerformanceStrip({ player, compact = false, className }: { player: Player; compact?: boolean; className?: string }) {
   const scores = usePerformanceScores(player.format);
-  if (!scores) return null;
+  if (!scores || scores.byKey.size === 0) return null; // signed out or no scores loaded: show nothing rather than imply missing data
   const m = scores.byKey.get(player.name + "|" + player.country);
   const scope = player.format === "T20" ? "T20I + IPL" : player.format;
   if (!m || m.status !== "measured") {

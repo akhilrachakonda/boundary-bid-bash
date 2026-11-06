@@ -8,9 +8,10 @@ import type { RoomData, Derived } from "@/components/auction/derive";
 import { PlayerPortrait } from "@/components/auction/PlayerPortrait";
 import { PlayerProfile } from "@/components/auction/PlayerProfile";
 import { ResultsV2 } from "./ResultsV2";
+import { ResultsV3 } from "./ResultsV3";
 
 export function Results({ data, d }: { data: RoomData; d: Derived }) {
-  return data.room?.evaluation_version?.startsWith('v2.') ? <ResultsV2 data={data} d={d}/> : <LegacyResults data={data} d={d}/>;
+  return data.room?.evaluation_version === 'v3.0' ? <ResultsV3 data={data} d={d}/> : data.room?.evaluation_version?.startsWith('v2.') ? <ResultsV2 data={data} d={d}/> : <LegacyResults data={data} d={d}/>;
 }
 function LegacyResults({ data, d }: { data: RoomData; d: Derived }) {
   const room = data.room!;

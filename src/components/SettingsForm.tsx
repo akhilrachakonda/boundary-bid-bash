@@ -23,7 +23,7 @@ export function SettingsForm({ s, onChange, available }: { s: Settings; onChange
     <div className="space-y-5">
       <label className="flex items-center justify-between gap-4 rounded-md border p-3"><span><strong className="block">Surprise player reveal</strong><span className="text-xs text-muted-foreground">Everyone can scout the pool; future sequence stays secret until each lot opens.</span></span><Switch checked={s.surprise_reveal === true} onCheckedChange={v => set("surprise_reveal", v)} /></label>
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Num label="Teams (2-10)" value={s.max_teams} min={2} max={10} onChange={(n) => set("max_teams", Math.max(2, Math.min(10, n)))} />
+        <Num label="Teams (2-10)" value={s.max_teams} min={2} max={10} onChange={(n) => { const t = Math.max(2, Math.min(10, n)); const need = t * s.min_squad; onChange({ ...s, max_teams: t, pool_size: typeof s.pool_size === "number" && s.pool_size < need ? need : s.pool_size }); }} />
         <Num label="Purse per team (Cr)" value={s.purse} step={5} min={10} onChange={(n) => set("purse", n)} />
         <div className="space-y-1">
           <Label className="text-xs text-muted-foreground">Currency display</Label>

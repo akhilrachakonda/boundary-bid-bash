@@ -50,10 +50,11 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
   const [generating, setGenerating] = useState(false);
   const generateServer = async () => {
     if (s.pool_size === "all") { toast.error("Choose a numeric pool size: random 80/20 pools need an exact size."); return; }
+    if (s.pool_size < req.total) { toast.error(`Pool size ${s.pool_size} is below ${req.total} (${s.max_teams} teams × ${s.min_squad}). Raise it in room settings.`); return; }
     setGenerating(true);
     const res = await rpc<PoolGeneration>("generate_pool", { p_room: room.id, p_size: s.pool_size });
     setGenerating(false);
-    if (res) toast.success(`Pool saved: ${res.established} established + ${res.emerging} emerging`);
+    if (res) toast.success(`Pool saved: ${res.established} performance pool + ${res.emerging} emerging / developing`);
   };
   const gen = (sd: number) => {
     setSeed(sd);
@@ -135,11 +136,11 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
                   </Button>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {s.pool_size === "all" ? "Set a numeric pool size first." : `${s.pool_size} players = ${ratioCounts(s.pool_size).established} established + ${ratioCounts(s.pool_size).emerging} emerging, drawn at random.`} Needs at least {req.total} players · WK {req.WK} · BAT {req.BAT} · AR {req.AR} · BOWL {req.BOWL} · spin {req.spin} · pace {req.pace}
+                  {s.pool_size === "all" ? "Set a numeric pool size first." : `${s.pool_size} players = ${ratioCounts(s.pool_size).established} performance pool + ${ratioCounts(s.pool_size).emerging} emerging / developing, drawn at random. Every player opens at the room's minimum price (${s.min_base} Cr).`} Needs at least {req.total} players · WK {req.WK} · BAT {req.BAT} · AR {req.AR} · BOWL {req.BOWL} · spin {req.spin} · pace {req.pace}
                 </p>
                 <PoolMixExplainer />
                 {poolReady && generation ? (
-                  <p className="text-sm text-success">Pool saved: {generation.size} players — {generation.established} established + {generation.emerging} emerging (WK {poolCounts.WK}, BAT {poolCounts.BAT}, AR {poolCounts.AR}, BOWL {poolCounts.BOWL}). Available for {room.format}: {generation.capacity.established} established, {generation.capacity.emerging} emerging.</p>
+                  <p className="text-sm text-success">Pool saved: {generation.size} players — {generation.established} performance pool + {generation.emerging} emerging / developing (WK {poolCounts.WK}, BAT {poolCounts.BAT}, AR {poolCounts.AR}, BOWL {poolCounts.BOWL}). Available for {room.format}: {generation.capacity.established} performance pool, {generation.capacity.emerging} emerging / developing.</p>
                 ) : (
                   <p className="text-sm text-muted-foreground">Generate a pool; it is saved straight away and stays fixed on refresh or reconnect until you regenerate it.</p>
                 )}
@@ -254,7 +255,7 @@ function PoolMixExplainer() {
   return (
     <details className="text-xs text-muted-foreground">
       <summary className="cursor-pointer">How players are grouped</summary>
-      <p className="mt-1">Established: enough recent matches in this format (last 36 months of covered Cricsheet data) and a top-half Cricket Auction performance score for their batting or bowling. Emerging: a small covered sample in every format so far. Experienced players outside the top half, or with no covered matches, are left out of random 80/20 pools. These groups only shape the pool — they are not official rankings.</p>
+      <p className="mt-1">Performance pool: the upper 80% of players with enough covered matches in this format, ranked within their playing role by Cricket Auction performance score (covered Cricsheet history, recent seasons counted twice, small samples pulled toward the average). Emerging / developing: the lower 20% of those players plus anyone with too few or no covered matches in this format (shown as insufficient data). These groups only shape the pool; they are not official rankings.</p>
     </details>
   );
 }

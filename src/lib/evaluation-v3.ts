@@ -5,10 +5,10 @@
 import { isPacer, isSpinner, type Player } from './auction-rules';
 
 export interface Measure {
-  bat?: number; bowl?: number; recentBat?: number; recentBowl?: number;
+  bat?: number | undefined; bowl?: number | undefined; recentBat?: number | undefined; recentBowl?: number | undefined;
   status: 'measured' | 'insufficient data' | 'unknown'; group: string;
-  raw?: { innings: number; runs: number; balls: number; dismissals: number; wickets: number; legal_balls: number; conceded: number };
-  latest?: string | null;
+  raw?: undefined | { innings: number; runs: number; balls: number; dismissals: number; wickets: number; legal_balls: number; conceded: number };
+  latest?: string | null | undefined;
 }
 export interface V3Player extends Pick<Player, 'id' | 'name' | 'role' | 'sub_role' | 'nationality_type' | 'format'> { measure?: Measure }
 export interface V3Contribution { id: string; slot: number; bat: number | null; overs: number; bowl: number | null; note: string }
@@ -98,7 +98,8 @@ export function rankV3<T extends { score: V3Result }>(teams: T[]): (T & { rank: 
   return sorted.map((t, i) => { if (!prev || prev.eligible !== t.score.eligible || prev.combined !== t.score.combined) rank = i + 1; prev = t.score; return { ...t, rank }; });
 }
 
-export function measureFromBasis(grp: string, basis: Record<string, any> | undefined): Measure {
-  const pc = basis?.percentiles ?? {}; const rc = basis?.recent ?? {};
-  return { bat: pc.bat, bowl: pc.bowl, recentBat: rc.bat, recentBowl: rc.bowl, status: basis?.status ?? 'measured', group: grp, raw: basis?.raw, latest: basis?.latest ?? null };
+interface Basis { percentiles?: { bat?: number; bowl?: number }; recent?: { bat?: number; bowl?: number }; status?: Measure['status']; raw?: Measure['raw']; latest?: string | null }
+export function measureFromBasis(grp: string, input: unknown): Measure {
+  const basis = (input ?? {}) as Basis; const pc = basis.percentiles ?? {}; const rc = basis.recent ?? {};
+  return { bat: pc.bat, bowl: pc.bowl, recentBat: rc.bat, recentBowl: rc.bowl, status: basis.status ?? 'measured', group: grp, raw: basis.raw, latest: basis.latest ?? null };
 }
