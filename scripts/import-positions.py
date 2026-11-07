@@ -27,9 +27,9 @@ def positions(innings):
  return slots
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--snapshot',required=True);ap.add_argument('--cutoff',default='2026-10-29');ap.add_argument('--data',default='/tmp/cricket-data');ap.add_argument('--out',default='/tmp/positions.csv');a=ap.parse_args();root=Path(a.data)
- cross=module.crosswalk();identity={p['identifier']:p['name']+'|'+p['country'] for p in cross if p.get('identifier') and p.get('country')}
+ cross=json.load(open('src/data/cricsheet-crosswalk.json'));identity={p['identifier']:p['name']+'|'+p['country'] for p in cross if p.get('identifier') and p.get('country')}
  # Crosswalk country may be absent; canonical photo identity is preserved.
- photos=module.roster();byname={p['name']:p['country'] for p in photos}
+ photos=json.load(open('src/data/player-photos.json'));byname={p['name']:p['country'] for p in photos}
  identity={p['identifier']:p['name']+'|'+byname[p['name']] for p in cross if p.get('identifier') and p['name'] in byname}
  groups=defaultdict(dict);seen=set();accepted=0;excluded=0
  for archive,formats in [('ipl_male_json.zip',['IPL','T20']),('t20s_male_json.zip',['T20']),('odis_male_json.zip',['ODI'])]:

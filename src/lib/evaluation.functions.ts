@@ -5,13 +5,12 @@ import type { Settings } from './auction-rules';
 import type { Json } from '@/integrations/supabase/types';
 import { optimizeTeam21, type Player21, type SubmittedLineup } from './evaluation-v21';
 import { z } from 'zod';
-import { evaluateV3, measureFromBasis, rankV3, type V3Player } from './evaluation-v3';
 
 export const getRoomEvaluation=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator((input:unknown)=>z.object({roomId:z.string().uuid()}).parse(input)).handler(async({data,context})=>{
  const projection=await context.supabase.rpc('room_projection',{p_room:data.roomId});
  if(projection.error)throw new Error('You must be a room member');
  const room=(projection.data as unknown as {room:{status:string;evaluation_version:string;format:string;settings:Settings;scoring_patch?:string}}).room;
- if(!['v2.0','v2.1','v3.0'].includes(room.evaluation_version))return null;
+ if(!['v2.0','v2.1'].includes(room.evaluation_version))return null;
  const stored=await context.supabase.from('room_evaluations').select('result').eq('room_id',data.roomId).maybeSingle();
  if(stored.data)return stored.data.result;
  if(!['completed','trade','results'].includes(room.status))throw new Error('Evaluation opens after the auction');
@@ -30,7 +29,7 @@ export const getRoomEvaluation=createServerFn({method:'POST'}).middleware([requi
  const teams=await context.supabase.from('participants').select('id').eq('room_id',data.roomId);
  const facts=input.data.player_facts as unknown as MeasuredPlayer[];
  const positionRead=sid?await context.supabase.from('evidence_positions').select('*').eq('snapshot_id',sid).eq('format',room.format):null;
- const lineupRead=['v2.1','v3.0'].includes(room.evaluation_version)?await context.supabase.from('evaluation_lineups').select('*').eq('room_id',data.roomId):null;
+ const lineupRead=room.evaluation_version==='v2.1'?await context.supabase.from('evaluation_lineups').select('*').eq('room_id',data.roomId):null;
  if(positionRead?.error||lineupRead?.error)throw new Error('Could not read complete lineup evidence; retry');
  const positions=positionRead?.data??[];
  const lineups=lineupRead?.data??[];
@@ -38,20 +37,6 @@ export const getRoomEvaluation=createServerFn({method:'POST'}).middleware([requi
  const measured=facts.map(p=>{const e=evidence.find(e=>e.identity_key===p.name+'|'+p.country);const stats=e?.stats as unknown as Record<string,Evidence>|undefined;const original=stats?.[room.format];const pos=positions.find(x=>x.identity_key===p.name+'|'+p.country);const ev=original?{...original,windows:{...original.windows,history:{...original.windows['history'],position_groups:pos?.groups??{}}}}:undefined;return {...p,...(ev?{evidence:ev}:{})} as Player21;});
  const cohorts=(snapshot?.cohorts??{}) as unknown as Record<string,Aggregate>;
  const settings=(input.data.rules as unknown as {settings:Settings}).settings;
- if(room.evaluation_version==='v3.0'){
-  const groupRead=sid?await context.supabase.from('pool_groups').select('identity_key,grp,basis').eq('snapshot_id',sid).eq('format',room.format).eq('rules_version','pool-groups-2'):null;
-  if(groupRead?.error)throw new Error('Could not read frozen performance scores; retry');
-  const groups=new Map((groupRead?.data??[]).map(g=>[g.identity_key,g]));
-  const players:V3Player[]=facts.map(p=>{const g=groups.get(p.name+'|'+p.country);return {...p,measure:g?measureFromBasis(g.grp,g.basis as Record<string,unknown>):{status:'unknown',group:'emerging'}};});
-  const maxOverseas=room.format==='IPL'?4:11;
-  const teamsV3=rankV3((teams.data??[]).map(t=>{const squad=players.filter(p=>(holdings.data??[]).some(s=>s.participant_id===t.id&&s.player_id===p.id));const line=lineups.find(l=>l.participant_id===t.id) as SubmittedLineup|undefined;return {id:t.id,score:evaluateV3(squad,room.format,maxOverseas,line?.lineup)};}));
-  const resultV3={version:'v3.0',groupRules:'pool-groups-2',cutoff:snapshot?.cutoff??null,coverage:snapshot?.coverage??null,attribution:'Available Cricsheet matches • ODC-By 1.0 • coverage incomplete • Cricket Auction performance scores are app-computed, not official ratings',teams:teamsV3};
-  if(room.status!=='results')return resultV3 as unknown as Json;
-  const {supabaseAdmin}=await import('@/integrations/supabase/client.server');
-  const committed=await supabaseAdmin.rpc('commit_room_evaluation',{p_room:data.roomId,p_snapshot:sid as string,p_hash:hash.data,p_result:resultV3 as unknown as Json});
-  if(committed.error)throw new Error('Final holdings changed or results could not be saved; retry');
-  return committed.data;
- }
  const result={version:room.evaluation_version,scoringPatch:room.scoring_patch??null,cutoff:snapshot?.cutoff??null,coverage:snapshot?.coverage??null,attribution:'Available Cricsheet matches • ODC-By 1.0 • coverage incomplete',teams:rankEvaluations((teams.data??[]).map(t=>{const squad=measured.filter(p=>(holdings.data??[]).some(s=>s.participant_id===t.id&&s.player_id===p.id));const line=lineups.find(l=>l.participant_id===t.id);return {id:t.id,score:room.evaluation_version==='v2.1'?optimizeTeam21(squad,settings,room.format,cohorts,line as SubmittedLineup|undefined,room.scoring_patch==='legal-reserve-1'):optimizeTeam(squad,settings,room.format,cohorts)};}))};
  if(room.status!=='results')return result as unknown as Json;
  // Membership verified above; service access is used only to commit trusted calculated output.

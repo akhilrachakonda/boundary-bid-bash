@@ -1,4 +1,3 @@
-import { PerformanceStrip } from "./PerformanceStrip";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlayerPortrait } from "./PlayerPortrait";
@@ -12,11 +11,9 @@ const tierStyle: Record<string, string> = {
   B: "bg-success/20 text-success",
   C: "bg-secondary text-secondary-foreground",
   Uncapped: "bg-muted text-muted-foreground",
-  Unrated: "bg-muted text-muted-foreground",
 };
 
 export function TierBadge({ tier }: { tier: string }) {
-  if (tier === "Unrated") return null; // newer catalogue players carry no legacy tier
   return (
     <span className={cn("rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider", tierStyle[tier])}>
       {tier}
@@ -45,6 +42,7 @@ export function PlayerCard({
         <PlayerProfile player={player} currency={currency}><PlayerPortrait player={player} priority={big} className={cn("shrink-0 rounded-md",big ? "h-28 w-24" : "h-16 w-14")}/></PlayerProfile>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
+            <TierBadge tier={player.tier} />
             {player.nationality_type === "Overseas" && (
               <span className="text-[10px] font-bold uppercase text-electric">✈ Overseas</span>
             )}
@@ -55,7 +53,6 @@ export function PlayerCard({
           <p className="truncate text-xs text-muted-foreground">
             {player.country} · {ROLE_LABEL[player.role]} · {player.sub_role}
           </p>
-          <PerformanceStrip player={player} compact={!big} className="mt-1" />
           {big && (
             <p className="text-xs text-muted-foreground">
               Bats {player.batting_hand} · {player.bowling_style}

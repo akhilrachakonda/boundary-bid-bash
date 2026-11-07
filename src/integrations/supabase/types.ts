@@ -561,41 +561,6 @@ export type Database = {
         }
         Relationships: []
       }
-      pool_groups: {
-        Row: {
-          basis: Json
-          format: string
-          grp: string
-          identity_key: string
-          rules_version: string
-          snapshot_id: string
-        }
-        Insert: {
-          basis?: Json
-          format: string
-          grp: string
-          identity_key: string
-          rules_version: string
-          snapshot_id: string
-        }
-        Update: {
-          basis?: Json
-          format?: string
-          grp?: string
-          identity_key?: string
-          rules_version?: string
-          snapshot_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pool_groups_snapshot_id_fkey"
-            columns: ["snapshot_id"]
-            isOneToOne: false
-            referencedRelation: "evaluation_snapshots"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       private_notes: {
         Row: {
           id: string
@@ -857,10 +822,7 @@ export type Database = {
           lot_version: number
           name: string
           next_lot_settings: Json
-          opening_price: number | null
           paused_remaining_ms: number | null
-          pool_generation: Json | null
-          pool_rules: string | null
           repair_flow: boolean
           review_ends_at: string | null
           scoring_patch: string | null
@@ -890,10 +852,7 @@ export type Database = {
           lot_version?: number
           name: string
           next_lot_settings?: Json
-          opening_price?: number | null
           paused_remaining_ms?: number | null
-          pool_generation?: Json | null
-          pool_rules?: string | null
           repair_flow?: boolean
           review_ends_at?: string | null
           scoring_patch?: string | null
@@ -923,10 +882,7 @@ export type Database = {
           lot_version?: number
           name?: string
           next_lot_settings?: Json
-          opening_price?: number | null
           paused_remaining_ms?: number | null
-          pool_generation?: Json | null
-          pool_rules?: string | null
           repair_flow?: boolean
           review_ends_at?: string | null
           scoring_patch?: string | null
@@ -1237,7 +1193,6 @@ export type Database = {
         Returns: Json
       }
       evaluation_holdings_hash: { Args: { p_room: string }; Returns: string }
-      generate_pool: { Args: { p_room: string; p_size: number }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

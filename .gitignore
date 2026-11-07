@@ -30,15 +30,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Environment files. The managed .env is already tracked; ignoring it does NOT untrack it.
-# These rules protect fresh exports and any additional env files.
-.env
-.env.*
-.env.local
-.env.*.local
-!.env.example
-
-# Python caches
-__pycache__/
-*.py[cod]

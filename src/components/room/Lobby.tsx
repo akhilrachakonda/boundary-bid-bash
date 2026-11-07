@@ -12,7 +12,6 @@ import { PlayerTable } from "@/components/auction/PlayerTable";
 import { TeamDot } from "@/components/auction/TeamPurseBar";
 import type { RoomData, Derived } from "@/components/auction/derive";
 import { rpc } from "./rpc";
-import { POOL_RULES, ratioCounts, type PoolGeneration } from "@/lib/pool-ratio";
 
 export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: number }) {
   const room = data.room!;
@@ -45,17 +44,6 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
   const enoughTeams = data.participants.length >= 2;
   const poolReady = data.pool.length > 0;
 
-  const ratioRoom = (room as { pool_rules?: string | null }).pool_rules === POOL_RULES;
-  const generation = (room as { pool_generation?: PoolGeneration | null }).pool_generation ?? null;
-  const [generating, setGenerating] = useState(false);
-  const generateServer = async () => {
-    if (s.pool_size === "all") { toast.error("Choose a numeric pool size: random 80/20 pools need an exact size."); return; }
-    if (s.pool_size < req.total) { toast.error(`Pool size ${s.pool_size} is below ${req.total} (${s.max_teams} teams × ${s.min_squad}). Raise it in room settings.`); return; }
-    setGenerating(true);
-    const res = await rpc<PoolGeneration>("generate_pool", { p_room: room.id, p_size: s.pool_size });
-    setGenerating(false);
-    if (res) toast.success(`Pool saved: ${res.established} performance pool + ${res.emerging} emerging / developing`);
-  };
   const gen = (sd: number) => {
     setSeed(sd);
     setPreview(generateBalancedPool(all, s, sd));
@@ -127,25 +115,6 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
 
         {d.isHost && (
           <div className="panel space-y-3 p-5">
-            {ratioRoom ? (
-              <>
-                <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="mr-auto text-2xl font-bold uppercase">Player pool</h3>
-                  <Button variant="outline" onClick={generateServer} disabled={generating}>
-                    <RefreshCw className="h-4 w-4" /> {generating ? "Generating…" : poolReady ? "Regenerate random pool" : "Generate random pool"}
-                  </Button>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {s.pool_size === "all" ? "Set a numeric pool size first." : `${s.pool_size} players = ${ratioCounts(s.pool_size).established} performance pool + ${ratioCounts(s.pool_size).emerging} emerging / developing, drawn at random. Every player opens at the room's minimum price (${s.min_base} Cr).`} Needs at least {req.total} players · WK {req.WK} · BAT {req.BAT} · AR {req.AR} · BOWL {req.BOWL} · spin {req.spin} · pace {req.pace}
-                </p>
-                <PoolMixExplainer />
-                {poolReady && generation ? (
-                  <p className="text-sm text-success">Pool saved: {generation.size} players — {generation.established} performance pool + {generation.emerging} emerging / developing (WK {poolCounts.WK}, BAT {poolCounts.BAT}, AR {poolCounts.AR}, BOWL {poolCounts.BOWL}). Available for {room.format}: {generation.capacity.established} performance pool, {generation.capacity.emerging} emerging / developing.</p>
-                ) : (
-                  <p className="text-sm text-muted-foreground">Generate a pool; it is saved straight away and stays fixed on refresh or reconnect until you regenerate it.</p>
-                )}
-              </>
-            ) : (<>
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="mr-auto text-2xl font-bold uppercase">Player pool</h3>
               <Button variant="outline" onClick={() => gen(Math.floor(Math.random() * 1e9))} disabled={!all.length}>
@@ -178,7 +147,6 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
             ) : (
               <p className="text-sm text-muted-foreground">Generate a pool to preview it.</p>
             )}
-            </>)}
           </div>
         )}
       </div>
@@ -248,14 +216,5 @@ function PoolSummary({ players }: { players: Player[] }) {
       <div className="flex flex-wrap gap-1">{by((p) => p.sub_role).map(([k, v]) => <span key={k} className="rounded bg-secondary px-2 py-1">{k}: <b>{v}</b></span>)}</div>
       <div className="flex flex-wrap gap-1">{by((p) => p.tier).map(([k, v]) => <span key={k} className="rounded bg-secondary px-2 py-1">{k}: <b>{v}</b></span>)}</div>
     </div>
-  );
-}
-
-function PoolMixExplainer() {
-  return (
-    <details className="text-xs text-muted-foreground">
-      <summary className="cursor-pointer">How players are grouped</summary>
-      <p className="mt-1">Performance pool: the upper 80% of players with enough covered matches in this format, ranked within their playing role by Cricket Auction performance score (covered Cricsheet history, recent seasons counted twice, small samples pulled toward the average). Emerging / developing: the lower 20% of those players plus anyone with too few or no covered matches in this format (shown as insufficient data). These groups only shape the pool; they are not official rankings.</p>
-    </details>
   );
 }

@@ -60,24 +60,15 @@ def innings_aggregates(innings,info):
    legal_seen+=int(bool(legal))
  for i,name in enumerate(batting_order):stats[name]['innings']=1;stats[name]['positions'][str(i+1)]=1
  return dict(stats)
-def roster():
- """Canonical identities: original 150 portrait roster plus reviewed register-ID additions."""
- base=json.load(open('src/data/player-photos.json'));add=json.load(open('src/data/roster-additions-2026-11.json'))['players']
- names={x['name'] for x in base};assert not names&{x['name'] for x in add},'duplicate identity'
- return base+[dict(name=x['name'],country=x['country'],source=None) for x in add]
-def crosswalk():
- base=json.load(open('src/data/cricsheet-crosswalk.json'));add=json.load(open('src/data/roster-additions-2026-11.json'))['players']
- ids={x.get('identifier') for x in base if x.get('identifier')};assert not ids&{x['identifier'] for x in add},'duplicate register id'
- return base+[dict(name=x['name'],identifier=x['identifier'],method='register-id-reviewed',evidence='Cricsheet register '+x['register_name']+(' / ESPNcricinfo key '+x['cricinfo_id'] if x['cricinfo_id'] else ''),aliases=x['aliases']) for x in add]
 def write_csv(path,fields,rows):
  with open(path,'w') as f:
   w=csv.writer(f);w.writerow(fields)
   for row in rows:w.writerow([json.dumps(row[k],separators=(',',':')) if isinstance(row[k],(dict,list)) else row[k] for k in fields])
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--data',default='/tmp/cricket-data');ap.add_argument('--out',default='/tmp/cricket-import');ap.add_argument('--cutoff',default=date.today().isoformat());args=ap.parse_args();root=Path(args.data);out=Path(args.out);out.mkdir(parents=True,exist_ok=True);cutoff=date.fromisoformat(args.cutoff)
- photos=roster();cross=json.load(open(root/'reviewed-crosswalk.json')) if (root/'reviewed-crosswalk.json').exists() else crosswalk()
+ photos=json.load(open('src/data/player-photos.json'));cross=json.load(open(root/'reviewed-crosswalk.json')) if (root/'reviewed-crosswalk.json').exists() else json.load(open('src/data/cricsheet-crosswalk.json'))
  by_name={x['name']:x for x in cross};ids={x['identifier'] for x in cross if x.get('identifier')};recent_start=month_before(cutoff,12);est_start=month_before(cutoff,36)
- sid=str(uuid.uuid5(uuid.NAMESPACE_URL,'cricket-auction-import-v2.1-arrival-group-1-roster200:'+args.cutoff+':'+':'.join(hashlib.sha256((root/n).read_bytes()).hexdigest() for n in ['ipl_male_json.zip','t20s_male_json.zip','odis_male_json.zip'])))
+ sid=str(uuid.uuid5(uuid.NAMESPACE_URL,'cricket-auction-import-v2.1-arrival-group-1:'+args.cutoff+':'+':'.join(hashlib.sha256((root/n).read_bytes()).hexdigest() for n in ['ipl_male_json.zip','t20s_male_json.zip','odis_male_json.zip'])))
  aggregated=defaultdict(empty);dates=defaultdict(list);matches=[];innings_rows=[];counts=defaultdict(int);latest={};earliest={};revisions={};dedup={};rejected=[]
  for filename,competition,formats,mt in [('ipl_male_json.zip','IPL',['IPL','T20'],'T20'),('t20s_male_json.zip','T20I',['T20'],'T20'),('odis_male_json.zip','ODI',['ODI'],'ODI')]:
   z=zipfile.ZipFile(root/filename)

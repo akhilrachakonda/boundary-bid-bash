@@ -22,7 +22,6 @@
 - Pure rule logic (increments, purse guard, pool builder, team rating) lives in `src/lib/auction-rules.ts` and is mirrored in SQL; keep both in sync and covered by `src/test/auction-rules.test.ts`.
 - One room page (`/room/$roomId`) switches views by room status (lobby → review → auction → completed/trade → results). Why: a single realtime subscription per room.
 - Admin rights come only from `public.user_roles`; never auto-grant.
-- Pool-group reads use `can_read_snapshot(snapshot_id)`; explicitly revoke inherited PUBLIC/anon/authenticated table grants before granting authenticated SELECT and service access. Why: evidence visibility must stay aligned and RLS cannot protect TRUNCATE.
 - Canonical portraits match name and country and share one sourced asset across formats; database photo overrides take precedence. Why: preserve IDs and support owner replacement without duplicate media.
 - Presentation deduplicates accepted bid IDs and sale event IDs and freezes resolved lot snapshots; sale reveals never block a new live lot. Why: avoid false bids, reconnect replay and next-player face mixups.
 - Production repair installation is tracked solely by the managed migration journal (0018 controls,0019 inherited ACL hardening); scripts/staged is historical isolated-test evidence, never a second production installation. Repair controls retain capability/repair-flow gating and observed revisions/retry IDs. Why: prevent duplicate installation, absent RPC calls and competing mutations.
@@ -35,4 +34,3 @@
 
 - New bids allocate accepted_order under the room lock; guarded host actions bind observed_bid_revision independently of lot version and reads filter current bid_session before limits. Why: transaction-start timestamps and reopened history cannot select the wrong retry row or undo leader.
 - Keep the Auction mounted during repair final call and memoize stable room data/auction rendering. Why: final-lot reveals survive status transitions and presence clock alone cannot rebuild the auction.
-- New rooms (pool_rules random-80-20-v1) get pools only from server `generate_pool` (exact round(N*0.2) emerging from per-snapshot `pool_groups` pool-groups-2, stored seed, quota-weighted constraint-first sampling, honest capacity failure), a common opening price frozen at review (`rooms.opening_price`) and descriptive V3.0 scoring (`evaluation-v3.ts`); legacy rooms keep their builder, catalogue prices and V1/V2.x scorers. Why: server-authoritative composition without legacy ratings while preserving historical economics.
