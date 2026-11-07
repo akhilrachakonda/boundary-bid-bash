@@ -1,0 +1,602 @@
+[
+  {
+    "name": "Jos Buttler",
+    "country": "England"
+  },
+  {
+    "name": "Rishabh Pant",
+    "country": "India"
+  },
+  {
+    "name": "KL Rahul",
+    "country": "India"
+  },
+  {
+    "name": "Quinton de Kock",
+    "country": "South Africa"
+  },
+  {
+    "name": "Phil Salt",
+    "country": "England"
+  },
+  {
+    "name": "Mohammad Rizwan",
+    "country": "Pakistan"
+  },
+  {
+    "name": "Sanju Samson",
+    "country": "India"
+  },
+  {
+    "name": "Devon Conway",
+    "country": "New Zealand"
+  },
+  {
+    "name": "Ishan Kishan",
+    "country": "India"
+  },
+  {
+    "name": "Rahmanullah Gurbaz",
+    "country": "Afghanistan"
+  },
+  {
+    "name": "Josh Inglis",
+    "country": "Australia"
+  },
+  {
+    "name": "Ryan Rickelton",
+    "country": "South Africa"
+  },
+  {
+    "name": "Abishek Porel",
+    "country": "India"
+  },
+  {
+    "name": "Heinrich Klaasen",
+    "country": "South Africa"
+  },
+  {
+    "name": "Nicholas Pooran",
+    "country": "West Indies"
+  },
+  {
+    "name": "Shai Hope",
+    "country": "West Indies"
+  },
+  {
+    "name": "Dhruv Jurel",
+    "country": "India"
+  },
+  {
+    "name": "Jamie Smith",
+    "country": "England"
+  },
+  {
+    "name": "MS Dhoni",
+    "country": "India"
+  },
+  {
+    "name": "Alex Carey",
+    "country": "Australia"
+  },
+  {
+    "name": "Kusal Mendis",
+    "country": "Sri Lanka"
+  },
+  {
+    "name": "Tom Latham",
+    "country": "New Zealand"
+  },
+  {
+    "name": "Jitesh Sharma",
+    "country": "India"
+  },
+  {
+    "name": "Dinesh Karthik",
+    "country": "India"
+  },
+  {
+    "name": "Prabhsimran Singh",
+    "country": "India"
+  },
+  {
+    "name": "Virat Kohli",
+    "country": "India"
+  },
+  {
+    "name": "Rohit Sharma",
+    "country": "India"
+  },
+  {
+    "name": "Travis Head",
+    "country": "Australia"
+  },
+  {
+    "name": "Shubman Gill",
+    "country": "India"
+  },
+  {
+    "name": "Yashasvi Jaiswal",
+    "country": "India"
+  },
+  {
+    "name": "Babar Azam",
+    "country": "Pakistan"
+  },
+  {
+    "name": "Kane Williamson",
+    "country": "New Zealand"
+  },
+  {
+    "name": "Abhishek Sharma",
+    "country": "India"
+  },
+  {
+    "name": "Ruturaj Gaikwad",
+    "country": "India"
+  },
+  {
+    "name": "David Warner",
+    "country": "Australia"
+  },
+  {
+    "name": "Sai Sudharsan",
+    "country": "India"
+  },
+  {
+    "name": "Ben Duckett",
+    "country": "England"
+  },
+  {
+    "name": "Pathum Nissanka",
+    "country": "Sri Lanka"
+  },
+  {
+    "name": "Priyansh Arya",
+    "country": "India"
+  },
+  {
+    "name": "Suryakumar Yadav",
+    "country": "India"
+  },
+  {
+    "name": "Joe Root",
+    "country": "England"
+  },
+  {
+    "name": "Harry Brook",
+    "country": "England"
+  },
+  {
+    "name": "Steve Smith",
+    "country": "Australia"
+  },
+  {
+    "name": "Shreyas Iyer",
+    "country": "India"
+  },
+  {
+    "name": "Daryl Mitchell",
+    "country": "New Zealand"
+  },
+  {
+    "name": "Aiden Markram",
+    "country": "South Africa"
+  },
+  {
+    "name": "Tilak Varma",
+    "country": "India"
+  },
+  {
+    "name": "Rassie van der Dussen",
+    "country": "South Africa"
+  },
+  {
+    "name": "Rajat Patidar",
+    "country": "India"
+  },
+  {
+    "name": "Charith Asalanka",
+    "country": "Sri Lanka"
+  },
+  {
+    "name": "Ajinkya Rahane",
+    "country": "India"
+  },
+  {
+    "name": "Nehal Wadhera",
+    "country": "India"
+  },
+  {
+    "name": "David Miller",
+    "country": "South Africa"
+  },
+  {
+    "name": "Tim David",
+    "country": "Australia"
+  },
+  {
+    "name": "Rinku Singh",
+    "country": "India"
+  },
+  {
+    "name": "Glenn Phillips",
+    "country": "New Zealand"
+  },
+  {
+    "name": "Tristan Stubbs",
+    "country": "South Africa"
+  },
+  {
+    "name": "Shimron Hetmyer",
+    "country": "West Indies"
+  },
+  {
+    "name": "Rovman Powell",
+    "country": "West Indies"
+  },
+  {
+    "name": "Dewald Brevis",
+    "country": "South Africa"
+  },
+  {
+    "name": "Sherfane Rutherford",
+    "country": "West Indies"
+  },
+  {
+    "name": "Shashank Singh",
+    "country": "India"
+  },
+  {
+    "name": "Ashutosh Sharma",
+    "country": "India"
+  },
+  {
+    "name": "Abdul Samad",
+    "country": "India"
+  },
+  {
+    "name": "Ramandeep Singh",
+    "country": "India"
+  },
+  {
+    "name": "Hardik Pandya",
+    "country": "India"
+  },
+  {
+    "name": "Andre Russell",
+    "country": "West Indies"
+  },
+  {
+    "name": "Cameron Green",
+    "country": "Australia"
+  },
+  {
+    "name": "Sam Curran",
+    "country": "England"
+  },
+  {
+    "name": "Mitchell Marsh",
+    "country": "Australia"
+  },
+  {
+    "name": "Marcus Stoinis",
+    "country": "Australia"
+  },
+  {
+    "name": "Shivam Dube",
+    "country": "India"
+  },
+  {
+    "name": "Nitish Kumar Reddy",
+    "country": "India"
+  },
+  {
+    "name": "Azmatullah Omarzai",
+    "country": "Afghanistan"
+  },
+  {
+    "name": "Venkatesh Iyer",
+    "country": "India"
+  },
+  {
+    "name": "Glenn Maxwell",
+    "country": "Australia"
+  },
+  {
+    "name": "Rachin Ravindra",
+    "country": "New Zealand"
+  },
+  {
+    "name": "Liam Livingstone",
+    "country": "England"
+  },
+  {
+    "name": "Will Jacks",
+    "country": "England"
+  },
+  {
+    "name": "Washington Sundar",
+    "country": "India"
+  },
+  {
+    "name": "Sikandar Raza",
+    "country": "Zimbabwe"
+  },
+  {
+    "name": "Riyan Parag",
+    "country": "India"
+  },
+  {
+    "name": "Kamindu Mendis",
+    "country": "Sri Lanka"
+  },
+  {
+    "name": "Mohammad Nabi",
+    "country": "Afghanistan"
+  },
+  {
+    "name": "Rahul Tewatia",
+    "country": "India"
+  },
+  {
+    "name": "Pat Cummins",
+    "country": "Australia"
+  },
+  {
+    "name": "Marco Jansen",
+    "country": "South Africa"
+  },
+  {
+    "name": "Chris Woakes",
+    "country": "England"
+  },
+  {
+    "name": "Jason Holder",
+    "country": "West Indies"
+  },
+  {
+    "name": "Deepak Chahar",
+    "country": "India"
+  },
+  {
+    "name": "Harshal Patel",
+    "country": "India"
+  },
+  {
+    "name": "Shardul Thakur",
+    "country": "India"
+  },
+  {
+    "name": "Gerald Coetzee",
+    "country": "South Africa"
+  },
+  {
+    "name": "Kyle Jamieson",
+    "country": "New Zealand"
+  },
+  {
+    "name": "Aamer Jamal",
+    "country": "Pakistan"
+  },
+  {
+    "name": "Rashid Khan",
+    "country": "Afghanistan"
+  },
+  {
+    "name": "Ravindra Jadeja",
+    "country": "India"
+  },
+  {
+    "name": "Sunil Narine",
+    "country": "West Indies"
+  },
+  {
+    "name": "Axar Patel",
+    "country": "India"
+  },
+  {
+    "name": "Wanindu Hasaranga",
+    "country": "Sri Lanka"
+  },
+  {
+    "name": "Ravichandran Ashwin",
+    "country": "India"
+  },
+  {
+    "name": "Mitchell Santner",
+    "country": "New Zealand"
+  },
+  {
+    "name": "Shakib Al Hasan",
+    "country": "Bangladesh"
+  },
+  {
+    "name": "Moeen Ali",
+    "country": "England"
+  },
+  {
+    "name": "Krunal Pandya",
+    "country": "India"
+  },
+  {
+    "name": "Jasprit Bumrah",
+    "country": "India"
+  },
+  {
+    "name": "Mitchell Starc",
+    "country": "Australia"
+  },
+  {
+    "name": "Kagiso Rabada",
+    "country": "South Africa"
+  },
+  {
+    "name": "Mohammed Shami",
+    "country": "India"
+  },
+  {
+    "name": "Josh Hazlewood",
+    "country": "Australia"
+  },
+  {
+    "name": "Shaheen Afridi",
+    "country": "Pakistan"
+  },
+  {
+    "name": "Trent Boult",
+    "country": "New Zealand"
+  },
+  {
+    "name": "Jofra Archer",
+    "country": "England"
+  },
+  {
+    "name": "Arshdeep Singh",
+    "country": "India"
+  },
+  {
+    "name": "Mohammed Siraj",
+    "country": "India"
+  },
+  {
+    "name": "Anrich Nortje",
+    "country": "South Africa"
+  },
+  {
+    "name": "Mark Wood",
+    "country": "England"
+  },
+  {
+    "name": "Lockie Ferguson",
+    "country": "New Zealand"
+  },
+  {
+    "name": "Mayank Yadav",
+    "country": "India"
+  },
+  {
+    "name": "Mohsin Khan",
+    "country": "India"
+  },
+  {
+    "name": "Bhuvneshwar Kumar",
+    "country": "India"
+  },
+  {
+    "name": "Matheesha Pathirana",
+    "country": "Sri Lanka"
+  },
+  {
+    "name": "Mustafizur Rahman",
+    "country": "Bangladesh"
+  },
+  {
+    "name": "Prasidh Krishna",
+    "country": "India"
+  },
+  {
+    "name": "Nathan Ellis",
+    "country": "Australia"
+  },
+  {
+    "name": "Fazalhaq Farooqi",
+    "country": "Afghanistan"
+  },
+  {
+    "name": "T Natarajan",
+    "country": "India"
+  },
+  {
+    "name": "Avesh Khan",
+    "country": "India"
+  },
+  {
+    "name": "Naveen-ul-Haq",
+    "country": "Afghanistan"
+  },
+  {
+    "name": "Harshit Rana",
+    "country": "India"
+  },
+  {
+    "name": "Khaleel Ahmed",
+    "country": "India"
+  },
+  {
+    "name": "Mukesh Kumar",
+    "country": "India"
+  },
+  {
+    "name": "Yash Dayal",
+    "country": "India"
+  },
+  {
+    "name": "Tushar Deshpande",
+    "country": "India"
+  },
+  {
+    "name": "Vyshak Vijaykumar",
+    "country": "India"
+  },
+  {
+    "name": "Kuldeep Yadav",
+    "country": "India"
+  },
+  {
+    "name": "Varun Chakaravarthy",
+    "country": "India"
+  },
+  {
+    "name": "Yuzvendra Chahal",
+    "country": "India"
+  },
+  {
+    "name": "Adam Zampa",
+    "country": "Australia"
+  },
+  {
+    "name": "Adil Rashid",
+    "country": "England"
+  },
+  {
+    "name": "Ravi Bishnoi",
+    "country": "India"
+  },
+  {
+    "name": "Keshav Maharaj",
+    "country": "South Africa"
+  },
+  {
+    "name": "Noor Ahmad",
+    "country": "Afghanistan"
+  },
+  {
+    "name": "Maheesh Theekshana",
+    "country": "Sri Lanka"
+  },
+  {
+    "name": "Tabraiz Shamsi",
+    "country": "South Africa"
+  },
+  {
+    "name": "Mujeeb Ur Rahman",
+    "country": "Afghanistan"
+  },
+  {
+    "name": "Ish Sodhi",
+    "country": "New Zealand"
+  },
+  {
+    "name": "Rahul Chahar",
+    "country": "India"
+  },
+  {
+    "name": "Sai Kishore",
+    "country": "India"
+  },
+  {
+    "name": "Suyash Sharma",
+    "country": "India"
+  }
+]

@@ -12,6 +12,7 @@ import { PlayerTable } from "@/components/auction/PlayerTable";
 import { TeamDot } from "@/components/auction/TeamPurseBar";
 import type { RoomData, Derived } from "@/components/auction/derive";
 import { rpc } from "./rpc";
+import { originalCatalogueNames, selectOriginalCatalogue } from "@/lib/legacy-catalogue";
 
 export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: number }) {
   const room = data.room!;
@@ -27,7 +28,10 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
   useEffect(() => setDraft(s), [s]);
   useEffect(() => {
     if (!d.isHost) return;
-    supabase.from("players").select("*").eq("format", room.format).then(({ data }) => setAll((data ?? []) as Player[]));
+    supabase.from("players").select("*").eq("format", room.format).in("name", originalCatalogueNames).then(({ data, error }) => {
+      if (error) { toast.error("Could not load the player catalogue"); return; }
+      setAll(selectOriginalCatalogue((data ?? []) as Player[]));
+    });
   }, [d.isHost, room.format]);
 
   const link = typeof window !== "undefined" ? `${window.location.origin}/join?code=${room.code}` : "";

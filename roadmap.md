@@ -1,4 +1,5 @@
 # Cricket Auction upgrade
+- [ ] Apply compatible future-only legacy pool default, verify exact original catalogue and isolated create/regenerate/confirm, and record publication requirement.
 - [x] Recover and reconcile existing post-launch draft with newer main source; preserve both sets of repairs and do not publish.
 - [x] Stage and locally verify guarded final call, unlimited unsold rounds, distinct bid undo and next-lot settings; never apply to production.
 - [x] Add capability-gated repair controls and lean projection support without enabling absent RPCs.
