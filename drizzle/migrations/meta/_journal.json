@@ -176,6 +176,13 @@
       "when": 1793972516557,
       "tag": "0024_evaluation_v3_descriptive_for_new_rooms",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1794074298555,
+      "tag": "0025_harden_pool_group_snapshot_access",
+      "breakpoints": true
     }
   ]
 }
