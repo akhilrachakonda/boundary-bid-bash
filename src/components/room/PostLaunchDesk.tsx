@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { RoomData, Derived } from '@/components/auction/derive';
 import { rpc } from './rpc';
 import { toast } from 'sonner';
+import {minutesValid} from '@/lib/community';
 import { createRefetchCoordinator } from '@/lib/refetch-coordinator';
 import type { LiveProjection } from '@/lib/live-projection';
 
@@ -17,6 +18,7 @@ export function PostLaunchDesk({data,d}:{data:RoomData;d:Derived}) {
  const room=data.room;
  const [open,setOpen]=useState(false);const [busy,setBusy]=useState(false);const flight=useRef(false);
  const [timer,setTimer]=useState(room?.settings.bid_timer??20);const [extension,setExtension]=useState(room?.settings.bid_reset??10);
+ const [tradeMinutes,setTradeMinutes]=useState(String(room?.settings.trade_minutes??10));
  const [nominations,setNominations]=useState<string[]>([]);
  const nominationQueue=useRef<ReturnType<typeof createRefetchCoordinator<'nominations'>>|null>(null);
  useEffect(()=>{
@@ -59,7 +61,7 @@ export function PostLaunchDesk({data,d}:{data:RoomData;d:Derived}) {
    <Button variant="outline" disabled={busy||!lastSale} onClick={()=>run('undo_sale',{sale_id:lastSale?.id})}><RotateCcw/>Undo last sale</Button>
    <Button variant="outline" onClick={()=>setOpen(true)}><Settings2/>Lot settings</Button>
    {!final&&<Button variant="outline" disabled={busy} onClick={()=>run('final_call')}>End rounds · final call</Button>}
-   {final&&<><Button variant="outline" disabled={busy} onClick={()=>run('rerun')}><RotateCcw/>Shuffle unsold round {(room.auction_round??1)+1}</Button><AlertDialog><AlertDialogTrigger asChild><Button disabled={busy}>Close auction &amp; open trades</Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Close all auction purchases?</AlertDialogTitle><AlertDialogDescription>{nominations.length} pending nominated players: {nominations.map(id=>data.pool.find(p=>p.id===id)?.player.name??'Player').join(', ')||'None'}. These nominations will be dismissed. Trading lasts 10 minutes.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Keep final call open</AlertDialogCancel><AlertDialogAction onClick={()=>run('close_trades',{pending:nominations,minutes:10})}>Close &amp; open trades</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></>}
+   {final&&<><Button variant="outline" disabled={busy} onClick={()=>run('rerun')}><RotateCcw/>Shuffle unsold round {(room.auction_round??1)+1}</Button><AlertDialog><AlertDialogTrigger asChild><Button disabled={busy}>Close auction &amp; open trades</Button></AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Close all auction purchases?</AlertDialogTitle><AlertDialogDescription>{nominations.length} pending nominated players: {nominations.map(id=>data.pool.find(p=>p.id===id)?.player.name??'Player').join(', ')||'None'}. These nominations will be dismissed. Choose the trade duration below.</AlertDialogDescription></AlertDialogHeader><label className="grid gap-2 text-sm">Trade duration (minutes)<Input aria-label="Trade duration" inputMode="numeric" value={tradeMinutes} onChange={e=>setTradeMinutes(e.target.value)}/></label><AlertDialogFooter><AlertDialogCancel>Keep final call open</AlertDialogCancel><AlertDialogAction disabled={!minutesValid(tradeMinutes)} onClick={()=>run('close_trades',{pending:nominations,minutes:Number(tradeMinutes)})}>Close &amp; open trades</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog></>}
   </div>}
   {!final&&<p className="text-xs text-muted-foreground">Bid undo restores the prior leader and leaves at least one extension window; sale undo refunds the buyer.</p>}
   {final&&<><h1 className="font-display text-3xl uppercase">Final call · round {room.auction_round??1} finished</h1><div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{data.pool.filter(p=>p.status==='unsold').map(p=><div key={p.id} className="flex flex-wrap items-center gap-2 border-b py-3"><span className="min-w-0 flex-1 font-semibold">{p.player.name}</span><Button size="sm" variant="outline" disabled={busy||nominations.includes(p.id)} onClick={()=>run('nominate',{lot:p.id})}> {nominations.includes(p.id)?'Nominated':'Nominate'}</Button>{d.isHost&&nominations.includes(p.id)&&<Button size="icon" aria-label={`Open competitive bidding for ${p.player.name}`} disabled={busy} onClick={()=>run('open_nomination',{nomination:p.id})}><Gavel/></Button>}</div>)}</div>{!data.pool.some(p=>p.status==='unsold')&&<p>No unsold players remain.</p>}</>}

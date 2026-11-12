@@ -1,0 +1,59 @@
+import {useCallback,useEffect,useRef,useState} from 'react';
+import {Button} from '@/components/ui/button';
+import {rpc} from './rpc';
+import {supabase} from '@/integrations/supabase/client';
+import {createRefetchCoordinator} from '@/lib/refetch-coordinator';
+import {battingPhase,inningsOvers,planErrors,type MatchPlan,type CommunityState,type TeamVote} from '@/lib/community';
+import type {RoomData,Derived} from '@/components/auction/derive';
+import {PlayerProfile} from '@/components/auction/PlayerProfile';
+import {StageTimers} from './StageTimers';
+import {toast} from 'sonner';
+const selectClass='min-h-11 max-w-full rounded-md border bg-background px-2 text-base';
+const emptyPlan=():MatchPlan=>({batting_order:[],bowling_overs:{},batting_phases:{}});
+export function CommunityStage({data,d,now}:{data:RoomData;d:Derived;now:number}){
+ const room=data.room!,me=d.me!;
+ const [state,setState]=useState<CommunityState|null>(null),[error,setError]=useState(''),[busy,setBusy]=useState(false);
+ const [plan,setPlan]=useState<MatchPlan>(emptyPlan),[drafts,setDrafts]=useState<Record<string,TeamVote>>({});
+ const initialized=useRef(false),queue=useRef<ReturnType<typeof createRefetchCoordinator<'state'>>|null>(null),flight=useRef(false);
+ const refresh=useCallback(()=>queue.current?.refresh('state')??Promise.resolve(),[]);
+ useEffect(()=>{
+  let alive=true;
+  const q=createRefetchCoordinator<'state'>(async()=>{
+   const {data:reply,error:err}=await supabase.rpc('community_state' as never,{p_room:room.id} as never).abortSignal(AbortSignal.timeout(8000));
+   if(!alive)return;if(err){setError('Could not refresh team plans. Your edits are still here.');return;}
+   const next=reply as unknown as CommunityState;if(!next)return;setState(next);setError('');
+   if(!initialized.current){
+    const saved=next.lineups.find(p=>p.participant_id===me.id);
+    const ids=data.notes.xi.order.filter(id=>d.mySquad.some(p=>p.id===id)).slice(0,11);
+    setPlan(saved??{batting_order:ids,bowling_overs:Object.fromEntries(ids.map(id=>[id,data.notes.xi.overs[id]??0])),batting_phases:Object.fromEntries(ids.map((id,i)=>[id,battingPhase(i,room.format)]))});
+    setDrafts(Object.fromEntries(next.my_votes.map(v=>[v.target,v])));initialized.current=true;
+   }
+  },200);queue.current=q;q.schedule('state');
+  const timer=setInterval(()=>q.schedule('state'),10000);
+  return()=>{alive=false;clearInterval(timer);q.dispose();queue.current=null;};
+ },[room.id,me.id]);
+ useEffect(()=>{queue.current?.schedule('state');},[room]);
+ const run=async(name:string,args:Record<string,unknown>)=>{if(flight.current)return;flight.current=true;setBusy(true);try{const ok=await rpc(name,args,{timeoutMs:8000});if(ok)toast.success('Saved');}catch{toast.warning('Outcome unconfirmed. Refreshing saved state.');}finally{await Promise.allSettled([data.reload('rooms'),refresh()]);flight.current=false;setBusy(false);}};
+ const hostAction=(action:string,payload:Record<string,unknown>={})=>run('community_control',{p_room:room.id,p_action:action,p_status:room.status,p_phase:state?.phase??room.post_phase,p_payload:payload});
+ if(!state)return <div className="panel p-5"><p>{error||'Loading team plans…'}</p><Button variant="outline" onClick={()=>void refresh()}>Retry</Button></div>;
+ const total=inningsOvers(room.format),cap=total/5;
+ const errors=planErrors(plan,d.mySquad.map(p=>p.id),room.format),left=Math.max(0,new Date(state.deadline??now).getTime()-now);
+ const change=(next:MatchPlan)=>setPlan({...next,confirmed:false});
+ const remove=(id:string)=>{const overs={...plan.bowling_overs},phases={...plan.batting_phases};delete overs[id];delete phases[id];change({...plan,batting_order:plan.batting_order.filter(x=>x!==id),bowling_overs:overs,batting_phases:phases});};
+ const move=(i:number,offset:number)=>{const order=[...plan.batting_order];[order[i],order[i+offset]]=[order[i+offset]!,order[i]!];change({...plan,batting_order:order});};
+ const planView=(pid:string)=>{const p=state.lineups.find(x=>x.participant_id===pid);return <div className="space-y-2">{!p?.confirmed&&<p className="text-sm text-amber-400">Unconfirmed draft at deadline</p>}{(!p||p.batting_order.length<11)&&<p className="text-sm text-amber-400">Incomplete XI · {p?.batting_order.length??0}/11 players</p>}<ol className="space-y-2">{p?.batting_order.map((id,i)=><li key={id} className="flex flex-wrap gap-x-2 border-b py-2 text-sm"><strong>{i+1}. {d.playerById.get(id)?.name??'Player'}</strong><span className="text-muted-foreground">Batting overs {p.batting_phases[id]?.from??'—'}–{p.batting_phases[id]?.to??'—'} · bowls {p.bowling_overs[id]??0} overs</span></li>)}</ol><p className="text-xs text-muted-foreground">Bowling allocation: {p?.batting_order.reduce((n,id)=>n+(p.bowling_overs[id]??0),0)??0}/{total} overs</p></div>;};
+ return <section className="space-y-4" aria-busy={busy}>
+  {error&&<p role="alert" className="rounded border p-3">{error}<Button variant="ghost" onClick={()=>void refresh()}>Retry</Button></p>}
+  <div className="panel space-y-3 p-5"><h1 className="text-3xl font-bold uppercase">{state.phase==='lineup'?'Choose your Playing XI':state.phase==='rating'?'Rate the other teams':'Team ratings'}</h1>
+   {state.phase==='lineup'?<><p>Your XI and match plan stay private until everyone confirms or the timer ends. Saved drafts will then be revealed.</p><p className="font-display text-3xl text-gold">{Math.floor(left/60000)}:{String(Math.floor(left%60000/1000)).padStart(2,'0')} · {state.confirmed.length}/{data.participants.length} teams confirmed</p>{d.isHost&&<><StageTimers data={data}/><Button variant="outline" disabled={busy} onClick={()=>confirm('Reveal saved XIs now, including any unconfirmed drafts?')&&hostAction('reveal')}>Reveal teams now</Button></>}</>:<><p>Each opponent rates top order, middle order / finishing and bowling from 1–10. The overall score is the mean of those three opponent averages. You cannot rate your own team.</p><p>{state.votes_received}/{data.participants.length*(data.participants.length-1)} team ratings received. Individual votes stay private.</p>{d.isHost&&state.phase==='rating'&&<Button variant="outline" disabled={busy} onClick={()=>confirm('Finish ratings now? Missing votes will be excluded, not counted as zero.')&&hostAction('finish',{allow_incomplete:true})}>Finish ratings & show results</Button>}</>}
+  </div>
+  {state.phase==='lineup'?<div className="panel space-y-4 p-4"><h2 className="text-xl font-bold">Your private XI · {plan.batting_order.length}/11</h2><p className="text-sm text-muted-foreground">Set batting order and expected batting-over ranges (overlaps are allowed), then allocate {total} bowling overs, at most {cap} per player. There are no role or overseas restrictions. Short squads are shown as incomplete.</p>
+   {plan.batting_order.map((id,i)=>{const p=d.playerById.get(id);const range=plan.batting_phases[id]??battingPhase(i,room.format);return <div key={id} className="space-y-3 rounded-lg border p-3"><div className="flex flex-wrap items-center gap-2"><strong className="mr-auto">{i+1}. {p?<PlayerProfile player={p}/>:id}</strong><Button variant="outline" disabled={busy||i===0} aria-label={`Move ${p?.name} up`} onClick={()=>move(i,-1)}>↑</Button><Button variant="outline" disabled={busy||i===plan.batting_order.length-1} aria-label={`Move ${p?.name} down`} onClick={()=>move(i,1)}>↓</Button><Button variant="ghost" disabled={busy} onClick={()=>remove(id)}>Remove</Button></div><div className="flex flex-wrap gap-3">{(['from','to'] as const).map(key=><label key={key} className="grid gap-1 text-xs">Batting {key} over<select disabled={busy} aria-label={`${p?.name} batting ${key}`} className={selectClass} value={range[key]} onChange={e=>change({...plan,batting_phases:{...plan.batting_phases,[id]:{...range,[key]:Number(e.target.value)}}})}>{Array.from({length:total},(_,n)=>n+1).map(n=><option key={n}>{n}</option>)}</select></label>)}<label className="grid gap-1 text-xs">Bowling overs<select disabled={busy} aria-label={`${p?.name} bowling overs`} className={selectClass} value={plan.bowling_overs[id]??0} onChange={e=>change({...plan,bowling_overs:{...plan.bowling_overs,[id]:Number(e.target.value)}})}>{Array.from({length:cap+1},(_,n)=><option key={n}>{n}</option>)}</select></label></div></div>;})}
+   <div className="flex flex-wrap gap-2">{d.mySquad.filter(p=>!plan.batting_order.includes(p.id)).map(p=><Button key={p.id} variant="outline" disabled={busy||plan.batting_order.length>=11} onClick={()=>change({...plan,batting_order:[...plan.batting_order,p.id],bowling_overs:{...plan.bowling_overs,[p.id]:0},batting_phases:{...plan.batting_phases,[p.id]:battingPhase(plan.batting_order.length,room.format)}})}>+ {p.name}</Button>)}</div>
+   {errors.map(e=><p key={e} className="text-sm text-amber-400">{e}</p>)}<div className="flex flex-wrap gap-2"><Button variant="outline" disabled={busy||!left} onClick={()=>run('save_community_lineup',{p_room:room.id,p_order:plan.batting_order,p_overs:plan.bowling_overs,p_batting:plan.batting_phases,p_confirm:false})}>Save private draft</Button><Button disabled={busy||!!errors.length||!left} onClick={()=>run('save_community_lineup',{p_room:room.id,p_order:plan.batting_order,p_overs:plan.bowling_overs,p_batting:plan.batting_phases,p_confirm:true})}>Confirm Playing XI</Button></div>{state.confirmed.includes(me.id)&&<p className="text-success">Your last saved XI is confirmed. Save or confirm again to submit further edits before selection closes.</p>}
+  </div>:<>
+   {state.phase==='done'&&<div className="panel overflow-x-auto p-4"><table className="w-full text-left text-sm"><thead><tr>{['Team','Top order','Middle / finishing','Bowling','Overall /10','Voters'].map(t=><th className="p-2" key={t}>{t}</th>)}</tr></thead><tbody>{state.results.map(r=><tr key={r.participant_id} className="border-t"><th className="p-2">{d.partById.get(r.participant_id)?.team_name}</th>{[r.top_order,r.middle_finishing,r.bowling,r.overall].map((v,i)=><td className="p-2" key={i}>{v==null?'Unrated':Number(v).toFixed(2)}</td>)}<td className="p-2">{r.voters}/{data.participants.length-1}</td></tr>)}</tbody></table><p className="mt-3 text-xs text-muted-foreground">Missing votes are excluded. Tied scores remain tied; unrated teams have no score.</p></div>}
+   <div className="grid gap-4 lg:grid-cols-2">{data.participants.map(team=>{const vote=drafts[team.id],saved=state.my_votes.find(v=>v.target===team.id);return <article className="panel space-y-3 p-4" key={team.id}><h2 className="text-2xl font-bold">{team.team_name}{team.id===me.id?' · Your team':''}</h2>{planView(team.id)}{state.phase==='rating'&&team.id!==me.id&&<div className="space-y-3 border-t pt-3"><div className="grid grid-cols-1 gap-2 sm:grid-cols-3">{(['top_order','middle_finishing','bowling'] as const).map((key,i)=><label className="grid gap-1 text-sm" key={key}>{['Top order','Middle / finishing','Bowling'][i]}<select className={selectClass} disabled={busy} aria-label={`${team.team_name} ${key}`} value={vote?.[key]??''} onChange={e=>setDrafts({...drafts,[team.id]:{target:team.id,top_order:vote?.top_order??0,middle_finishing:vote?.middle_finishing??0,bowling:vote?.bowling??0,[key]:Number(e.target.value)}})}><option value="">Choose 1–10</option>{Array.from({length:10},(_,i)=>i+1).map(n=><option key={n}>{n}</option>)}</select></label>)}</div><Button disabled={busy||!vote||[vote.top_order,vote.middle_finishing,vote.bowling].some(n=>n<1||n>10)} onClick={()=>vote&&run('rate_community_team',{p_room:room.id,p_target:team.id,p_top:vote.top_order,p_middle:vote.middle_finishing,p_bowling:vote.bowling})}>{saved?'Update rating':'Submit rating'}</Button>{saved&&<p className="text-sm text-success">Saved: {saved.top_order} / {saved.middle_finishing} / {saved.bowling}</p>}</div>}</article>;})}</div>
+  </>}
+ </section>;
+}

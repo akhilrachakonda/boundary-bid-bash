@@ -52,12 +52,16 @@ export interface Settings {
   review_seconds: number;
   min_base: number;
   currency: "cr" | "lakh" | "coins";
+  trade_minutes?: number;
+  lineup_minutes?: number;
   sound?: boolean;
   surprise_reveal?: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   surprise_reveal: true,
+  trade_minutes: 10,
+  lineup_minutes: 5,
   max_teams: 4,
   min_squad: 11,
   max_squad: 18,

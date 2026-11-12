@@ -204,6 +204,13 @@
       "when": 1794506400001,
       "tag": "0028_scope_catalogue_reads",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1794520800000,
+      "tag": "0029_community_lineups_and_resilient_reads",
+      "breakpoints": true
     }
   ]
 }

@@ -30,7 +30,7 @@ export function AuctionStage({ player, currency, price, leader, remaining, total
           <p className="mt-2 text-sm text-electric">{ROLE_LABEL[player.role]} <span className="text-muted-foreground">/ {player.sub_role}</span></p>
           <p className="mt-2 hidden text-xs text-muted-foreground sm:block">{player.batting_hand}-hand bat · {player.bowling_style}</p>
           <SourceStats player={player}/>
-          <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-border/60 pt-3"><div><span className="stat-label">Estimated base price</span><strong className="font-display text-2xl tabular">{formatMoney(Number(player.base_price),currency)}</strong></div><PlayerProfile player={player} currency={currency}><span className="text-xs text-electric underline">Performance · positions · leadership</span></PlayerProfile></div>
+          <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-border/60 pt-3"><div><span className="stat-label">Estimated base price</span><strong className="font-display text-2xl tabular">{formatMoney(Number(player.base_price),currency)}</strong></div><PlayerProfile player={player} currency={currency}><span className="text-xs text-electric underline">Player statistics</span></PlayerProfile></div>
         </div>
         {onStar && <Button variant="ghost" size="icon" className="absolute right-3 top-12" onClick={onStar} aria-label={starred ? "Remove from targets" : "Add to my targets"}><Star className={cn("h-5 w-5",starred && "fill-primary text-primary")}/></Button>}
       </div>

@@ -1,5 +1,5 @@
 import type { Room } from '@/hooks/use-room';
-export interface RepairCapabilities { auction_controls?: number; action_sync?: number }
+export interface RepairCapabilities { auction_controls?: number; action_sync?: number; bounded_poll?: number; community?: number }
 export function repairsEnabled(room: Room | null, capabilities: RepairCapabilities) {
  return capabilities.auction_controls === 1 && room?.repair_flow === true;
 }

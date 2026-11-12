@@ -39,7 +39,7 @@ function CreatePage() {
 
   const create = async () => {
     setBusy(true);
-    const { data, error } = await supabase.rpc("create_catalogue_room" as never, {
+    const { data, error } = await supabase.rpc("create_social_room" as never, {
       p_name: name,
       p_format: format,
       p_settings: s as unknown as Json,

@@ -1,0 +1,21 @@
+import {cleanup,fireEvent,render,screen,waitFor} from '@testing-library/react';
+import {afterEach,expect,it,vi} from 'vitest';
+import {CommunityStage} from '@/components/room/CommunityStage';
+import {rpc} from '@/components/room/rpc';
+import {DEFAULT_SETTINGS} from '@/lib/auction-rules';
+vi.mock('@/components/room/rpc',()=>({rpc:vi.fn().mockResolvedValue(true)}));
+vi.mock('@/components/auction/PlayerProfile',()=>({PlayerProfile:()=>null}));
+vi.mock('@/integrations/supabase/client',()=>({supabase:{rpc:vi.fn(()=>({abortSignal:()=>Promise.resolve({data:{phase:'rating',deadline:null,lineups:[],confirmed:[],my_votes:[],votes_received:0,results:[]},error:null})}))}}));
+afterEach(cleanup);
+it('offers ratings only for opponents and sends all three chosen category scores',async()=>{
+ const me={id:'me',team_name:'My team'},other={id:'other',team_name:'Opponent'};
+ const data={room:{id:'room',status:'results',post_phase:'rating',community_mode:true,format:'IPL',settings:DEFAULT_SETTINGS},participants:[me,other],notes:{xi:{order:[],overs:{}}},reload:vi.fn().mockResolvedValue(null)};
+ const d={me,isHost:false,mySquad:[],playerById:new Map(),partById:new Map([['me',me],['other',other]])};
+ render(<CommunityStage data={data as never} d={d as never} now={Date.now()}/>);
+ await screen.findByText('Rate the other teams');
+ expect(screen.getAllByRole('combobox')).toHaveLength(3);expect(screen.queryByLabelText('My team top_order')).not.toBeInTheDocument();
+ const submit=screen.getByRole('button',{name:'Submit rating'});expect(submit).toBeDisabled();
+ for(const [key,value] of [['top_order','8'],['middle_finishing','6'],['bowling','9']])fireEvent.change(screen.getByLabelText('Opponent '+key),{target:{value}});
+ fireEvent.click(submit);
+ await waitFor(()=>expect(rpc).toHaveBeenCalledWith('rate_community_team',{p_room:'room',p_target:'other',p_top:8,p_middle:6,p_bowling:9},{timeoutMs:8000}));
+});

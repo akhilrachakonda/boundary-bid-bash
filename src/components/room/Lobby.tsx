@@ -1,17 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Check, Copy, Crown, RefreshCw, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
-import { generateBalancedPool, poolRequirements, squadCounts, type Player, type Settings } from "@/lib/auction-rules";
+import { poolRequirements, squadCounts, type Player, type Settings } from "@/lib/auction-rules";
 import { SettingsForm } from "@/components/SettingsForm";
 import { ColorPicker } from "@/components/TeamPicker";
-import { PlayerTable } from "@/components/auction/PlayerTable";
 import { TeamDot } from "@/components/auction/TeamPurseBar";
 import type { RoomData, Derived } from "@/components/auction/derive";
 import { rpc } from "./rpc";
+
+import {generateQualityPool,inspectPool} from '@/lib/quality-pool';
+import {PoolEditor} from '@/components/auction/PoolEditor';
 
 export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: number }) {
   const room = data.room!;
@@ -22,7 +24,7 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
   const [draft, setDraft] = useState<Settings>(s);
   const [all, setAll] = useState<Player[]>([]);
   const [seed, setSeed] = useState(1);
-  const [preview, setPreview] = useState<ReturnType<typeof generateBalancedPool> | null>(null);
+  const [preview, setPreview] = useState<ReturnType<typeof generateQualityPool> | null>(null);
 
   useEffect(() => setDraft(s), [s]);
   useEffect(() => {
@@ -48,13 +50,12 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
   const req = poolRequirements(s);
   const poolCounts = squadCounts(data.pool.map((r) => r.player));
   const enoughTeams = data.participants.length >= 2;
-  const poolReady = data.pool.length > 0;
+  const poolReady = data.pool.length > 0 && !preview;
 
   const gen = (sd: number) => {
     setSeed(sd);
-    setPreview(generateBalancedPool(all, s, sd));
+    setPreview(generateQualityPool(all, s, sd));
   };
-  const previewRows = useMemo(() => (preview ? preview.players.map((p) => ({ player: p })) : []), [preview]);
 
   return (
     <div className="grid gap-4 lg:grid-cols-[1fr_340px]">
@@ -102,6 +103,8 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
               <h3 className="text-2xl font-bold uppercase">Room settings · {room.format}</h3>
               <Button variant="outline" size="sm" onClick={() => setEditing(!editing)}>{editing ? "Close" : "Edit"}</Button>
             </div>
+            {!room.community_mode&&<Button variant="outline" onClick={async()=>{if(await rpc("community_control",{p_room:room.id,p_action:"enable",p_status:room.status,p_phase:room.post_phase??null,p_payload:{}}))await data.reload("rooms");}}>Use Playing XI & team voting</Button>}
+            {room.community_mode&&<p className="text-sm text-electric">After trading: private Playing XI and match plans, then opponent ratings.</p>}
             {editing ? (
               <>
                 <SettingsForm s={draft} onChange={setDraft} available={all.length} />
@@ -124,8 +127,9 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="mr-auto text-2xl font-bold uppercase">Player pool</h3>
               <Button variant="outline" onClick={() => gen(Math.floor(Math.random() * 1e9))} disabled={!all.length}>
-                <RefreshCw className="h-4 w-4" /> {preview ? "Regenerate" : "Generate balanced pool"}
+                <RefreshCw className="h-4 w-4" /> {preview ? "Regenerate" : "Generate star-first pool"}
               </Button>
+              {!preview && data.pool.length>0 && <Button variant="outline" onClick={()=>setPreview(inspectPool(data.pool.map(p=>p.player),s))}>Edit confirmed pool</Button>}
               {preview && (
                 <Button
                   disabled={!preview.feasible}
@@ -146,7 +150,7 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
                 {preview.notes.map((n) => <p key={n} className="rounded-md border border-primary/40 bg-primary/10 p-2 text-sm text-primary">{n}</p>)}
                 <PoolSummary players={preview.players} />
                 <p className="text-xs text-muted-foreground">Preview (seed {seed}) — not saved until you confirm.</p>
-                <PlayerTable rows={previewRows} currency={s.currency} />
+                <PoolEditor catalogue={all} selected={preview.players} onChange={players=>setPreview(inspectPool(players,s))} />
               </>
             ) : poolReady ? (
               <p className="text-sm text-success">Pool confirmed: {data.pool.length} players (WK {poolCounts.WK}, BAT {poolCounts.BAT}, AR {poolCounts.AR}, BOWL {poolCounts.BOWL}).</p>

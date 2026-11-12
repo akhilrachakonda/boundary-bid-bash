@@ -22,7 +22,7 @@ try {
  GRANT USAGE ON SCHEMA auth TO authenticated; GRANT EXECUTE ON FUNCTION auth.uid() TO authenticated;
  CREATE SCHEMA extensions; CREATE EXTENSION pgcrypto WITH SCHEMA extensions;
  CREATE PUBLICATION supabase_realtime; CREATE SCHEMA storage; CREATE TABLE storage.objects(id uuid,bucket_id text);`);
- for(const file of readdirSync('drizzle/migrations').filter(f=>f.endsWith('.sql')&&!f.startsWith('0027')).sort()) {
+ for(const file of readdirSync('drizzle/migrations').filter(f=>f.endsWith('.sql')&&Number(f.slice(0,4))<27).sort()) {
   console.log('MIGRATE',file);
   await db.exec(text('drizzle/migrations/'+file));
   if(file.startsWith('0000')) await db.exec('GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO authenticated');

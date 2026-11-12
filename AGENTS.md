@@ -10,6 +10,9 @@
 <!-- LOVABLE:END -->
 
 ## Project rules
+- New community rooms use private timed XI plans and opponent-only votes; never expose drafts or aggregate ratings before their phase. Every write locks the room and verifies membership/ownership, stage, deadline and host authority where relevant. Historical scoring stays isolated.
+- Generated pools include every Marquee/A identity, with 80/20 middle/low for the rest; manual edits are allowed before confirmation. Show any shortage/role-driven adjustment rather than claiming an exact unattainable mix.
+- Community trades impose no composition/size limits but must preserve ownership, acceptance and nonnegative purses. Bowling and batting plans are user-authored; never silently invent a missing XI.
 - New IPL rooms created through create_catalogue_room use their immutable catalogue_version and source statistics. Legacy rooms use the original seed catalogue. Enforce membership in set_pool, use per-room prices for bids/final call, and freeze catalogue facts at review. Why: new rosters must not rewrite historical auctions.
 - Bid and host-command sync replies carry the same transaction's room state and monotonic room_updates revision. Discard older replies and retain existing lot/version/request checks. Why: one response updates controls without stale rollback or extra round trips.
 - Release actions bind bids to observed lot ID/version plus unique retry ID, and host actions to observed lot version/status/sale; legacy unbound RPCs are internal-only. Why: delayed requests and retries cannot mutate the next lot or refund twice.

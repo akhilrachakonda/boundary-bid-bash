@@ -23,7 +23,7 @@ export function SettingsForm({ s, onChange, available }: { s: Settings; onChange
     <div className="space-y-5">
       <label className="flex items-center justify-between gap-4 rounded-md border p-3"><span><strong className="block">Surprise player reveal</strong><span className="text-xs text-muted-foreground">Everyone can scout the pool; future sequence stays secret until each lot opens.</span></span><Switch checked={s.surprise_reveal === true} onCheckedChange={v => set("surprise_reveal", v)} /></label>
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Num label="Teams (2-10)" value={s.max_teams} min={2} max={10} onChange={(n) => set("max_teams", Math.max(2, Math.min(10, n)))} />
+        <div className="space-y-1"><Label htmlFor="team-count" className="text-xs">Teams (2–10)</Label><select id="team-count" className={sel} value={s.max_teams} onChange={e => set('max_teams', Number(e.target.value))}>{Array.from({length:9},(_,i)=>i+2).map(n=><option key={n} value={n}>{n} teams</option>)}</select></div>
         <Num label="Purse per team (Cr)" value={s.purse} step={5} min={10} onChange={(n) => set("purse", n)} />
         <div className="space-y-1">
           <Label className="text-xs text-muted-foreground">Currency display</Label>
@@ -63,7 +63,7 @@ export function SettingsForm({ s, onChange, available }: { s: Settings; onChange
               key={p}
               type="button"
               onClick={() => set("pool_size", p as Settings["pool_size"])}
-              className={`rounded-full border px-4 py-1.5 text-sm font-semibold ${s.pool_size === p ? "border-primary bg-primary text-primary-foreground" : ""}`}
+              className={`min-h-11 touch-manipulation rounded-full border px-4 py-1.5 text-sm font-semibold ${s.pool_size === p ? "border-primary bg-primary text-primary-foreground" : ""}`}
             >
               {p === "all" ? "All" : p}
             </button>
@@ -82,6 +82,7 @@ export function SettingsForm({ s, onChange, available }: { s: Settings; onChange
           </p>
         )}
       </section>
+      <section><h4 className="mb-2 text-lg font-bold uppercase">After the auction</h4><div className="grid grid-cols-2 gap-3"><Num label="Trade minutes" value={s.trade_minutes??10} min={1} max={120} onChange={n=>set('trade_minutes',n)}/><Num label="Playing XI minutes" value={s.lineup_minutes??5} min={1} max={120} onChange={n=>set('lineup_minutes',n)}/></div><p className="mt-2 text-xs text-muted-foreground">Trading → private Playing XI and match plans → opponent ratings. The host can change remaining time during the timed stages.</p></section>
       <section>
         <h4 className="mb-2 text-lg font-bold uppercase">Bid increments</h4>
         <div className="grid gap-2 sm:grid-cols-3">

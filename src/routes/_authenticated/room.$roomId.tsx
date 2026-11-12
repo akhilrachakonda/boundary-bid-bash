@@ -25,6 +25,9 @@ import {EvaluationLineup} from '@/components/auction/EvaluationLineup';
 import { hostActionArgs } from '@/lib/room-actions';
 import { repairsEnabled } from '@/lib/post-launch-controls';
 
+import {CommunityStage} from '@/components/room/CommunityStage';
+import {CommunityContext} from '@/components/auction/CommunityContext';
+
 export const Route = createFileRoute("/_authenticated/room/$roomId")({
   head: () => ({
     meta: [
@@ -128,11 +131,11 @@ function RoomPage() {
     ) : room.status === "completed" || room.status === "trade" ? (
       <Trades data={data} d={d} now={now} />
     ) : (
-      <Results data={data} d={d} />
+      room.community_mode ? <CommunityStage data={data} d={d} now={now}/> : <Results data={data} d={d} />
     );
 
   return (
-    <RoomEvaluationContext.Provider value={room.id}><RoomEvidenceContext.Provider value={room.evaluation_snapshot}><div className="min-h-screen pb-10">
+    <CommunityContext.Provider value={!!room.community_mode}><RoomEvaluationContext.Provider value={room.id}><RoomEvidenceContext.Provider value={room.evaluation_snapshot}><div className="min-h-screen pb-10">
       <AppHeader>
         <div className="min-w-0">
           <div className="truncate text-sm font-semibold">{room.name}</div>
@@ -149,7 +152,7 @@ function RoomPage() {
         </Button>
       </AppHeader>
       <main className="mx-auto max-w-7xl space-y-4 px-3 py-5 sm:px-6">
-        {room.evaluation_version==='v2.1'&&<p className="text-xs text-muted-foreground">V2.1 · 35 combination/position + 30 established + 20 recent + 10 bench + 5 leadership · {room.status==='lobby'?'Evidence and leadership freeze before review':'Frozen evidence and leadership rubric'} · <Link to="/scoring" className="text-electric underline">Rules and data coverage</Link></p>}
+        {!room.community_mode&&room.evaluation_version==='v2.1'&&<p className="text-xs text-muted-foreground">V2.1 · 35 combination/position + 30 established + 20 recent + 10 bench + 5 leadership · {room.status==='lobby'?'Evidence and leadership freeze before review':'Frozen evidence and leadership rubric'} · <Link to="/scoring" className="text-electric underline">Rules and data coverage</Link></p>}
         {hostAway && !d.isHost && (
           <div className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 p-3 text-sm">
             <Crown className="h-4 w-4 text-primary" /> The host seems to have disconnected.
@@ -164,10 +167,10 @@ function RoomPage() {
         ) : (
           <Tabs defaultValue="main">
             <TabsList>
-              <TabsTrigger value="main">{live ? "Auction" : room.auction_stage==='final_call'&&room.status==='completed' ? 'Final call' : room.status === "review" ? "Pool" : room.status === "results" ? "Results" : "Trades"}</TabsTrigger>
+              <TabsTrigger value="main">{live ? "Auction" : room.auction_stage==='final_call'&&room.status==='completed' ? 'Final call' : room.status === "review" ? "Pool" : room.status === "results" ? (room.post_phase==='lineup'?'Playing XI':room.post_phase==='rating'?'Team ratings':'Results') : "Trades"}</TabsTrigger>
               {room.status !== "review" && <TabsTrigger value="pool">Player pool</TabsTrigger>}
               <TabsTrigger value="log">Log</TabsTrigger>
-              {room.evaluation_version==='v2.1'&&['completed','trade'].includes(room.status)&&<TabsTrigger value="evaluation">Evaluation XI</TabsTrigger>}
+              {!room.community_mode&&room.evaluation_version==='v2.1'&&['completed','trade'].includes(room.status)&&<TabsTrigger value="evaluation">Evaluation XI</TabsTrigger>}
             </TabsList>
             <TabsContent value="main">{main}</TabsContent>
             <TabsContent value="pool">
@@ -179,6 +182,6 @@ function RoomPage() {
         )}
       </main>
       <Sheet open={!!selectedTeam} onOpenChange={open=>{if(!open)setSelectedTeam(null);}}><SheetContent className="w-full overflow-y-auto sm:max-w-lg"><SheetTitle className="font-display text-3xl uppercase">{selectedTeam ? d.partById.get(selectedTeam)?.team_name : "Team squad"}</SheetTitle><SheetDescription>{selectedTeam ? `${formatMoney(Number(d.partById.get(selectedTeam)?.purse ?? 0),s.currency)} remaining · ${d.squadOf(selectedTeam).length} players` : ""}</SheetDescription><div className="mt-5 space-y-3">{selectedTeam && d.squadOf(selectedTeam).map(player=><PlayerCard key={player.id} player={player} currency={s.currency}/>)}{selectedTeam && !d.squadOf(selectedTeam).length && <p className="text-sm text-muted-foreground">No signings yet.</p>}</div></SheetContent></Sheet>
-    </div></RoomEvidenceContext.Provider></RoomEvaluationContext.Provider>
+    </div></RoomEvidenceContext.Provider></RoomEvaluationContext.Provider></CommunityContext.Provider>
   );
 }

@@ -28,6 +28,9 @@ export interface Room {
   evaluation_version?: string;
   evaluation_snapshot?: string | null;
   catalogue_version?: string | null;
+  community_mode?: boolean;
+  post_phase?: "lineup" | "rating" | "done" | null;
+  phase_ends_at?: string | null;
   repair_flow?: boolean;
   auction_stage?: "round" | "final_call" | "closed";
   auction_round?: number;
@@ -118,6 +121,8 @@ export function useRoom(roomId: string, userId: string | undefined) {
   const [offset, setOffset] = useState(0);
   const [connection, setConnection] = useState("connecting");
   const roomRef = useRef<Room | null>(null);
+  const channelHealthy=useRef(false);
+  const participantsRef=useRef(participants); participantsRef.current=participants;
   const generation = useRef(0);
   const projectionRef = useRef("");
   const revisionRef = useRef(0);
@@ -141,6 +146,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
     roomRef.current = live.room;
     setRoom(live.room);
     setError(null);
+    if(channelHealthy.current)setConnection("connected");
     return true;
   }, [roomId]);
 
@@ -155,8 +161,10 @@ export function useRoom(roomId: string, userId: string | undefined) {
           if(repairsEnabled(roomRef.current,capabilitiesRef.current) && poolRef.current.length && roomRef.current?.status!=="lobby") {
             try {
               const sync = capabilitiesRef.current.action_sync === 1;
-              const {data,error}=await supabase.rpc((sync ? "room_sync" : "room_live_projection") as never,{p_room:roomId} as never).abortSignal(AbortSignal.timeout(5000));
+              const bounded=capabilitiesRef.current.bounded_poll===1;
+              const {data,error}=await supabase.rpc((bounded?"room_poll":sync ? "room_sync" : "room_live_projection") as never,(bounded?{p_room:roomId,p_revision:revisionRef.current}:{p_room:roomId}) as never).abortSignal(AbortSignal.timeout(5000));
               if(!current())return null;
+              if(!error && bounded && data===null){if(channelHealthy.current)setConnection("connected");return roomRef.current;}
               const live=data as unknown as LiveProjection | null;
               if (!error && live && (live.revision ?? 0) < revisionRef.current) return roomRef.current;
               if(!error && live && applyLive(live)) return live.room;
@@ -169,6 +177,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
           if (error) { if (!roomRef.current || error.code === 'P0001') setError(error.message); else setConnection('reconnecting'); }
           else if (!projection) setError("Room not found or you are not a member.");
           else {
+            if(channelHealthy.current)setConnection("connected");
             revisionRef.current = projection.revision ?? revisionRef.current;
             capabilitiesRef.current=projection.capabilities??{};setCapabilities(capabilitiesRef.current);
             setError(null); setRoom(projection.room); roomRef.current=projection.room;
@@ -245,7 +254,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
     revisionRef.current = 0;
     readVersions.current = {participants:0,bids:0,squads:0,sales:0};
     capabilitiesRef.current={};setCapabilities({});poolRef.current=[];roomRef.current=null;setRoom(null);setLoaded(false);
-    const queue = createRefetchCoordinator(load);
+    const queue = createRefetchCoordinator(load,240);
     coordinator.current = queue;
     return () => { generation.current++; queue.dispose(); if (coordinator.current === queue) coordinator.current = null; };
   }, [load]);
@@ -307,26 +316,28 @@ export function useRoom(roomId: string, userId: string | undefined) {
   // realtime
   useEffect(() => {
     const queue = (t: Table) => coordinator.current?.schedule(t);
-    const tables: Table[] = ["participants", "bids", "squads", "trades", "room_events", "sales"];
+    const tables: Table[] = ["participants", "squads", "trades", "sales"];
     let ch = supabase.channel(`room-${roomId}-${Math.random().toString(36).slice(2)}`);
     for (const t of tables) {
       ch = ch.on(
         "postgres_changes",
         { event: "*", schema: "public", table: t, filter: `room_id=eq.${roomId}` },
         () => {
-          if (t === 'bids' && capabilitiesRef.current.action_sync === 1) queue('rooms');
+          if (t === 'bids' && capabilitiesRef.current.action_sync === 1) return; // The room revision carries the accepted bid.
           else queue(t);
         },
       );
     }
-    ch=ch.on("postgres_changes",{event:"*",schema:"public",table:"room_updates",filter:`room_id=eq.${roomId}`},()=>queue("rooms"));
+    ch=ch.on("postgres_changes",{event:"*",schema:"public",table:"room_updates",filter:`room_id=eq.${roomId}`},(payload)=>{const revision=(payload.new as {revision?:number}).revision;if(revision==null||revision>revisionRef.current){queue("rooms");if(capabilitiesRef.current.action_sync!==1)queue("bids");}});
     ch.subscribe((status) => {
-      setConnection(status === "SUBSCRIBED" ? "connected" : "reconnecting");
+      channelHealthy.current=status === "SUBSCRIBED";
+      setConnection(channelHealthy.current ? "connected" : "reconnecting");
       // on (re)connect, resync everything so reconnects restore state
       if (status === "SUBSCRIBED") { tables.forEach(queue);queue("rooms"); }
     });
     return () => {
-      supabase.removeChannel(ch);
+      channelHealthy.current=false;
+      void supabase.removeChannel(ch);
     };
   }, [roomId, load]);
 
@@ -341,10 +352,10 @@ export function useRoom(roomId: string, userId: string | undefined) {
       const r = roomRef.current;
       if (!r || inflight || Date.now() < nextAttempt) return;
       const now = Date.now() + offset;
-      const due =
-        (r.status === "review" && r.review_ends_at && now >= new Date(r.review_ends_at).getTime()) ||
-        (r.status === "auction" && r.lot_ends_at && now >= new Date(r.lot_ends_at).getTime()) ||
-        (r.status === "trade" && r.trade_ends_at && now >= new Date(r.trade_ends_at).getTime());
+      const deadline = r.status==='review'?r.review_ends_at:r.status==='auction'?r.lot_ends_at:r.status==='trade'?r.trade_ends_at:r.community_mode&&r.post_phase==='lineup'?r.phase_ends_at:null;
+      const active=participantsRef.current.filter(p=>now-new Date(p.last_seen).getTime()<30000).sort((a,b)=>Number(b.user_id===r.host_id)-Number(a.user_id===r.host_id)||a.id.localeCompare(b.id));
+      const rank=Math.max(0,active.findIndex(p=>p.user_id===userId));
+      const due=deadline && now>=new Date(deadline).getTime()+(rank?800+rank*250:0);
       if (!due) return;
       inflight = true;
       nextAttempt = Date.now() + 2000;
@@ -352,14 +363,20 @@ export function useRoom(roomId: string, userId: string | undefined) {
       catch { /* Bounded retry after a transport failure. */ }
       finally { inflight = false; }
     }, 700);
+    const recovery=setInterval(()=>{
+      coordinator.current?.schedule('rooms');
+      coordinator.current?.schedule('room_events');
+      if(!channelHealthy.current)(['participants','squads','sales'] as Table[]).forEach(t=>coordinator.current?.schedule(t));
+    },5000);
     const onFocus = () => (["rooms", "participants", "squads", "sales", "trades", "bids"] as Table[]).forEach(t => coordinator.current?.schedule(t));
     window.addEventListener("focus", onFocus);
     return () => {
       clearInterval(hb);
       clearInterval(tk);
+      clearInterval(recovery);
       window.removeEventListener("focus", onFocus);
     };
-  }, [loaded, roomId, offset, load]);
+  }, [loaded, roomId, offset, load, userId]);
 
   return useMemo(() => ({ room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload, applyLive }),
     [room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload, applyLive]);

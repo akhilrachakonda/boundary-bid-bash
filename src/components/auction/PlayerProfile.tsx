@@ -7,8 +7,11 @@ import { withCanonicalPhoto } from "@/lib/player-photos";
 import { EvidencePanel } from "./EvidencePanel";
 import { SourceStats } from "./SourceStats";
 
+import {useCommunityMode} from './CommunityContext';
+
 export function PlayerProfile({ player, children, currency = "cr" }: { player: Player; children?: React.ReactNode; currency?: Settings["currency"] }) {
   const [open, setOpen] = useState(false);
+  const community=useCommunityMode();
   player=withCanonicalPhoto(player);
   return <><Button variant="ghost" onClick={() => setOpen(true)} className="player-profile-trigger h-auto min-w-0 justify-start p-0 text-left hover:bg-transparent" aria-label={`View ${player.name} profile`}>{children ?? player.name}</Button>
     <Dialog open={open} onOpenChange={setOpen}><DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
@@ -17,11 +20,11 @@ export function PlayerProfile({ player, children, currency = "cr" }: { player: P
       <dl className="grid grid-cols-2 gap-3 border-y py-4"><div><dt className="text-xs text-muted-foreground">Estimated base price</dt><dd className="font-display text-2xl">{formatMoney(Number(player.base_price),currency)}</dd></div><div><dt className="text-xs text-muted-foreground">Estimated auction tier</dt><dd className="font-display text-2xl">{player.tier}</dd></div></dl>
       <p className="text-sm text-muted-foreground">{player.batting_hand}-hand bat · {player.bowling_style} · {player.format}</p>
       <SourceStats player={player} />
-      <EvidencePanel player={player} />
-      <details className="text-xs text-muted-foreground"><summary>Auction setup rating</summary>{player.catalogue_version
+      {!community && <EvidencePanel player={player} />}
+      {!community && <details className="text-xs text-muted-foreground"><summary>Auction setup rating</summary>{player.catalogue_version
         ? <p>Crick Auction setup rating: {player.rating}/100. Used for balanced pool selection and auction tiers. Team evaluation uses this game's existing scoring rules.</p>
         : <p>Legacy game estimate—not used in evaluation: {player.rating}/100. Subjective seed values included format/role offsets and name-based jitter, not current sourced ability. Balanced pool selection, tiers and prices still use these auction setup estimates; existing economics are preserved. Only historical V1 scoring uses them.</p>}
-      </details>
+      </details>}
       {player.photo_credit && <p className="text-xs text-muted-foreground">Photo: {player.photo_credit} {player.photo_source?.startsWith('https://') && <a href={player.photo_source} target="_blank" rel="noreferrer" className="underline">Source</a>}</p>}
     </DialogContent></Dialog>
   </>;

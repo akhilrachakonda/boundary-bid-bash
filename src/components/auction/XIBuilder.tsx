@@ -8,6 +8,8 @@ import type { Notes } from "@/hooks/use-room";
 import { PlayerPortrait } from "./PlayerPortrait";
 import { PlayerProfile } from "./PlayerProfile";
 
+import {useCommunityMode} from './CommunityContext';
+
 export function XIBuilder({
   squad,
   notes,
@@ -19,12 +21,13 @@ export function XIBuilder({
   onChange: (n: Notes) => void;
   format: string;
 }) {
+  const community=useCommunityMode();
   const [drag, setDrag] = useState<number | null>(null);
   const byId = new Map(squad.map((p) => [p.id, p]));
   const order = notes.xi.order.filter((id) => byId.has(id));
   const xi = order.map((id) => byId.get(id)!);
   const bench = squad.filter((p) => !order.includes(p.id)).sort((a, b) => b.rating - a.rating);
-  const warnings = xiWarnings(xi, overseasXILimit(format));
+  const warnings = community ? [] : xiWarnings(xi, overseasXILimit(format));
   const overs = notes.xi.overs ?? {};
   const totalOvers = Object.entries(overs).filter(([id]) => order.includes(id)).reduce((a, [, v]) => a + v, 0);
   const maxOvers = format === "ODI" ? 50 : 20;
@@ -44,7 +47,7 @@ export function XIBuilder({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
-        <Button size="sm" variant="outline" onClick={() => setOrder(bestXI(squad, overseasXILimit(format)).map((p) => p.id))} disabled={!squad.length}>
+        <Button size="sm" variant="outline" onClick={() => setOrder((community?[...squad].sort((a,b)=>b.rating-a.rating).slice(0,11):bestXI(squad, overseasXILimit(format))).map((p) => p.id))} disabled={!squad.length}>
           <Wand2 className="h-4 w-4" /> Auto-pick best XI
         </Button>
         <span className="text-xs text-muted-foreground">
@@ -64,7 +67,7 @@ export function XIBuilder({
             onDragStart={() => setDrag(i)}
             onDragOver={(e) => e.preventDefault()}
             onDrop={() => drag != null && move(drag, i)}
-            className={cn("flex items-center gap-2 rounded-md border bg-secondary/40 px-2 py-1.5 text-sm", drag === i && "opacity-50")}
+            className={cn("flex flex-wrap items-center gap-2 rounded-md border bg-secondary/40 px-2 py-1.5 text-sm", drag === i && "opacity-50")}
           >
             <GripVertical className="h-4 w-4 cursor-grab text-muted-foreground" />
             <span className="w-5 font-display font-bold text-primary tabular">{i + 1}</span>
@@ -73,16 +76,18 @@ export function XIBuilder({
               {p.name}
               <span className="ml-1 text-xs text-muted-foreground">{p.sub_role}{p.nationality_type === "Overseas" ? " ✈" : ""}</span>
             </span>
-            {isBowlingOption(p) && (
+            <div className="ml-auto flex w-full flex-wrap items-center justify-end gap-1">
+            {(community||isBowlingOption(p)) && (
               <span className="flex items-center gap-1 text-xs">
-                <button aria-label="Fewer overs" onClick={() => setOv(p.id, (overs[p.id] ?? 0) - 1)}><Minus className="h-3 w-3" /></button>
+                <button className="grid h-11 w-11 touch-manipulation place-items-center rounded border" aria-label="Fewer overs" onClick={() => setOv(p.id, (overs[p.id] ?? 0) - 1)}><Minus className="h-3 w-3" /></button>
                 <span className="w-4 text-center tabular">{overs[p.id] ?? 0}</span>
-                <button aria-label="More overs" onClick={() => setOv(p.id, (overs[p.id] ?? 0) + 1)}><Plus className="h-3 w-3" /></button>
+                <button className="grid h-11 w-11 touch-manipulation place-items-center rounded border" aria-label="More overs" onClick={() => setOv(p.id, (overs[p.id] ?? 0) + 1)}><Plus className="h-3 w-3" /></button>
               </span>
             )}
-            <button aria-label="Move up" onClick={() => move(i, i - 1)}><ArrowUp className="h-4 w-4" /></button>
-            <button aria-label="Move down" onClick={() => move(i, i + 1)}><ArrowDown className="h-4 w-4" /></button>
-            <button aria-label="Remove from XI" onClick={() => setOrder(order.filter((x) => x !== p.id))}><Minus className="h-4 w-4 text-destructive" /></button>
+            <button className="grid h-11 w-11 touch-manipulation place-items-center rounded border" aria-label="Move up" onClick={() => move(i, i - 1)}><ArrowUp className="h-4 w-4" /></button>
+            <button className="grid h-11 w-11 touch-manipulation place-items-center rounded border" aria-label="Move down" onClick={() => move(i, i + 1)}><ArrowDown className="h-4 w-4" /></button>
+            <button className="grid h-11 w-11 touch-manipulation place-items-center rounded border" aria-label="Remove from XI" onClick={() => setOrder(order.filter((x) => x !== p.id))}><Minus className="h-4 w-4 text-destructive" /></button>
+            </div>
           </li>
         ))}
       </ol>
