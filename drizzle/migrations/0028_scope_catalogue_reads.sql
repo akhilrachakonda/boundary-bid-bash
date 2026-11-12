@@ -1,0 +1,2 @@
+DROP POLICY IF EXISTS catalogue_read ON public.player_catalogues;
+CREATE POLICY catalogue_read ON public.player_catalogues FOR SELECT TO authenticated USING (public.has_role(auth.uid(), 'admin'::public.app_role));
