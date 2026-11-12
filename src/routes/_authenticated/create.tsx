@@ -39,14 +39,14 @@ function CreatePage() {
 
   const create = async () => {
     setBusy(true);
-    const { data, error } = await supabase.rpc("create_room", {
+    const { data, error } = await supabase.rpc("create_catalogue_room" as never, {
       p_name: name,
       p_format: format,
       p_settings: s as unknown as Json,
       p_nickname: nick || "Host",
       p_team: team || `${nick || "Host"} XI`,
       p_color: color,
-    });
+    } as never);
     setBusy(false);
     if (error) { toast.error(error.message); return; }
     const { room_id } = data as unknown as { room_id: string };
@@ -91,7 +91,7 @@ function CreatePage() {
           </div>
         </div>
         <div className="panel p-5">
-          <SettingsForm s={s} onChange={setS} />
+          <SettingsForm s={s} onChange={setS} available={format === 'IPL' ? 273 : 150} />
         </div>
         <Button className="h-14 w-full bg-gold text-lg font-bold text-primary-foreground shadow-glow" onClick={create} disabled={busy}>
           {busy ? "Creating…" : "Create room & open lobby"}

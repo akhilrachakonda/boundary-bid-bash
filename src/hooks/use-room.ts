@@ -4,6 +4,7 @@ import type { Player, Settings } from "@/lib/auction-rules";
 import { withCanonicalPhoto } from "@/lib/player-photos";
 import { createRefetchCoordinator } from "@/lib/refetch-coordinator";
 import { repairsEnabled, type RepairCapabilities } from "@/lib/post-launch-controls";
+import { mergeLiveProjection, type LiveProjection } from '@/lib/live-projection';
 
 export interface Room {
   id: string;
@@ -26,6 +27,7 @@ export interface Room {
   trade_ends_at: string | null;
   evaluation_version?: string;
   evaluation_snapshot?: string | null;
+  catalogue_version?: string | null;
   repair_flow?: boolean;
   auction_stage?: "round" | "final_call" | "closed";
   auction_round?: number;
@@ -118,35 +120,56 @@ export function useRoom(roomId: string, userId: string | undefined) {
   const roomRef = useRef<Room | null>(null);
   const generation = useRef(0);
   const projectionRef = useRef("");
+  const revisionRef = useRef(0);
+  const readVersions = useRef({participants:0,bids:0,squads:0,sales:0});
   roomRef.current = room;
+
+  const applyLive = useCallback((live: LiveProjection) => {
+    if (!roomRef.current || live.room.id !== roomId) return false;
+    const merged = mergeLiveProjection(roomRef.current, poolRef.current, live, revisionRef.current);
+    if (!merged) return false;
+    revisionRef.current = live.revision ?? revisionRef.current;
+    if (merged.some((player,index) => player !== poolRef.current[index])) {
+      poolRef.current = merged;
+      setPool(merged);
+    }
+    if (live.bids) { readVersions.current.bids++; setBids(live.bids); }
+    if (live.participants) { readVersions.current.participants++; setParticipants(live.participants); }
+    if (live.squads) { readVersions.current.squads++; setSquads(live.squads); }
+    if (live.sales) { readVersions.current.sales++; setSales(live.sales); }
+    projectionRef.current = '';
+    roomRef.current = live.room;
+    setRoom(live.room);
+    setError(null);
+    return true;
+  }, [roomId]);
 
   const load = useCallback(
     async (t: Table) => {
       const epoch = generation.current;
-      const current = () => epoch === generation.current;
+      const collection = t as keyof typeof readVersions.current;
+      const readVersion = readVersions.current[collection];
+      const current = () => epoch === generation.current && readVersions.current[collection] === readVersion;
       switch (t) {
         case "rooms": {
           if(repairsEnabled(roomRef.current,capabilitiesRef.current) && poolRef.current.length && roomRef.current?.status!=="lobby") {
             try {
-              const {data,error}=await supabase.rpc("room_live_projection" as never,{p_room:roomId} as never).abortSignal(AbortSignal.timeout(5000));
+              const sync = capabilitiesRef.current.action_sync === 1;
+              const {data,error}=await supabase.rpc((sync ? "room_sync" : "room_live_projection") as never,{p_room:roomId} as never).abortSignal(AbortSignal.timeout(5000));
               if(!current())return null;
-              const live=data as unknown as {room:Room;states:Partial<RoomPlayer>[]} | null;
-              if(!error && live && live.room.evaluation_snapshot===roomRef.current?.evaluation_snapshot && live.states.length===poolRef.current.length && live.states.every(state=>poolRef.current.some(player=>player.id===state.id))){
-                const states=new Map(live.states.map(state=>[state.id,state]));
-                const merged=poolRef.current.map(player=>({...player,...states.get(player.id)}));
-                const changed=merged.some((player,index)=>JSON.stringify(player)!==JSON.stringify(poolRef.current[index]));
-                if(changed){poolRef.current=merged;setPool(merged);}
-                projectionRef.current="";
-                setError(null);setRoom(live.room);roomRef.current=live.room;return live.room;
-              }
+              const live=data as unknown as LiveProjection | null;
+              if (!error && live && (live.revision ?? 0) < revisionRef.current) return roomRef.current;
+              if(!error && live && applyLive(live)) return live.room;
             } catch { if(!current())return null; /* Fall back to the full bounded projection. */ }
           }
           const { data, error } = await supabase.rpc("room_projection", { p_room: roomId }).abortSignal(AbortSignal.timeout(5000));
-          const projection = data as unknown as { room: Room; pool: RoomPlayer[]; capabilities?: RepairCapabilities } | null;
+          const projection = data as unknown as { room: Room; pool: RoomPlayer[]; revision?: number; capabilities?: RepairCapabilities } | null;
           if (!current()) return null;
+          if (projection && (projection.revision ?? 0) < revisionRef.current) return roomRef.current;
           if (error) { if (!roomRef.current || error.code === 'P0001') setError(error.message); else setConnection('reconnecting'); }
           else if (!projection) setError("Room not found or you are not a member.");
           else {
+            revisionRef.current = projection.revision ?? revisionRef.current;
             capabilitiesRef.current=projection.capabilities??{};setCapabilities(capabilitiesRef.current);
             setError(null); setRoom(projection.room); roomRef.current=projection.room;
             const poolKey = JSON.stringify(projection.pool);
@@ -211,7 +234,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
         }
       }
     },
-    [roomId],
+    [roomId, applyLive],
   );
 
   const coordinator = useRef<ReturnType<typeof createRefetchCoordinator<Table>> | null>(null);
@@ -219,6 +242,8 @@ export function useRoom(roomId: string, userId: string | undefined) {
   useEffect(() => {
     generation.current++;
     projectionRef.current = "";
+    revisionRef.current = 0;
+    readVersions.current = {participants:0,bids:0,squads:0,sales:0};
     capabilitiesRef.current={};setCapabilities({});poolRef.current=[];roomRef.current=null;setRoom(null);setLoaded(false);
     const queue = createRefetchCoordinator(load);
     coordinator.current = queue;
@@ -288,7 +313,10 @@ export function useRoom(roomId: string, userId: string | undefined) {
       ch = ch.on(
         "postgres_changes",
         { event: "*", schema: "public", table: t, filter: `room_id=eq.${roomId}` },
-        () => queue(t),
+        () => {
+          if (t === 'bids' && capabilitiesRef.current.action_sync === 1) queue('rooms');
+          else queue(t);
+        },
       );
     }
     ch=ch.on("postgres_changes",{event:"*",schema:"public",table:"room_updates",filter:`room_id=eq.${roomId}`},()=>queue("rooms"));
@@ -333,8 +361,8 @@ export function useRoom(roomId: string, userId: string | undefined) {
     };
   }, [loaded, roomId, offset, load]);
 
-  return useMemo(() => ({ room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload }),
-    [room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload]);
+  return useMemo(() => ({ room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload, applyLive }),
+    [room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload, applyLive]);
 }
 
 export function useNow(offset: number, ms = 100) {

@@ -2,6 +2,7 @@ import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlayerPortrait } from "./PlayerPortrait";
 import { PlayerProfile } from "./PlayerProfile";
+import { SourceStats } from "./SourceStats";
 import { cn } from "@/lib/utils";
 import { formatMoney, ROLE_LABEL, type Player, type Settings } from "@/lib/auction-rules";
 
@@ -75,6 +76,7 @@ export function PlayerCard({
           </Button>
         )}
       </div>
+      {big && <SourceStats player={player} />}
       {footer}
     </div>
   );

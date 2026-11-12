@@ -1,0 +1,21 @@
+{
+  "version": "crickauction-ddb56cc-2026-11-12",
+  "source": "https://github.com/Shaurya01836/ipl-auction",
+  "commit": "ddb56cc8282cbb997cc8c93ae24c7d8328b9bf1c",
+  "imported": "2026-11-12",
+  "sha256": "55fca961c60c81c7a2272b83962065c3cbc46172abaa25eb24b663d47d820ee5",
+  "count": 273,
+  "aliases": {
+    "Mitch Marsh": "Mitchell Marsh",
+    "Mahendra Singh Dhoni": "MS Dhoni",
+    "Vaibhav Sooryavanshi": "Vaibhav Suryavanshi",
+    "Mitch Santner": "Mitchell Santner",
+    "Thangarasu Natarajan": "T Natarajan",
+    "AM Ghazanfar": "Allah Mohammad Ghazanfar",
+    "Digvesh Singh Rathi": "Digvesh Rathi",
+    "Mitch Owen": "Mitchell Owen",
+    "Rasikh Dar": "Rasikh Salam",
+    "Vijaykumar Vyshak": "Vyshak Vijaykumar"
+  },
+  "notes": "Source stats have no per-player cutoff. Existing game subroles retained. Unknown styles and countries remain explicit."
+}

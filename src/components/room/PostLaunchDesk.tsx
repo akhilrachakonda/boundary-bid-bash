@@ -11,6 +11,7 @@ import type { RoomData, Derived } from '@/components/auction/derive';
 import { rpc } from './rpc';
 import { toast } from 'sonner';
 import { createRefetchCoordinator } from '@/lib/refetch-coordinator';
+import type { LiveProjection } from '@/lib/live-projection';
 
 export function PostLaunchDesk({data,d}:{data:RoomData;d:Derived}) {
  const room=data.room;
@@ -35,12 +36,15 @@ export function PostLaunchDesk({data,d}:{data:RoomData;d:Derived}) {
  if(!room)return null;
  const run=async(action:string,payload:Record<string,unknown>={})=>{
   if(flight.current)return;flight.current=true;setBusy(true);
+  let reconciled = false;
   try{
-   const result=await rpc(action==='nominate'?'nominate_unsold':'auction_command',action==='nominate'?{p_room:room.id,p_lot:payload['lot'],p_version:room.lot_version,p_revision:room.control_revision??0}:auctionCommandArgs(room,action,crypto.randomUUID(),payload),{timeoutMs:8000});
+   const sync = action !== 'nominate' && data.capabilities.action_sync === 1;
+   const result=await rpc<{live?:LiveProjection}>(action==='nominate'?'nominate_unsold':sync?'auction_command_and_sync':'auction_command',action==='nominate'?{p_room:room.id,p_lot:payload['lot'],p_version:room.lot_version,p_revision:room.control_revision??0}:auctionCommandArgs(room,action,crypto.randomUUID(),payload),{timeoutMs:8000});
+   if (sync && result?.live) reconciled = data.applyLive(result.live);
    if(result&&action==='settings'){toast.success('Saved for the next player');setOpen(false);}
   }catch{toast.warning('Action outcome unconfirmed. Refreshing; no automatic retry.');}
   finally{
-   try{await data.reload('rooms');await Promise.all((['bids','sales','squads','participants'] as const).map(table=>data.reload(table)));nominationQueue.current?.schedule('nominations');}
+   try{if (!reconciled) {await data.reload('rooms');await Promise.all((['bids','sales','squads','participants'] as const).map(table=>data.reload(table)));}nominationQueue.current?.schedule('nominations');}
    catch{toast.warning('Could not refresh. Check your connection before another action.');}
    finally{flight.current=false;setBusy(false);}
   }

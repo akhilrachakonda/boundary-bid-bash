@@ -3,17 +3,24 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { BidRequestGate, type BidRequestState } from "@/lib/bid-request-gate";
 import { bidArgs } from "@/lib/room-actions";
+import type { LiveProjection } from '@/lib/live-projection';
 
 type Args = ReturnType<typeof bidArgs>;
-export function useBidRequest(reload: () => Promise<unknown>) {
+export function useBidRequest(reload: () => Promise<unknown>, live?: { enabled: boolean; apply: (projection: LiveProjection) => boolean }) {
   const [state, setState] = useState<BidRequestState>("idle");
   const [accepted, setAccepted] = useState(false);
   const alive = useRef(true);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const refresh = useRef(reload); refresh.current = reload;
+  const liveRef = useRef(live); liveRef.current = live;
   const [gate] = useState(() => new BidRequestGate<Args>(async args => {
-    const { data, error } = await supabase.rpc("place_bid", args).abortSignal(AbortSignal.timeout(8000));
-    if (!error && data != null) { void refresh.current().catch(() => {}); return "accepted"; }
+    const synced = liveRef.current?.enabled;
+    const { data, error } = await supabase.rpc((synced ? "place_bid_and_sync" : "place_bid") as never, args as never).abortSignal(AbortSignal.timeout(8000));
+    if (!error && data != null) {
+      const reply = data as unknown as {live?: LiveProjection};
+      if (!synced || !reply.live || !liveRef.current?.apply(reply.live)) void refresh.current().catch(() => {});
+      return "accepted";
+    }
     // PostgreSQL rejection has a SQLSTATE. Empty-code fetch/abort errors are ambiguous.
     if (error?.code && /^[0-9A-Z]{5}$/.test(error.code)) {
       toast.error(error.message); void refresh.current().catch(() => {}); return "rejected";

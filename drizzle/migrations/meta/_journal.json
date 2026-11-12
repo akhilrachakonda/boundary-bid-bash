@@ -148,6 +148,55 @@
       "when": 1793560166546,
       "tag": "0020_scope_evidence_reads",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1793971431084,
+      "tag": "0021_random_80_20_pool_generator",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1793972211598,
+      "tag": "0022_pool_groups_v2_and_room_opening_price",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1793972375501,
+      "tag": "0023_pool_generator_quota_weighted_picks",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1793972516557,
+      "tag": "0024_evaluation_v3_descriptive_for_new_rooms",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1794074298555,
+      "tag": "0025_harden_pool_group_snapshot_access",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1794075540000,
+      "tag": "0026_original_catalogue_defaults",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1794506400000,
+      "tag": "0027_versioned_ipl_catalogue_and_action_sync",
+      "breakpoints": true
     }
   ]
 }

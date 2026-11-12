@@ -21,6 +21,11 @@ export interface Player {
   photo_url?: string | null;
   photo_source?: string | null;
   photo_credit?: string | null;
+  source_stats?: Record<string, number | string>;
+  stats_source?: string;
+  stats_imported?: string;
+  stats_source_role?: string;
+  catalogue_version?: string;
 }
 
 export interface Increment {
@@ -86,9 +91,9 @@ export const ROLE_LABEL: Record<string, string> = {
 };
 export const SUB_ROLES: Record<Role, string[]> = {
   WK: ["WK-Batter", "WK-Finisher"],
-  BAT: ["Top order", "Middle order", "Finisher"],
-  AR: ["Batting AR (pace)", "Batting AR (spin)", "Bowling AR (pace)", "Bowling AR (spin)"],
-  BOWL: ["Pace", "Medium pace", "Spin"],
+  BAT: ["Top order", "Middle order", "Finisher", "Batter"],
+  AR: ["Batting AR (pace)", "Batting AR (spin)", "Bowling AR (pace)", "Bowling AR (spin)", "All-rounder"],
+  BOWL: ["Pace", "Medium pace", "Spin", "Bowler"],
 };
 
 export const isSpinner = (p: Pick<Player, "sub_role">) => /spin/i.test(p.sub_role);

@@ -10,7 +10,8 @@
 <!-- LOVABLE:END -->
 
 ## Project rules
-- Filter only new legacy catalogue selection by the exact original seed name/country set; enforce it in set_pool for NULL pool_rules and retain unrestricted historical lookups. Why: restored clients need original pools without changing expanded-room records.
+- New IPL rooms created through create_catalogue_room use their immutable catalogue_version and source statistics. Legacy rooms use the original seed catalogue. Enforce membership in set_pool, use per-room prices for bids/final call, and freeze catalogue facts at review. Why: new rosters must not rewrite historical auctions.
+- Bid and host-command sync replies carry the same transaction's room state and monotonic room_updates revision. Discard older replies and retain existing lot/version/request checks. Why: one response updates controls without stale rollback or extra round trips.
 - Release actions bind bids to observed lot ID/version plus unique retry ID, and host actions to observed lot version/status/sale; legacy unbound RPCs are internal-only. Why: delayed requests and retries cannot mutate the next lot or refund twice.
 - New rooms freeze the legal-reserve scoring patch separately from the V2.1 version; historical rooms retain their original optimizer. Why: guarantee legal shortlist reservations without changing existing scores.
 - Direct RPC and table guards enforce bounded room settings, identity/notes/import fields and authenticated-only grants; persisted action quotas complement hosted auth limits. Why: UI validation is not a security boundary.

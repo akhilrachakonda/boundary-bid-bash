@@ -6,7 +6,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { cn } from "@/lib/utils";
 import { bidBlockReason, formatMoney, nextBidAmount } from "@/lib/auction-rules";
 import { unseenEvents, bidChange, pendingLots, saleSnapshot } from "@/lib/auction-presentation";
-import { playHammer, playBid } from "@/lib/sound";
+import { playCelebration, playBid, stopCelebration } from "@/lib/sound";
 import { AuctionStage } from "@/components/auction/AuctionStage";
 import { SaleReveal, type SaleSnapshot } from "@/components/auction/SaleReveal";
 import { PlayerPortrait } from "@/components/auction/PlayerPortrait";
@@ -26,7 +26,7 @@ import { PostLaunchDesk } from './PostLaunchDesk';
 export const Auction = memo(function Auction({ data, d, sound }: { data: RoomData; d: Derived; sound: boolean }) {
   const room = data.room;
   const me = d.me;
-  const bidRequest = useBidRequest(async () => { await data.reload('rooms'); await data.reload('bids'); });
+  const bidRequest = useBidRequest(async () => { await data.reload('rooms'); if (data.capabilities.action_sync !== 1) await data.reload('bids'); }, {enabled:data.capabilities.action_sync===1,apply:data.applyLive});
   const [hostBusy, setHostBusy] = useState<string | null>(null);
   const hostPending = useRef(false);
   const [strategy,setStrategy] = useState(false);
@@ -77,9 +77,10 @@ export const Auction = memo(function Auction({ data, d, sound }: { data: RoomDat
     if (sale && !data.sales.some(record => record.id === sale.id && !record.undone)) setSale(null);
     if (!sale && saleQueue.current.length) setSale(saleQueue.current.shift() ?? null);
   },[data.bids,data.sales,data.pool,data.participants,data.loaded,data.connection,d.partById,room?.current_bid,room?.current_rp,sound,sale]);
-  useEffect(()=>{if(!sale)return;if(sale.kind==='sold' && soundRef.current)playHammer();const t=setTimeout(()=>setSale(saleQueue.current.shift() ?? null),2600);return()=>clearTimeout(t);},[sale]);
+  useEffect(()=>{if(!sale)return;if(soundRef.current)playCelebration(sale.kind,sale.team?.name);const t=setTimeout(()=>setSale(saleQueue.current.shift() ?? null),2600);return()=>{clearTimeout(t);stopCelebration();};},[sale]);
   useEffect(()=>{if(!pulse)return;const t=setTimeout(()=>{setPulse("");setIncrement(0);},1400);return()=>clearTimeout(t);},[pulse]);
   useEffect(()=>{previousPrice.current=null;},[room?.current_rp]);
+  useEffect(() => { if (!sound) stopCelebration(); return () => stopCelebration(); }, [sound]);
   if(!room || !me) return null;
   const s=room.settings;
   const paused=room.status === "paused";
