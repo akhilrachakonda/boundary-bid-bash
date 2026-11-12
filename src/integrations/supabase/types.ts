@@ -498,6 +498,69 @@ export type Database = {
           },
         ]
       }
+      player_catalogue_entries: {
+        Row: {
+          player_facts: Json
+          player_id: string
+          source_id: string
+          version: string
+        }
+        Insert: {
+          player_facts: Json
+          player_id: string
+          source_id: string
+          version: string
+        }
+        Update: {
+          player_facts?: Json
+          player_id?: string
+          source_id?: string
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_catalogue_entries_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_catalogue_entries_version_fkey"
+            columns: ["version"]
+            isOneToOne: false
+            referencedRelation: "player_catalogues"
+            referencedColumns: ["version"]
+          },
+        ]
+      }
+      player_catalogues: {
+        Row: {
+          content_hash: string
+          imported_on: string
+          player_count: number
+          source_commit: string
+          source_url: string
+          version: string
+        }
+        Insert: {
+          content_hash: string
+          imported_on: string
+          player_count: number
+          source_commit: string
+          source_url: string
+          version: string
+        }
+        Update: {
+          content_hash?: string
+          imported_on?: string
+          player_count?: number
+          source_commit?: string
+          source_url?: string
+          version?: string
+        }
+        Relationships: []
+      }
       players: {
         Row: {
           age_group: string
@@ -842,6 +905,7 @@ export type Database = {
           auction_stage: string
           bid_revision: number
           bid_session: number
+          catalogue_version: string | null
           code: string
           control_revision: number
           created_at: string
@@ -853,6 +917,7 @@ export type Database = {
           format: string
           host_id: string
           id: string
+          legacy_original_catalogue: boolean
           lot_ends_at: string | null
           lot_version: number
           name: string
@@ -875,6 +940,7 @@ export type Database = {
           auction_stage?: string
           bid_revision?: number
           bid_session?: number
+          catalogue_version?: string | null
           code: string
           control_revision?: number
           created_at?: string
@@ -886,6 +952,7 @@ export type Database = {
           format: string
           host_id: string
           id?: string
+          legacy_original_catalogue?: boolean
           lot_ends_at?: string | null
           lot_version?: number
           name: string
@@ -908,6 +975,7 @@ export type Database = {
           auction_stage?: string
           bid_revision?: number
           bid_session?: number
+          catalogue_version?: string | null
           code?: string
           control_revision?: number
           created_at?: string
@@ -919,6 +987,7 @@ export type Database = {
           format?: string
           host_id?: string
           id?: string
+          legacy_original_catalogue?: boolean
           lot_ends_at?: string | null
           lot_version?: number
           name?: string
@@ -934,7 +1003,15 @@ export type Database = {
           status?: string
           trade_ends_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "rooms_catalogue_version_fkey"
+            columns: ["catalogue_version"]
+            isOneToOne: false
+            referencedRelation: "player_catalogues"
+            referencedColumns: ["version"]
+          },
+        ]
       }
       sales: {
         Row: {
@@ -1146,6 +1223,10 @@ export type Database = {
     Functions: {
       _advance_lot: { Args: { p_room: string }; Returns: undefined }
       _advance_lot_pre_repair: { Args: { p_room: string }; Returns: undefined }
+      _catalogue_player_json: {
+        Args: { p_player: string; p_room: string }
+        Returns: Json
+      }
       _check_after_trade: {
         Args: { p_before: Json; p_part: string; p_settings: Json }
         Returns: undefined
@@ -1215,6 +1296,19 @@ export type Database = {
         }
         Returns: Json
       }
+      auction_command_and_sync: {
+        Args: {
+          p_action: string
+          p_lot: string
+          p_payload?: Json
+          p_request: string
+          p_revision: number
+          p_room: string
+          p_status: string
+          p_version: number
+        }
+        Returns: Json
+      }
       can_read_snapshot: { Args: { p_snapshot: string }; Returns: boolean }
       commit_room_evaluation: {
         Args: {
@@ -1222,6 +1316,17 @@ export type Database = {
           p_result: Json
           p_room: string
           p_snapshot: string
+        }
+        Returns: Json
+      }
+      create_catalogue_room: {
+        Args: {
+          p_color: string
+          p_format: string
+          p_name: string
+          p_nickname: string
+          p_settings: Json
+          p_team: string
         }
         Returns: Json
       }
@@ -1263,6 +1368,10 @@ export type Database = {
         Args: { p_bundle: Json }
         Returns: string
       }
+      is_original_catalogue_player: {
+        Args: { p_country: string; p_name: string }
+        Returns: boolean
+      }
       is_room_member: { Args: { p_room: string }; Returns: boolean }
       join_room: {
         Args: {
@@ -1303,6 +1412,16 @@ export type Database = {
             }
             Returns: number
           }
+      place_bid_and_sync: {
+        Args: {
+          p_amount: number
+          p_lot: string
+          p_request: string
+          p_room: string
+          p_version: number
+        }
+        Returns: Json
+      }
       propose_trade: {
         Args: {
           p_cash: number
@@ -1331,8 +1450,10 @@ export type Database = {
         }
         Returns: string
       }
+      room_catalogue: { Args: { p_room: string }; Returns: Json }
       room_live_projection: { Args: { p_room: string }; Returns: Json }
       room_projection: { Args: { p_room: string }; Returns: Json }
+      room_sync: { Args: { p_full?: boolean; p_room: string }; Returns: Json }
       server_now: { Args: never; Returns: string }
       set_pool: {
         Args: { p_player_ids: string[]; p_room: string }
