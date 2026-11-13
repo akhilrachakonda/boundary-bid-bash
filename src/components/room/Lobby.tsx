@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { poolRequirements, squadCounts, type Player, type Settings } from "@/lib/auction-rules";
 import { SettingsForm } from "@/components/SettingsForm";
+import {IplTeamPicker} from "@/components/IplTeamPicker";
 import { ColorPicker } from "@/components/TeamPicker";
 import { TeamDot } from "@/components/auction/TeamPurseBar";
 import type { RoomData, Derived } from "@/components/auction/derive";
@@ -20,6 +21,7 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
   const s = room.settings;
   const me = d.me!;
   const [team, setTeam] = useState(me.team_name);
+  const [claiming,setClaiming]=useState(false);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<Settings>(s);
   const [all, setAll] = useState<Player[]>([]);
@@ -58,8 +60,8 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
   };
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[1fr_340px]">
-      <div className="space-y-4">
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="order-2 min-w-0 space-y-4 lg:order-1">
         <p className="border-l-2 border-electric px-3 py-2 text-sm">Surprise player reveal: <strong>{s.surprise_reveal ? "ON — future order hidden from everyone" : "OFF — upcoming players visible"}</strong>. The confirmed scouting pool is unchanged.</p>
         <div className="panel flex flex-wrap items-center gap-4 p-5">
           <div>
@@ -78,7 +80,7 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
             {data.participants.map((p) => {
               const online = now - new Date(p.last_seen).getTime() < 30000;
               return (
-                <li key={p.id} className="flex items-center gap-3 rounded-lg border bg-secondary/40 p-3">
+                <li key={p.id} className="flex flex-wrap items-center gap-3 rounded-lg border bg-secondary/40 p-3">
                   <TeamDot color={p.color} className="h-5 w-5" />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1 truncate font-semibold">
@@ -103,6 +105,7 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
               <h3 className="text-2xl font-bold uppercase">Room settings · {room.format}</h3>
               <Button variant="outline" size="sm" onClick={() => setEditing(!editing)}>{editing ? "Close" : "Edit"}</Button>
             </div>
+            {room.format==='IPL'&&!room.ipl_franchises&&<Button variant="outline" onClick={async()=>{if(await rpc('enable_ipl_teams',{p_room:room.id}))await data.reload('rooms');}}>Use unique IPL teams & sounds</Button>}
             {!room.community_mode&&<Button variant="outline" onClick={async()=>{if(await rpc("community_control",{p_room:room.id,p_action:"enable",p_status:room.status,p_phase:room.post_phase??null,p_payload:{}}))await data.reload("rooms");}}>Use Playing XI & team voting</Button>}
             {room.community_mode&&<p className="text-sm text-electric">After trading: private Playing XI and match plans, then opponent ratings.</p>}
             {editing ? (
@@ -161,25 +164,26 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
         )}
       </div>
 
-      <aside className="space-y-4">
+      <aside className="order-1 min-w-0 space-y-4 lg:order-2">
         <div className="panel space-y-3 p-5">
           <h3 className="text-xl font-bold uppercase">Your team</h3>
-          <Input value={team} onChange={(e) => setTeam(e.target.value)} onBlur={() => team !== me.team_name && rpc("update_my_team", { p_room: room.id, p_team: team, p_color: null, p_ready: null })} maxLength={30} />
-          <ColorPicker value={me.color} taken={taken} onChange={(c) => rpc("update_my_team", { p_room: room.id, p_team: null, p_color: c, p_ready: null })} />
+          {room.ipl_franchises?<IplTeamPicker value={me.ipl_team??''} taken={data.participants.filter(p=>p.id!==me.id).flatMap(p=>p.ipl_team?[p.ipl_team]:[])} disabled={claiming} onChange={async code=>{if(claiming)return;setClaiming(true);try{await rpc('claim_ipl_team',{p_room:room.id,p_team:code});}finally{await data.reload('participants');setClaiming(false);}}}/>:<><Input value={team} onChange={(e) => setTeam(e.target.value)} onBlur={() => team !== me.team_name && rpc("update_my_team", { p_room: room.id, p_team: team, p_color: null, p_ready: null })} maxLength={30} />
+          <ColorPicker value={me.color} taken={taken} onChange={(c) => rpc("update_my_team", { p_room: room.id, p_team: null, p_color: c, p_ready: null })} /></>}
           <label className="flex items-center justify-between rounded-lg border p-3">
             <span className="font-semibold">I'm ready</span>
-            <Switch checked={me.is_ready} onCheckedChange={(v) => rpc("update_my_team", { p_room: room.id, p_team: null, p_color: null, p_ready: v })} />
+            <Switch disabled={!!room.ipl_franchises&&!me.ipl_team} checked={me.is_ready} onCheckedChange={(v) => rpc("update_my_team", { p_room: room.id, p_team: null, p_color: null, p_ready: v })} />
           </label>
         </div>
         {d.isHost ? (
           <div className="panel space-y-2 p-5">
             <Button
               className="h-14 w-full bg-gold text-lg font-bold text-primary-foreground shadow-glow"
-              disabled={!enoughTeams || !poolReady}
+              disabled={!enoughTeams || !poolReady || (!!room.ipl_franchises&&data.participants.some(p=>!p.ipl_team))}
               onClick={() => rpc("start_review", { p_room: room.id })}
             >
               Start auction
             </Button>
+            {room.ipl_franchises&&data.participants.some(p=>!p.ipl_team)&&<p className="text-xs text-primary">Every participant must choose an IPL team first.</p>}
             {!enoughTeams && <p className="text-xs text-muted-foreground">Waiting for at least 2 teams.</p>}
             {!poolReady && <p className="text-xs text-muted-foreground">Confirm the player pool first.</p>}
             {enoughTeams && data.participants.some((p) => !p.is_ready) && <p className="text-xs text-muted-foreground">Some teams aren't ready yet.</p>}

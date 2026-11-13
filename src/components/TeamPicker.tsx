@@ -13,7 +13,7 @@ export function ColorPicker({ value, onChange, taken = [] }: { value: string; on
           aria-label={`Colour ${c}`}
           onClick={() => onChange(c)}
           disabled={taken.includes(c) && c !== value}
-          className={cn("h-8 w-8 rounded-full border-2 border-transparent transition disabled:opacity-20", value === c && "scale-110 border-foreground")}
+          className={cn("h-11 w-11 sm:h-8 sm:w-8 rounded-full border-2 border-transparent transition disabled:opacity-20", value === c && "scale-110 border-foreground")}
           style={{ backgroundColor: c }}
         />
       ))}

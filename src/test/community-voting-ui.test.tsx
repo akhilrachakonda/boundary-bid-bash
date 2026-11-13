@@ -16,6 +16,7 @@ it('offers ratings only for opponents and sends all three chosen category scores
  expect(screen.getAllByRole('combobox')).toHaveLength(3);expect(screen.queryByLabelText('My team top_order')).not.toBeInTheDocument();
  const submit=screen.getByRole('button',{name:'Submit rating'});expect(submit).toBeDisabled();
  for(const [key,value] of [['top_order','8'],['middle_finishing','6'],['bowling','9']])fireEvent.change(screen.getByLabelText('Opponent '+key),{target:{value}});
+ fireEvent.change(screen.getByLabelText('Opponent comment'),{target:{value:'Great bowling'}});
  fireEvent.click(submit);
- await waitFor(()=>expect(rpc).toHaveBeenCalledWith('rate_community_team',{p_room:'room',p_target:'other',p_top:8,p_middle:6,p_bowling:9},{timeoutMs:8000}));
+ await waitFor(()=>expect(rpc).toHaveBeenCalledWith('rate_community_team',{p_room:'room',p_target:'other',p_top:8,p_middle:6,p_bowling:9,p_comment:'Great bowling'},{timeoutMs:8000}));
 });

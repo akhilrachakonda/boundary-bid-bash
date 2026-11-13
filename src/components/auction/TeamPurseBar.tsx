@@ -24,14 +24,14 @@ export function TeamPurseBar({
   onSelect?: (id: string) => void;
 }) {
   return (
-    <div className="flex gap-2 overflow-x-auto pb-1">
+    <div className="team-rail flex min-w-0 snap-x gap-2 overflow-x-auto pb-1">
       {participants.map((p) => {
         const online = now - new Date(p.last_seen).getTime() < 30000;
         return (
           <Button variant="ghost" onClick={()=>onSelect?.(p.id)} aria-label={`View ${p.team_name} squad`}
             key={p.id}
             className={cn(
-              "team-rail-item h-auto min-w-[170px] flex-1 flex-col items-stretch rounded-md border bg-card px-3 py-3 transition-all",
+              "team-rail-item h-auto w-36 min-w-36 shrink-0 snap-start sm:w-auto sm:min-w-[170px] flex-1 flex-col items-stretch rounded-md border bg-card px-3 py-3 transition-all",
               highlight === p.id && "border-primary bg-primary/5",
             )}
           >

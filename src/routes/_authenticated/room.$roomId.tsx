@@ -151,7 +151,7 @@ function RoomPage() {
           {sound ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
         </Button>
       </AppHeader>
-      <main className="mx-auto max-w-7xl space-y-4 px-3 py-5 sm:px-6">
+      <main className="room-main mx-auto min-w-0 max-w-7xl space-y-3 px-3 py-3 sm:space-y-4 sm:px-6 sm:py-5">
         {!room.community_mode&&room.evaluation_version==='v2.1'&&<p className="text-xs text-muted-foreground">V2.1 · 35 combination/position + 30 established + 20 recent + 10 bench + 5 leadership · {room.status==='lobby'?'Evidence and leadership freeze before review':'Frozen evidence and leadership rubric'} · <Link to="/scoring" className="text-electric underline">Rules and data coverage</Link></p>}
         {hostAway && !d.isHost && (
           <div className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 p-3 text-sm">

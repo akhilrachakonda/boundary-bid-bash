@@ -18,7 +18,7 @@ export interface PoolRow {
   price?: number | null;
 }
 
-const sel = "h-9 rounded-md border border-input bg-background px-2 text-sm";
+const sel = "min-h-11 sm:min-h-9 h-11 sm:h-9 rounded-md border border-input bg-background px-2 text-base sm:text-sm";
 
 export function PlayerTable({
   rows,
@@ -65,9 +65,9 @@ export function PlayerTable({
   }, [rows, q, role, sub, tier, nat, maxBase, sort, onlyStar, starred]);
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap gap-2">
-        <Input placeholder="Search name or country" value={q} onChange={(e) => setQ(e.target.value)} className="h-9 w-full sm:w-56" />
+    <div className="min-w-0 space-y-3">
+      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
+        <Input placeholder="Search name or country" value={q} onChange={(e) => setQ(e.target.value)} className="col-span-2 h-11 w-full sm:h-9 sm:w-56" />
         <select className={`${sel} max-w-full`} value={role} onChange={(e) => { setRole(e.target.value); setSub(""); }} aria-label="Role">
           <option value="">All roles</option>
           {Object.keys(SUB_ROLES).map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
@@ -100,13 +100,18 @@ export function PlayerTable({
             <Star className="h-4 w-4" /> Targets
           </Button>
         )}
-        <div className="ml-auto flex gap-1">
+        <div className="ml-auto hidden gap-1 sm:flex">
           <Button size="icon" variant={view === "table" ? "secondary" : "ghost"} onClick={() => setView("table")} aria-label="Table view"><List className="h-4 w-4" /></Button>
           <Button size="icon" variant={view === "cards" ? "secondary" : "ghost"} onClick={() => setView("cards")} aria-label="Card view"><LayoutGrid className="h-4 w-4" /></Button>
         </div>
       </div>
       <p className="text-xs text-muted-foreground">{filtered.length} of {rows.length} players · tiers, base prices and balanced pool selection are legacy setup estimates, not measured evaluation rankings.</p>
-      {view === "cards" ? (
+      <div className="grid gap-3 sm:hidden" aria-label="Player cards">{filtered.map(r=><article key={r.player.id} className="panel min-w-0 p-3">
+        <div className="flex items-center gap-3"><PlayerPortrait player={r.player} className="h-16 w-12 shrink-0 rounded-lg"/><div className="min-w-0 flex-1"><PlayerProfile player={r.player} currency={currency}><strong className="block break-words text-base">{r.player.name}</strong></PlayerProfile><p className="mt-1 text-xs text-muted-foreground">{r.player.country} · {r.player.sub_role}</p></div>{onStar&&<Button variant="ghost" size="icon" className="shrink-0" aria-label={`Toggle target ${r.player.name}`} onClick={()=>onStar(r.player.id)}><Star className={cn('h-5 w-5',starred?.has(r.player.id)&&'fill-primary text-primary')}/></Button>}</div>
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t pt-3"><TierBadge tier={r.player.tier}/><span className="text-sm font-semibold">Base {formatMoney(Number(r.player.base_price),currency)}</span></div>
+        {(r.status||r.order!=null)&&<p className="mt-2 break-words text-xs text-muted-foreground">{r.order!=null?`Round ${r.round??1} · #${r.order} · `:''}{r.status==='sold'&&r.owner?`${r.owner.name} · ${formatMoney(r.price,currency)}`:r.status}</p>}
+      </article>)}</div>
+      <div className="hidden sm:block">{view === "cards" ? (
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((r) => (
             <PlayerCard key={r.player.id} player={r.player} currency={currency} starred={starred?.has(r.player.id)} onStar={onStar ? () => onStar(r.player.id) : undefined} />
@@ -161,7 +166,7 @@ export function PlayerTable({
             </tbody>
           </table>
         </div>
-      )}
+      )}</div>
     </div>
   );
 }

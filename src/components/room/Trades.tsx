@@ -22,7 +22,7 @@ export function TradeCard({ t, d, currency, actions }: { t: Trade; d: Derived; c
   const names = (ids: string[]) => ids.map((id) => d.playerById.get(id)?.name ?? "?").join(", ") || "—";
   return (
     <div className="rounded-lg border bg-secondary/40 p-3 text-sm">
-      <div className="flex items-center gap-2 font-semibold">
+      <div className="flex flex-wrap items-center gap-2 font-semibold">
         <TeamDot color={from?.color ?? "#888"} /> {from?.team_name}
         <ArrowLeftRight className="h-4 w-4 text-muted-foreground" />
         <TeamDot color={to?.color ?? "#888"} /> {to?.team_name}
@@ -43,7 +43,7 @@ function PickList({ players, picked, toggle }: { players: Player[]; picked: stri
   return (
     <div className="flex max-h-48 flex-wrap gap-1 overflow-y-auto">
       {players.map((p) => (
-        <button key={p.id} onClick={() => toggle(p.id)} className={cn("rounded-full border px-2 py-1 text-xs", picked.includes(p.id) && "border-primary bg-primary/20 text-primary")}>
+        <button key={p.id} onClick={() => toggle(p.id)} className={cn("min-h-11 max-w-full rounded-xl border px-2 py-1 text-sm", picked.includes(p.id) && "border-primary bg-primary/20 text-primary")}>
           <PlayerPortrait player={p} className="mr-1 inline-block h-10 w-8 rounded"/>{p.name}
         </button>
       ))}
@@ -102,7 +102,7 @@ export function Trades({ data, d, now }: { data: RoomData; d: Derived; now: numb
   };
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
       <div className="space-y-4">
         <div className="panel flex flex-wrap items-center gap-3 p-4">
           <h2 className="text-3xl font-extrabold uppercase">Trade window</h2>
@@ -114,7 +114,7 @@ export function Trades({ data, d, now }: { data: RoomData; d: Derived; now: numb
           <h3 className="text-xl font-bold uppercase">{parent ? "Counter-offer" : "Propose a trade"}</h3>
           <div className="flex flex-wrap gap-2">
             {others.map((o) => (
-              <button key={o.id} onClick={() => { setTo(o.id); setReq([]); }} className={cn("flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm", to === o.id && "border-primary")}>
+              <button key={o.id} onClick={() => { setTo(o.id); setReq([]); }} className={cn("flex min-h-11 max-w-full items-center gap-2 rounded-xl border px-3 py-1.5 text-sm", to === o.id && "border-primary")}>
                 <TeamDot color={o.color} /> {o.team_name}
               </button>
             ))}

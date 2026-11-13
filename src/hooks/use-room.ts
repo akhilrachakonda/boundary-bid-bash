@@ -29,6 +29,7 @@ export interface Room {
   evaluation_snapshot?: string | null;
   catalogue_version?: string | null;
   community_mode?: boolean;
+  ipl_franchises?: boolean;
   post_phase?: "lineup" | "rating" | "done" | null;
   phase_ends_at?: string | null;
   repair_flow?: boolean;
@@ -42,6 +43,7 @@ export interface Participant {
   user_id: string;
   nickname: string;
   team_name: string;
+  ipl_team?: string | null;
   color: string;
   purse: number;
   is_ready: boolean;

@@ -29,11 +29,12 @@ export function AuctionStage({ player, currency, price, leader, remaining, total
           <PlayerProfile player={player} currency={currency}><h2 className="stage-player-name">{player.name}</h2></PlayerProfile>
           <p className="mt-2 text-sm text-electric">{ROLE_LABEL[player.role]} <span className="text-muted-foreground">/ {player.sub_role}</span></p>
           <p className="mt-2 hidden text-xs text-muted-foreground sm:block">{player.batting_hand}-hand bat · {player.bowling_style}</p>
-          <SourceStats player={player}/>
+          <div className="hidden sm:block"><SourceStats player={player}/></div>
           <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-border/60 pt-3"><div><span className="stat-label">Estimated base price</span><strong className="font-display text-2xl tabular">{formatMoney(Number(player.base_price),currency)}</strong></div><PlayerProfile player={player} currency={currency}><span className="text-xs text-electric underline">Player statistics</span></PlayerProfile></div>
         </div>
         {onStar && <Button variant="ghost" size="icon" className="absolute right-3 top-12" onClick={onStar} aria-label={starred ? "Remove from targets" : "Add to my targets"}><Star className={cn("h-5 w-5",starred && "fill-primary text-primary")}/></Button>}
       </div>
+      <div className="px-3 pb-3 sm:hidden"><SourceStats player={player}/></div>
       <div className={cn("price-desk",pulse && "price-desk-active")}>
         <div className="min-w-0 flex-1"><span className="stat-label">{leader ? "Current highest bid" : "Opening bid"}</span><div className="flex items-center gap-3"><strong ref={priceRef} className="broadcast-price tabular">{formatMoney(price,currency)}</strong>{!!increment && <span className="increment-rise text-sm font-bold text-success"><ArrowUp className="inline h-3 w-3"/>{formatMoney(increment,currency)}</span>}</div>
         <div className={cn("leading-team",pulse && "team-sweep")} style={leader ? {"--team-color":leader.color} as React.CSSProperties : undefined}>{leader ? <><TeamCrest name={leader.name} color={leader.color} className="h-8 w-8"/><span>{leader.name}</span><TrendingUp className="ml-auto h-4 w-4"/></> : <span className="text-sm text-muted-foreground">The floor is open</span>}</div></div>

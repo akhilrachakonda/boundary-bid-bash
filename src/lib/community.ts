@@ -1,7 +1,7 @@
 export interface MatchPlan {batting_order:string[];bowling_overs:Record<string,number>;batting_phases:Record<string,{from:number;to:number}>;confirmed?:boolean;participant_id?:string}
-export interface TeamVote {target:string;top_order:number;middle_finishing:number;bowling:number}
+export interface TeamVote {target:string;top_order:number;middle_finishing:number;bowling:number;comment?:string;rater?:string}
 export interface PeerResult {participant_id:string;voters:number;top_order:number|null;middle_finishing:number|null;bowling:number|null;overall:number|null}
-export interface CommunityState {phase:'lineup'|'rating'|'done';deadline:string|null;lineups:MatchPlan[];confirmed:string[];my_votes:TeamVote[];votes_received:number;results:PeerResult[]}
+export interface CommunityState {phase:'lineup'|'rating'|'done';deadline:string|null;lineups:MatchPlan[];confirmed:string[];my_votes:TeamVote[];visible_votes?:TeamVote[];votes_received:number;results:PeerResult[]}
 export const inningsOvers=(format:string)=>format==='ODI'?50:20;
 export function battingPhase(position:number,format:string){const odi=format==='ODI';return position<3?{from:1,to:odi?10:6}:position<6?{from:odi?11:7,to:odi?40:15}:{from:odi?41:16,to:odi?50:20};}
 export function planErrors(plan:MatchPlan,owned:string[],format:string){

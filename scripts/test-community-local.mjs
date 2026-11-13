@@ -24,6 +24,7 @@ try{
  const oldCat=await call(host,'room_catalogue',[old.room_id]);await call(host,'set_pool',[old.room_id,generateQualityPool(oldCat,settings,22).players.map(p=>p.id)]);
  await call(host,'start_review',[old.room_id]);const oldBefore=await projection(host,old.room_id);
  await db.exec(file('drizzle/migrations/0029_community_lineups_and_resilient_reads.sql'));
+ await db.exec(file('drizzle/migrations/0030_ipl_teams_and_rating_comments.sql'));
  const oldAfter=await projection(host,old.room_id);assert.equal(oldAfter.room.community_mode,false);assert.deepEqual(oldAfter.pool,oldBefore.pool);
  const made=await create('create_social_room'),rid=made.room_id;
  for(let i=1;i<3;i++)await call(ids[i],'join_room',[made.code,'Guest'+i,'Team'+i,'#234567']);
@@ -68,12 +69,17 @@ try{
  await assert.rejects(async()=>call(ids[1],'save_community_lineup',[rid,await own(host),'{}','{}',false],[null,null,'jsonb','jsonb']));
  await save(host,true);await save(ids[1],true);await save(ids[2],true);assert.equal((await projection(host,rid)).room.post_phase,'rating');
  assert.equal((await call(host,'community_state',[rid])).lineups.length,3);
- const rate=(uid,target,a,b,c)=>call(uid,'rate_community_team',[rid,partOf(target),a,b,c]);
+ const rate=(uid,target,a,b,c,comment='')=>call(uid,'rate_community_team',[rid,partOf(target),a,b,c,comment]);
  await assert.rejects(()=>rate(host,host,10,10,10));await assert.rejects(()=>rate(host,ids[1],11,1,1));
- await rate(ids[1],host,8,6,10);await rate(ids[1],host,8,6,10);assert.equal((await call(host,'community_state',[rid])).votes_received,1);
+ await assert.rejects(()=>rate(ids[1],host,8,6,10,'x'.repeat(501)));
+ await rate(ids[1],host,8,6,10,' Strong bowling depth ');await rate(ids[1],host,8,6,10,'Strong bowling depth');
+ const received=await call(host,'community_state',[rid]);assert.equal(received.visible_votes.length,1);assert.equal(received.visible_votes[0].comment,'Strong bowling depth');assert.equal(received.visible_votes[0].rater,partOf(ids[1]));
+ assert.equal((await call(ids[2],'community_state',[rid])).visible_votes.length,0);
+ await assert.rejects(()=>user(host,'SELECT * FROM public.community_votes'));
+ assert.equal((await call(host,'community_state',[rid])).votes_received,1);
  await rate(ids[2],host,6,8,4);await rate(host,ids[1],10,9,8);await rate(ids[2],ids[1],4,5,6);await rate(host,ids[2],2,2,2);
  assert.equal((await call(host,'community_state',[rid])).results.length,0);
- await rate(ids[1],ids[2],8,8,8);const final=await call(host,'community_state',[rid]);assert.equal(final.phase,'done');assert.equal(final.results.find(x=>x.participant_id===partOf(host)).overall,7);assert.equal(final.results.find(x=>x.participant_id===partOf(ids[2])).overall,5);
+ await rate(ids[1],ids[2],8,8,8);const final=await call(host,'community_state',[rid]);assert.equal(final.phase,'done');assert.equal(final.visible_votes.length,6);assert.equal(final.results.find(x=>x.participant_id===partOf(host)).overall,7);assert.equal(final.results.find(x=>x.participant_id===partOf(ids[2])).overall,5);
  await assert.rejects(()=>rate(host,ids[1],1,1,1));await assert.rejects(()=>save(host,false));
  const live=await call(host,'room_sync',[rid]);assert.equal(await call(host,'room_poll',[rid,live.revision]),null);
  // Deadline transition and explicit partial-results close.
@@ -83,5 +89,35 @@ try{
  await assert.rejects(()=>call(host,'community_control',[second.room_id,'finish','results','rating','{}'],[null,null,null,null,'jsonb']));
  await call(host,'community_control',[second.room_id,'finish','results','rating','{"allow_incomplete":true}'],[null,null,null,null,'jsonb']);
  assert.ok((await call(host,'community_state',[second.room_id])).results.every(x=>x.overall===null&&x.voters===0));
+ // IPL claims are transactionally unique; failed joins do not consume a room slot.
+ const franchise=await call(host,'create_franchise_room',['IPL reservations',JSON.stringify(settings),'Host','CSK'],[null,'jsonb']);
+ const fr=franchise.room_id;
+ let entry=await call(ids[1],'room_entry',[franchise.code]);assert.equal(entry.ipl_franchises,true);assert.deepEqual(entry.taken,['CSK']);
+ const claims=await Promise.allSettled(ids.slice(1).map(uid=>call(uid,'join_franchise_room',[franchise.code,'Guest','MI'])));
+ assert.equal(claims.filter(x=>x.status==='fulfilled').length,1);
+ const winner=ids[claims.findIndex(x=>x.status==='fulfilled')+1],loser=ids[claims.findIndex(x=>x.status==='rejected')+1];
+ assert.equal((await db.query('SELECT count(*)::int n FROM public.participants WHERE room_id=$1',[fr])).rows[0].n,2);
+ await assert.rejects(()=>call(host,'claim_ipl_team',[fr,'MI']));
+ assert.equal((await call(host,'room_entry',[franchise.code])).my_team,'CSK');
+ await assert.rejects(()=>call(stranger,'claim_ipl_team',[fr,'RR']));
+ await assert.rejects(()=>call(winner,'enable_ipl_teams',[fr]));
+ await call(host,'update_my_team',[fr,'Fake team','#ffffff',true]);
+ assert.equal((await db.query('SELECT team_name FROM public.participants WHERE room_id=$1 AND user_id=$2',[fr,host])).rows[0].team_name,'Chennai Super Kings');
+ await call(host,'claim_ipl_team',[fr,'RR']);
+ assert.equal((await db.query('SELECT is_ready FROM public.participants WHERE room_id=$1 AND user_id=$2',[fr,host])).rows[0].is_ready,false);
+ assert.ok(!(await call(loser,'room_entry',[franchise.code])).taken.includes('CSK'));
+ // Legacy join cannot bypass the requirement to choose a team before starting.
+ await call(loser,'join_room',[franchise.code,'Third','Custom','#123456']);
+ const cat=await call(host,'room_catalogue',[fr]);await call(host,'set_pool',[fr,generateQualityPool(cat,settings,12).players.map(p=>p.id)]);
+ await assert.rejects(()=>call(host,'start_review',[fr]),/choose an available IPL team/);
+ await call(loser,'claim_ipl_team',[fr,'CSK']);await call(host,'start_review',[fr]);
+ await assert.rejects(()=>call(host,'claim_ipl_team',[fr,'GT']));
+ assert.equal(await call(winner,'join_franchise_room',[franchise.code,'Ignore','GT']),fr);
+ assert.equal((await call(winner,'room_entry',[franchise.code])).my_team,'MI');
+ assert.equal((await projection(host,old.room_id)).room.ipl_franchises,false);
+ await assert.rejects(()=>call(host,'claim_ipl_team',[old.room_id,'CSK']));
+ await assert.rejects(()=>user(host,"SELECT public._ipl_team('CSK')"));
+ assert.equal((await db.query("SELECT has_function_privilege('anon','public.claim_ipl_team(uuid,text)','EXECUTE') AS allowed")).rows[0].allowed,false);
+ console.log('PASS: IPL duplicate claims, rollback, release/reclaim, locked identities, received rating comments and visibility');
  console.log('PASS: rapid/retry bids, private plans, unrestricted trades, custom deadlines, self-vote rejection, averages, missing votes, legacy compatibility and revision polling');
 }finally{await db.close();}
