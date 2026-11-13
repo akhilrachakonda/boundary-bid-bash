@@ -15,7 +15,7 @@ export function AppHeader({ children }: { children?: React.ReactNode }) {
           <span className="leading-[0.9]">Cricket<br/><span className="text-primary">Auction</span></span>
         </Link>
         <div className="flex min-w-0 flex-1 items-center gap-2">{children}</div>
-        <Button asChild variant="ghost" size="icon" aria-label="How scoring works"><Link to="/scoring"><CircleHelp className="h-4 w-4" /></Link></Button>
+        <Button asChild variant="ghost" size="icon" aria-label="Team ratings and game rules"><Link to="/scoring"><CircleHelp className="h-4 w-4" /></Link></Button>
         {user ? (
           <div className="flex items-center gap-1">
             <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
