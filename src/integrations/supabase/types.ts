@@ -174,6 +174,103 @@ export type Database = {
           },
         ]
       }
+      community_lineups: {
+        Row: {
+          batting_order: string[]
+          batting_phases: Json
+          bowling_overs: Json
+          confirmed: boolean
+          participant_id: string
+          room_id: string
+          updated_at: string
+        }
+        Insert: {
+          batting_order?: string[]
+          batting_phases?: Json
+          bowling_overs?: Json
+          confirmed?: boolean
+          participant_id: string
+          room_id: string
+          updated_at?: string
+        }
+        Update: {
+          batting_order?: string[]
+          batting_phases?: Json
+          bowling_overs?: Json
+          confirmed?: boolean
+          participant_id?: string
+          room_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_lineups_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_lineups_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_votes: {
+        Row: {
+          bowling: number
+          comment: string
+          middle_finishing: number
+          rater: string
+          room_id: string
+          target: string
+          top_order: number
+        }
+        Insert: {
+          bowling: number
+          comment?: string
+          middle_finishing: number
+          rater: string
+          room_id: string
+          target: string
+          top_order: number
+        }
+        Update: {
+          bowling?: number
+          comment?: string
+          middle_finishing?: number
+          rater?: string
+          room_id?: string
+          target?: string
+          top_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_votes_rater_fkey"
+            columns: ["rater"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_votes_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_votes_target_fkey"
+            columns: ["target"]
+            isOneToOne: false
+            referencedRelation: "participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       evaluation_lineups: {
         Row: {
           captain: string
@@ -455,6 +552,7 @@ export type Database = {
         Row: {
           color: string
           id: string
+          ipl_team: string | null
           is_ready: boolean
           joined_at: string
           last_seen: string
@@ -467,6 +565,7 @@ export type Database = {
         Insert: {
           color?: string
           id?: string
+          ipl_team?: string | null
           is_ready?: boolean
           joined_at?: string
           last_seen?: string
@@ -479,6 +578,7 @@ export type Database = {
         Update: {
           color?: string
           id?: string
+          ipl_team?: string | null
           is_ready?: boolean
           joined_at?: string
           last_seen?: string
@@ -907,6 +1007,7 @@ export type Database = {
           bid_session: number
           catalogue_version: string | null
           code: string
+          community_mode: boolean
           control_revision: number
           created_at: string
           current_bid: number | null
@@ -917,6 +1018,7 @@ export type Database = {
           format: string
           host_id: string
           id: string
+          ipl_franchises: boolean
           legacy_original_catalogue: boolean
           lot_ends_at: string | null
           lot_version: number
@@ -924,8 +1026,10 @@ export type Database = {
           next_lot_settings: Json
           opening_price: number | null
           paused_remaining_ms: number | null
+          phase_ends_at: string | null
           pool_generation: Json | null
           pool_rules: string | null
+          post_phase: string | null
           repair_flow: boolean
           review_ends_at: string | null
           scoring_patch: string | null
@@ -942,6 +1046,7 @@ export type Database = {
           bid_session?: number
           catalogue_version?: string | null
           code: string
+          community_mode?: boolean
           control_revision?: number
           created_at?: string
           current_bid?: number | null
@@ -952,6 +1057,7 @@ export type Database = {
           format: string
           host_id: string
           id?: string
+          ipl_franchises?: boolean
           legacy_original_catalogue?: boolean
           lot_ends_at?: string | null
           lot_version?: number
@@ -959,8 +1065,10 @@ export type Database = {
           next_lot_settings?: Json
           opening_price?: number | null
           paused_remaining_ms?: number | null
+          phase_ends_at?: string | null
           pool_generation?: Json | null
           pool_rules?: string | null
+          post_phase?: string | null
           repair_flow?: boolean
           review_ends_at?: string | null
           scoring_patch?: string | null
@@ -977,6 +1085,7 @@ export type Database = {
           bid_session?: number
           catalogue_version?: string | null
           code?: string
+          community_mode?: boolean
           control_revision?: number
           created_at?: string
           current_bid?: number | null
@@ -987,6 +1096,7 @@ export type Database = {
           format?: string
           host_id?: string
           id?: string
+          ipl_franchises?: boolean
           legacy_original_catalogue?: boolean
           lot_ends_at?: string | null
           lot_version?: number
@@ -994,8 +1104,10 @@ export type Database = {
           next_lot_settings?: Json
           opening_price?: number | null
           paused_remaining_ms?: number | null
+          phase_ends_at?: string | null
           pool_generation?: Json | null
           pool_rules?: string | null
+          post_phase?: string | null
           repair_flow?: boolean
           review_ends_at?: string | null
           scoring_patch?: string | null
@@ -1231,6 +1343,8 @@ export type Database = {
         Args: { p_before: Json; p_part: string; p_settings: Json }
         Returns: undefined
       }
+      _community_advance: { Args: { p_room: string }; Returns: undefined }
+      _ipl_team: { Args: { p_code: string }; Returns: Json }
       _is_pacer: { Args: { p_role: string; p_sub: string }; Returns: boolean }
       _is_spinner: { Args: { p_sub: string }; Returns: boolean }
       _log: {
@@ -1251,6 +1365,7 @@ export type Database = {
         Returns: {
           color: string
           id: string
+          ipl_team: string | null
           is_ready: boolean
           joined_at: string
           last_seen: string
@@ -1310,6 +1425,10 @@ export type Database = {
         Returns: Json
       }
       can_read_snapshot: { Args: { p_snapshot: string }; Returns: boolean }
+      claim_ipl_team: {
+        Args: { p_room: string; p_team: string }
+        Returns: boolean
+      }
       commit_room_evaluation: {
         Args: {
           p_hash: string
@@ -1319,10 +1438,30 @@ export type Database = {
         }
         Returns: Json
       }
+      community_control: {
+        Args: {
+          p_action: string
+          p_payload?: Json
+          p_phase: string
+          p_room: string
+          p_status: string
+        }
+        Returns: boolean
+      }
+      community_state: { Args: { p_room: string }; Returns: Json }
       create_catalogue_room: {
         Args: {
           p_color: string
           p_format: string
+          p_name: string
+          p_nickname: string
+          p_settings: Json
+          p_team: string
+        }
+        Returns: Json
+      }
+      create_franchise_room: {
+        Args: {
           p_name: string
           p_nickname: string
           p_settings: Json
@@ -1341,6 +1480,18 @@ export type Database = {
         }
         Returns: Json
       }
+      create_social_room: {
+        Args: {
+          p_color: string
+          p_format: string
+          p_name: string
+          p_nickname: string
+          p_settings: Json
+          p_team: string
+        }
+        Returns: Json
+      }
+      enable_ipl_teams: { Args: { p_room: string }; Returns: boolean }
       evaluation_holdings_hash: { Args: { p_room: string }; Returns: string }
       generate_pool: { Args: { p_room: string; p_size: number }; Returns: Json }
       has_role: {
@@ -1373,6 +1524,10 @@ export type Database = {
         Returns: boolean
       }
       is_room_member: { Args: { p_room: string }; Returns: boolean }
+      join_franchise_room: {
+        Args: { p_code: string; p_nickname: string; p_team: string }
+        Returns: string
+      }
       join_room: {
         Args: {
           p_code: string
@@ -1433,6 +1588,28 @@ export type Database = {
         }
         Returns: string
       }
+      rate_community_team:
+        | {
+            Args: {
+              p_bowling: number
+              p_middle: number
+              p_room: string
+              p_target: string
+              p_top: number
+            }
+            Returns: boolean
+          }
+        | {
+            Args: {
+              p_bowling: number
+              p_comment: string
+              p_middle: number
+              p_room: string
+              p_target: string
+              p_top: number
+            }
+            Returns: boolean
+          }
       respond_trade: {
         Args: { p_action: string; p_trade: string }
         Returns: undefined
@@ -1451,9 +1628,21 @@ export type Database = {
         Returns: string
       }
       room_catalogue: { Args: { p_room: string }; Returns: Json }
+      room_entry: { Args: { p_code: string }; Returns: Json }
       room_live_projection: { Args: { p_room: string }; Returns: Json }
+      room_poll: { Args: { p_revision: number; p_room: string }; Returns: Json }
       room_projection: { Args: { p_room: string }; Returns: Json }
       room_sync: { Args: { p_full?: boolean; p_room: string }; Returns: Json }
+      save_community_lineup: {
+        Args: {
+          p_batting: Json
+          p_confirm?: boolean
+          p_order: string[]
+          p_overs: Json
+          p_room: string
+        }
+        Returns: boolean
+      }
       server_now: { Args: never; Returns: string }
       set_pool: {
         Args: { p_player_ids: string[]; p_room: string }
