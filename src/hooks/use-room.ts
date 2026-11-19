@@ -5,6 +5,7 @@ import { withCanonicalPhoto } from "@/lib/player-photos";
 import { createRefetchCoordinator } from "@/lib/refetch-coordinator";
 import { repairsEnabled, type RepairCapabilities } from "@/lib/post-launch-controls";
 import { mergeLiveProjection, type LiveProjection } from '@/lib/live-projection';
+import { membershipFailure, connectionDiagnostics } from '@/lib/connection-recovery';
 
 export interface Room {
   id: string;
@@ -154,6 +155,9 @@ export function useRoom(roomId: string, userId: string | undefined) {
 
   const load = useCallback(
     async (t: Table) => {
+      if (!userId || !navigator.onLine || document.visibilityState === 'hidden') throw new Error('Connection paused');
+      const started = performance.now();
+      connectionDiagnostics.reads++;
       const epoch = generation.current;
       const collection = t as keyof typeof readVersions.current;
       const readVersion = readVersions.current[collection];
@@ -176,9 +180,16 @@ export function useRoom(roomId: string, userId: string | undefined) {
           const projection = data as unknown as { room: Room; pool: RoomPlayer[]; revision?: number; capabilities?: RepairCapabilities } | null;
           if (!current()) return null;
           if (projection && (projection.revision ?? 0) < revisionRef.current) return roomRef.current;
-          if (error) { if (!roomRef.current || error.code === 'P0001') setError(error.message); else setConnection('reconnecting'); }
-          else if (!projection) setError("Room not found or you are not a member.");
+          if (error) {
+            connectionDiagnostics.failures++; setConnection('reconnecting');
+            if (membershipFailure(error)) { setError('This account is not a member of this room. Use your original device or sign-in.'); setLoaded(true); return null; }
+            throw new Error('Room read unavailable');
+          }
+          else if (!projection) { setError("Room not found or you are not a member."); setLoaded(true); }
           else {
+            connectionDiagnostics.lastReadMs = Math.round(performance.now() - started);
+            connectionDiagnostics.recoveries++;
+            setLoaded(true);
             if(channelHealthy.current)setConnection("connected");
             revisionRef.current = projection.revision ?? revisionRef.current;
             capabilitiesRef.current=projection.capabilities??{};setCapabilities(capabilitiesRef.current);
@@ -193,12 +204,14 @@ export function useRoom(roomId: string, userId: string | undefined) {
           return projection?.room ?? null;
         }
         case "participants": {
-          const { data } = await supabase.from("participants").select("*").eq("room_id", roomId).order("joined_at").abortSignal(AbortSignal.timeout(5000));
+          const { data, error } = await supabase.from("participants").select("*").eq("room_id", roomId).order("joined_at").abortSignal(AbortSignal.timeout(5000));
+          if(error) throw new Error('Participant read unavailable');
           if (current() && data) setParticipants(data as Participant[]);
           return;
         }
         case "sales": {
-          const {data}=await supabase.from("sales").select("*").eq("room_id",roomId).order("created_at",{ascending:false}).order("id",{ascending:false}).abortSignal(AbortSignal.timeout(5000));
+          const {data,error}=await supabase.from("sales").select("*").eq("room_id",roomId).order("created_at",{ascending:false}).order("id",{ascending:false}).abortSignal(AbortSignal.timeout(5000));
+          if(error) throw new Error('Sale read unavailable');
           if (current() && data) setSales(data as Sale[]); return;
         }
         case "bids": {
@@ -213,39 +226,43 @@ export function useRoom(roomId: string, userId: string | undefined) {
             query = query.eq("lot_session" as never, session ?? 0).eq("undone" as never, false)
               .order("accepted_order" as never, { ascending: false, nullsFirst: false });
           }
-          const { data } = await query
+          const { data, error } = await query
             .order("created_at", { ascending: false })
             .limit(30).abortSignal(AbortSignal.timeout(5000));
+          if(error) throw new Error('Bid read unavailable');
           if (current() && data && rp === roomRef.current?.current_rp && session===roomRef.current?.bid_session) setBids((data as Bid[]).filter(b=>!b.undone));
           return;
         }
         case "squads": {
-          const { data } = await supabase.from("squads").select("*").eq("room_id", roomId).abortSignal(AbortSignal.timeout(5000));
+          const { data, error } = await supabase.from("squads").select("*").eq("room_id", roomId).abortSignal(AbortSignal.timeout(5000));
+          if(error) throw new Error('Squad read unavailable');
           if (current() && data) setSquads(data as SquadRow[]);
           return;
         }
         case "trades": {
-          const { data } = await supabase
+          const { data, error } = await supabase
             .from("trades")
             .select("*")
             .eq("room_id", roomId)
             .order("created_at", { ascending: false }).abortSignal(AbortSignal.timeout(5000));
+          if(error) throw new Error('Trade read unavailable');
           if (current() && data) setTrades(data as Trade[]);
           return;
         }
         case "room_events": {
-          const { data } = await supabase
+          const { data, error } = await supabase
             .from("room_events")
             .select("*")
             .eq("room_id", roomId)
             .order("id", { ascending: false })
             .limit(60).abortSignal(AbortSignal.timeout(5000));
+          if(error) throw new Error('Event read unavailable');
           if (current() && data) setEvents(data as RoomEvent[]);
           return;
         }
       }
     },
-    [roomId, applyLive],
+    [roomId, userId, applyLive],
   );
 
   const coordinator = useRef<ReturnType<typeof createRefetchCoordinator<Table>> | null>(null);
@@ -287,15 +304,16 @@ export function useRoom(roomId: string, userId: string | undefined) {
 
   // initial load + clock sync
   useEffect(() => {
+    if (!userId) return;
     let alive = true;
     (async () => {
       const t0 = Date.now();
-      const { data: now } = await supabase.rpc("server_now");
+      const { data: now } = await supabase.rpc("server_now").abortSignal(AbortSignal.timeout(5000));
       const t1 = Date.now();
       if (!alive) return;
       if (alive && now) setOffset(new Date(now as string).getTime() - (t0 + t1) / 2);
-      await reload("rooms");
-      await Promise.all([
+      await Promise.allSettled([
+        reload("rooms"),
         reload("participants"),
         reload("squads"),
         reload("sales"),
@@ -304,14 +322,15 @@ export function useRoom(roomId: string, userId: string | undefined) {
         loadNotes(),
       ]);
       if (alive) setLoaded(true);
-    })().catch(() => { if (alive) setError("Could not load the room. Check your connection and refresh."); });
+    })().catch(() => { if (alive) { setConnection('reconnecting'); coordinator.current?.schedule('rooms'); } });
     return () => {
       alive = false;
     };
-  }, [load, reload, loadNotes]);
+  }, [load, reload, loadNotes, userId]);
 
   // reload bids when lot changes
   useEffect(() => {
+    if (!userId) return;
     void reload("bids").catch(() => {});
   }, [room?.current_rp, room?.bid_session, reload]);
 
@@ -341,18 +360,26 @@ export function useRoom(roomId: string, userId: string | undefined) {
       channelHealthy.current=false;
       void supabase.removeChannel(ch);
     };
-  }, [roomId, load]);
+  }, [roomId, load, userId]);
 
   // heartbeat + server tick driver
   useEffect(() => {
-    if (!loaded) return;
-    const hb = setInterval(() => supabase.rpc("heartbeat", { p_room: roomId }), 10000);
-    supabase.rpc("heartbeat", { p_room: roomId });
+    if (!userId) return;
+    let heartbeating = false;
+    const heartbeat = async () => {
+      if (heartbeating || !navigator.onLine || document.visibilityState === 'hidden' || !roomRef.current) return;
+      heartbeating = true;
+      try { await supabase.rpc('heartbeat', {p_room:roomId}).abortSignal(AbortSignal.timeout(5000)); }
+      catch { /* Presence is advisory; never replace identity on failure. */ }
+      finally { heartbeating = false; }
+    };
+    const hb = setInterval(() => { void heartbeat(); }, 10000);
+    void heartbeat();
     let inflight = false;
     let nextAttempt = 0;
     const tk = setInterval(async () => {
       const r = roomRef.current;
-      if (!r || inflight || Date.now() < nextAttempt) return;
+      if (!r || inflight || Date.now() < nextAttempt || !navigator.onLine || document.visibilityState === 'hidden') return;
       const now = Date.now() + offset;
       const deadline = r.status==='review'?r.review_ends_at:r.status==='auction'?r.lot_ends_at:r.status==='trade'?r.trade_ends_at:r.community_mode&&r.post_phase==='lineup'?r.phase_ends_at:null;
       const active=participantsRef.current.filter(p=>now-new Date(p.last_seen).getTime()<30000).sort((a,b)=>Number(b.user_id===r.host_id)-Number(a.user_id===r.host_id)||a.id.localeCompare(b.id));
@@ -366,19 +393,34 @@ export function useRoom(roomId: string, userId: string | undefined) {
       finally { inflight = false; }
     }, 700);
     const recovery=setInterval(()=>{
+      if (!navigator.onLine || document.visibilityState === 'hidden') return;
       coordinator.current?.schedule('rooms');
       coordinator.current?.schedule('room_events');
       if(!channelHealthy.current)(['participants','squads','sales'] as Table[]).forEach(t=>coordinator.current?.schedule(t));
     },5000);
-    const onFocus = () => (["rooms", "participants", "squads", "sales", "trades", "bids"] as Table[]).forEach(t => coordinator.current?.schedule(t));
+    const onFocus = () => {
+      if (!navigator.onLine || document.visibilityState === 'hidden') return;
+      void heartbeat();
+      (["rooms", "participants", "squads", "sales", "trades", "bids", "room_events"] as Table[]).forEach(t => coordinator.current?.schedule(t));
+      void loadNotes().catch(() => {});
+    };
+    const onOffline = () => setConnection('offline');
     window.addEventListener("focus", onFocus);
+    window.addEventListener('online',onFocus);
+    window.addEventListener('offline',onOffline);
+    window.addEventListener('pageshow',onFocus);
+    document.addEventListener('visibilitychange',onFocus);
     return () => {
       clearInterval(hb);
       clearInterval(tk);
       clearInterval(recovery);
       window.removeEventListener("focus", onFocus);
+      window.removeEventListener('online',onFocus);
+      window.removeEventListener('offline',onOffline);
+      window.removeEventListener('pageshow',onFocus);
+      document.removeEventListener('visibilitychange',onFocus);
     };
-  }, [loaded, roomId, offset, load, userId]);
+  }, [roomId, offset, load, userId, loadNotes]);
 
   return useMemo(() => ({ room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload, applyLive }),
     [room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload, applyLive]);

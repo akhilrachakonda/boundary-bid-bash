@@ -1,4 +1,8 @@
 # Cricket Auction upgrade
+- [ ] Diagnose and repair guest identity, hard re-entry and bounded room recovery; measure isolated ten-client contention/reconnect.
+- [ ] Add versioned historical IPL selections without altering frozen room catalogues.
+- [ ] Add locked, retry-safe host phase reopening with explicit consequences and preserved settlements.
+- [ ] Verify hosted schema compatibility and isolated flows, document measurements/limits; do not deploy frontend.
 - [ ] Apply compatible future-only legacy pool default, verify exact original catalogue and isolated create/regenerate/confirm, and record publication requirement.
 - [x] Recover and reconcile existing post-launch draft with newer main source; preserve both sets of repairs and do not publish.
 - [x] Stage and locally verify guarded final call, unlimited unsold rounds, distinct bid undo and next-lot settings; never apply to production.

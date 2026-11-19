@@ -12,11 +12,12 @@ export function useAuth() {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       if (mounted) setUser(session?.user ?? null);
     });
-    supabase.auth.getUser().then(({ data }) => {
+    // Cached identity survives an offline reload. All writes still authenticate on the server.
+    supabase.auth.getSession().then(({ data }) => {
       if (!mounted) return;
-      setUser(data.user ?? null);
+      setUser(data.session?.user ?? null);
       setLoading(false);
-    });
+    }).catch(() => { if (mounted) setLoading(false); });
     return () => {
       mounted = false;
       sub.subscription.unsubscribe();
