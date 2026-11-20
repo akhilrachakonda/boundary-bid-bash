@@ -10,7 +10,7 @@ vi.mock('@/integrations/supabase/client',()=>({supabase:network}));
 vi.mock('@/components/auction/PlayerProfile',()=>({PlayerProfile:({children}:{children:React.ReactNode})=>{probes.profiles++;return <>{children}</>;}}));
 vi.mock('@/components/auction/TeamDetails',()=>({TeamDetails:()=>null}));
 vi.mock('@/components/room/PrivatePanel',()=>({PrivatePanel:()=>null}));
-afterEach(()=>{cleanup();vi.useRealTimers();vi.clearAllMocks();});
+afterEach(()=>{cleanup();sessionStorage.clear();vi.useRealTimers();vi.clearAllMocks();});
 function fixture(): RoomData {
  const player:Player={id:'player-1',name:'Jasprit Bumrah',country:'India',format:'IPL',role:'BOWL',sub_role:'Pace',batting_hand:'Right',bowling_style:'Pace',rating:98,base_price:2,nationality_type:'Indian',tier:'Marquee'};
  return {lastSeen:p=>Date.parse(p.last_seen),retryConnection:vi.fn(),poolRevision:{current:null},applyLive:vi.fn(()=>true),capabilities:{},room:{id:'room-1',code:'TEST',name:'LOCAL MOCK ONLY',host_id:'user-1',format:'IPL',settings:DEFAULT_SETTINGS,status:'auction',review_ends_at:null,current_rp:'lot-1',lot_version:7,current_bid:null,current_bidder:null,lot_ends_at:new Date(Date.now()+20000).toISOString(),paused_remaining_ms:null,accel_done:false,trade_ends_at:null},participants:[{id:'team-1',user_id:'user-1',nickname:'Mock',team_name:'Mock team',color:'var(--primary)',purse:100,is_ready:true,last_seen:new Date().toISOString()}],pool:[{id:'lot-1',player_id:player.id,player,set_name:'Marquee',lot_order:0,round:1,status:'live',sold_to:null,sold_price:null}],bids:[],squads:[],sales:[],trades:[],events:[],notes:{notes:'',targets:{},xi:{order:[],overs:{}}},saveNotes:vi.fn(),error:null,loaded:true,offset:0,connection:'connected',reload:vi.fn(async()=>null)};
@@ -49,6 +49,25 @@ describe('local mocked auction UI (no live backend)',()=>{
   expect(network.rpc.mock.calls.map(call=>call[0])).toEqual(['place_bid','host_control']);
   await act(async()=>{replies.get('host_control')?.({data:null,error:null});replies.get('place_bid')?.({data:2,error:null});});
   expect(screen.getByRole('button',{name:'Pause'})).toBeEnabled();
+ });
+ it('restores an interrupted bid on remount and reconciles the original request without another bid',async()=>{
+  const data=fixture();
+  network.rpc.mockImplementation(()=>({abortSignal:()=>new Promise(()=>{})}));
+  const first=render(<Auction data={data} d={derive(data,'user-1')} sound={false}/>);
+  fireEvent.click(screen.getByRole('button',{name:'Bid ₹2 Cr'}));
+  const original=network.rpc.mock.calls[0]![1];
+  expect(JSON.parse(sessionStorage.getItem('pending-bid:room-1:user-1')!)).toEqual(original);
+  first.unmount();
+  const lookup={select:vi.fn(),eq:vi.fn(),limit:vi.fn(),abortSignal:vi.fn()};
+  lookup.select.mockReturnValue(lookup);lookup.eq.mockReturnValue(lookup);lookup.limit.mockReturnValue(lookup);
+  lookup.abortSignal.mockResolvedValue({data:[{id:'accepted'}],error:null});
+  network.from.mockReturnValue(lookup);
+  render(<Auction data={data} d={derive(data,'user-1')} sound={false}/>);
+  await act(async()=>{fireEvent.click(screen.getByRole('button',{name:'Check & retry same bid'}));});
+  expect(lookup.eq).toHaveBeenCalledWith('request_id',original.p_request);
+  expect(network.rpc).toHaveBeenCalledTimes(1);
+  expect(sessionStorage.getItem('pending-bid:room-1:user-1')).toBeNull();
+  expect(screen.getByRole('button',{name:'Bid accepted'})).toBeEnabled();
  });
  it('clock ticks update only countdown controls, not the auction root',async()=>{
   vi.useFakeTimers();

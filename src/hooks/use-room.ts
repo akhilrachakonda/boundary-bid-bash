@@ -124,6 +124,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
   const capabilitiesRef=useRef<RepairCapabilities>({});
   const poolRef=useRef<RoomPlayer[]>([]);
   const [offset, setOffset] = useState(0);
+  const clockOffset = useRef(0);
   const [connection, setConnection] = useState("connecting");
   const roomRef = useRef<Room | null>(null);
   const channelHealthy=useRef(false);
@@ -159,6 +160,29 @@ export function useRoom(roomId: string, userId: string | undefined) {
     return true;
   }, [roomId]);
 
+  const activeRoomRead = useRef<AbortController | null>(null);
+  const pauseRoomRead = useCallback(() => {
+    const controller = activeRoomRead.current;
+    activeRoomRead.current = null;
+    controller?.abort();
+  }, []);
+
+  const readRoom = useCallback(async (name: string, args: object, timeout: number) => {
+    const controller = new AbortController();
+    activeRoomRead.current = controller;
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      const response = await supabase.rpc(name as never, args as never).abortSignal(controller.signal);
+      return activeRoomRead.current === controller ? response : null;
+    } catch (error) {
+      if (activeRoomRead.current !== controller) return null;
+      throw error;
+    } finally {
+      clearTimeout(timer);
+      if (activeRoomRead.current === controller) activeRoomRead.current = null;
+    }
+  }, []);
+
   const load = useCallback(
     async (t: Table) => {
       if (!userId || !roomReadsAvailable()) return null;
@@ -178,7 +202,9 @@ export function useRoom(roomId: string, userId: string | undefined) {
               const method = compact ? "room_poll_changes" : bounded ? "room_poll" : sync ? "room_sync" : "room_live_projection";
               const args = {p_room:roomId, ...(bounded ? {p_revision:revisionRef.current} : {}),
                 ...(compact ? {p_pool_revision:poolRevision.current} : {})};
-              const {data,error}=await supabase.rpc(method as never,args as never).abortSignal(AbortSignal.timeout(8000));
+              const response = await readRoom(method, args, 8000);
+              if (!response) return null;
+              const {data,error} = response;
               if(!current())return null;
               if (error && !['PGRST202','42883'].includes(error.code) && !membershipFailure(error)) {
                 setConnection('reconnecting');
@@ -190,7 +216,9 @@ export function useRoom(roomId: string, userId: string | undefined) {
               if(!error && live && applyLive(live)) return live.room;
             }
           }
-          const { data, error } = await supabase.rpc("room_projection", { p_room: roomId }).abortSignal(AbortSignal.timeout(15000));
+          const response = await readRoom("room_projection", { p_room: roomId }, 15000);
+          if (!response) return null;
+          const {data,error} = response;
           const projection = data as unknown as { room: Room; pool: RoomPlayer[]; pool_revision?: number; revision?: number; capabilities?: RepairCapabilities } | null;
           if (!current()) return null;
           if (projection && (projection.revision ?? 0) < revisionRef.current) return roomRef.current;
@@ -277,7 +305,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
         }
       }
     },
-    [roomId, userId, applyLive],
+    [roomId, userId, applyLive, readRoom],
   );
 
   const coordinator = useRef<ReturnType<typeof createRefetchCoordinator<Table>> | null>(null);
@@ -302,8 +330,8 @@ export function useRoom(roomId: string, userId: string | undefined) {
     setNotes({targets:{},xi:{order:[],overs:{}},notes:''});
     const queue = createRefetchCoordinator(load,240,roomReadsAvailable);
     coordinator.current = queue;
-    return () => { generation.current++; queue.dispose(); if (coordinator.current === queue) coordinator.current = null; };
-  }, [load]);
+    return () => { generation.current++; pauseRoomRead(); queue.dispose(); if (coordinator.current === queue) coordinator.current = null; };
+  }, [load, pauseRoomRead]);
 
   const loadNotes = useCallback(async () => {
     if (!userId) return;
@@ -330,6 +358,24 @@ export function useRoom(roomId: string, userId: string | undefined) {
     [roomId, userId],
   );
 
+  const clockRequest = useRef(0);
+  const syncClock = useCallback(async () => {
+    if (!roomReadsAvailable()) return;
+    const request = ++clockRequest.current;
+    const epoch = generation.current;
+    const sent = Date.now();
+    try {
+      const {data} = await supabase.rpc("server_now").abortSignal(AbortSignal.timeout(5000));
+      const received = Date.now();
+      const stamp = typeof data === "string" ? Date.parse(data) : NaN;
+      if (request === clockRequest.current && epoch === generation.current && roomReadsAvailable() &&
+          received >= sent && received - sent <= 2000 && Number.isFinite(stamp)) {
+        clockOffset.current = stamp - (sent + received) / 2;
+        setOffset(clockOffset.current);
+      }
+    } catch { /* Keep the last clock estimate until another wake. */ }
+  }, []);
+
   // initial load + clock sync
   useEffect(() => {
     if (!userId) return;
@@ -342,13 +388,9 @@ export function useRoom(roomId: string, userId: string | undefined) {
       });
     }
     void loadNotes().catch(() => {});
-    const start = Date.now();
-    void Promise.resolve(supabase.rpc('server_now').abortSignal(AbortSignal.timeout(5000)))
-      .then(({ data }) => {
-        if (alive && data) setOffset(new Date(data as string).getTime() - (start + Date.now()) / 2);
-      }).catch(() => {});
+    void syncClock();
     return () => { alive = false; };
-  }, [load, reload, loadNotes, userId]);
+  }, [load, reload, loadNotes, userId, syncClock]);
 
   // reload bids when lot changes
   useEffect(() => {
@@ -423,6 +465,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
     };
   }, [roomId, load, userId, refreshAfterResume, lastSeen]);
 
+  const lastWake = useRef(-Infinity);
   // heartbeat + server tick driver
   useEffect(() => {
     if (!userId) return;
@@ -441,7 +484,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
     const tk = setInterval(async () => {
       const r = roomRef.current;
       if (!r || inflight || Date.now() < nextAttempt || !navigator.onLine || document.visibilityState === 'hidden') return;
-      const now = Date.now() + offset;
+      const now = Date.now() + clockOffset.current;
       const deadline = r.status==='review'?r.review_ends_at:r.status==='auction'?r.lot_ends_at:r.status==='trade'?r.trade_ends_at:r.community_mode&&r.post_phase==='lineup'?r.phase_ends_at:null;
       const active=participantsRef.current.filter(p=>now-lastSeen(p)<ONLINE_WINDOW_MS).sort((a,b)=>Number(b.user_id===r.host_id)-Number(a.user_id===r.host_id)||a.id.localeCompare(b.id));
       const rank=Math.max(0,active.findIndex(p=>p.user_id===userId));
@@ -459,14 +502,24 @@ export function useRoom(roomId: string, userId: string | undefined) {
       coordinator.current?.schedule('room_events');
       if(!channelHealthy.current)(['participants','squads','sales','bids','trades'] as Table[]).forEach(t=>coordinator.current?.schedule(t));
     },5000);
+    const suspend = () => {
+      lastWake.current = -Infinity;
+      clockRequest.current++;
+      pauseRoomRead();
+    };
     const onFocus = () => {
-      if (!navigator.onLine || document.visibilityState === 'hidden') return;
+      if (!roomReadsAvailable()) { suspend(); return; }
+      const now = performance.now();
+      if (now - lastWake.current < 350) return;
+      lastWake.current = now;
+      void syncClock();
       setConnection(previous => previous === "offline" ? "reconnecting" : previous);
       void heartbeat();
       retryConnection();
       void loadNotes().catch(() => {});
     };
-    const onOffline = () => setConnection('offline');
+    const onOffline = () => { suspend(); setConnection('offline'); };
+    window.addEventListener("pagehide", suspend);
     window.addEventListener("focus", onFocus);
     window.addEventListener('online',onFocus);
     window.addEventListener('offline',onOffline);
@@ -476,13 +529,14 @@ export function useRoom(roomId: string, userId: string | undefined) {
       clearInterval(hb);
       clearInterval(tk);
       clearInterval(recovery);
+      window.removeEventListener("pagehide", suspend);
       window.removeEventListener("focus", onFocus);
       window.removeEventListener('online',onFocus);
       window.removeEventListener('offline',onOffline);
       window.removeEventListener('pageshow',onFocus);
       document.removeEventListener('visibilitychange',onFocus);
     };
-  }, [roomId, offset, load, userId, loadNotes, retryConnection, lastSeen]);
+  }, [roomId, load, userId, loadNotes, retryConnection, lastSeen, syncClock, pauseRoomRead]);
 
   return useMemo(() => ({ room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, poolRevision, lastSeen, retryConnection, reload, applyLive }),
     [room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, poolRevision, lastSeen, retryConnection, reload, applyLive]);
@@ -491,8 +545,16 @@ export function useRoom(roomId: string, userId: string | undefined) {
 export function useNow(offset: number, ms = 100) {
   const [now, setNow] = useState(() => Date.now() + offset);
   useEffect(() => {
-    const i = setInterval(() => setNow(Date.now() + offset), ms);
-    return () => clearInterval(i);
+    const update = () => { if (document.visibilityState !== "hidden") setNow(Date.now() + offset); };
+    update();
+    const i = setInterval(update, ms);
+    document.addEventListener("visibilitychange", update);
+    window.addEventListener("pageshow", update);
+    return () => {
+      clearInterval(i);
+      document.removeEventListener("visibilitychange", update);
+      window.removeEventListener("pageshow", update);
+    };
   }, [offset, ms]);
   return now;
 }

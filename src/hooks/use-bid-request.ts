@@ -2,12 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { BidRequestGate, type BidRequestState } from "@/lib/bid-request-gate";
+import { readPendingBid, rememberPendingBid } from "@/lib/mobile-bid";
 import { bidArgs } from "@/lib/room-actions";
 import type { LiveProjection } from '@/lib/live-projection';
 
 type Args = ReturnType<typeof bidArgs>;
-export function useBidRequest(reload: () => Promise<unknown>, live?: { enabled: boolean; compact?: boolean; poolRevision?: {current:number|null}; apply: (projection: LiveProjection) => boolean }) {
-  const [state, setState] = useState<BidRequestState>("idle");
+export function useBidRequest(roomId: string, userId: string, reload: () => Promise<unknown>, live?: { enabled: boolean; compact?: boolean; poolRevision?: {current:number|null}; apply: (projection: LiveProjection) => boolean }) {
+  const key = `pending-bid:${roomId}:${userId}`;
+  const [restored] = useState(() => readPendingBid(key, roomId));
+  const [state, setState] = useState<BidRequestState>(restored ? "uncertain" : "idle");
   const [accepted, setAccepted] = useState(false);
   const alive = useRef(true);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -38,10 +41,15 @@ export function useBidRequest(reload: () => Promise<unknown>, live?: { enabled: 
     return data.length ? "accepted" : "absent";
   }, (next, success) => {
     if (!alive.current) return;
+    if (next === "idle") rememberPendingBid(key);
     setState(next);
     if (next === "uncertain") toast.warning("Bid outcome not confirmed. Check and retry the same bid before placing another.");
     if (success) { setAccepted(true); clearTimeout(timer.current); timer.current = setTimeout(() => setAccepted(false), 700); }
-  }));
+  }, restored));
   useEffect(() => { alive.current = true; return () => { alive.current = false; clearTimeout(timer.current); }; }, []);
-  return { state, accepted, submit: (args: Args) => gate.submit(args), retry: () => gate.retry() };
+  return { state, accepted, submit: (args: Args) => {
+    if (gate.state !== "idle") return;
+    rememberPendingBid(key, args);
+    return gate.submit(args);
+  }, retry: () => gate.retry() };
 }

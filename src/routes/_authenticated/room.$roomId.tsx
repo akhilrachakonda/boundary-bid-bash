@@ -133,7 +133,7 @@ function RoomPage() {
         <PrivatePanel data={data} d={d} />
       </div>
     ) : live || (repairsEnabled(room,data.capabilities) && room.status==='completed' && room.auction_stage==='final_call') ? (
-      <Auction data={data} d={d} sound={sound} />
+      <Auction key={room.id + ":" + d.me.user_id} data={data} d={d} sound={sound} />
     ) : room.status === "completed" || room.status === "trade" ? (
       <Trades data={data} d={d} now={now} />
     ) : (

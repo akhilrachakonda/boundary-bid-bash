@@ -16,12 +16,19 @@ it("opens while the clock is stalled, retries an initial participant failure and
   vi.useFakeTimers();
   const room = { id: "room", status: "lobby" };
   const member = { id: "participant", user_id: "user", last_seen: new Date().toISOString() };
+  let holdRoom = false;
+  let interrupted: AbortSignal | undefined;
   const rpc = vi.mocked(supabase.rpc);
   rpc.mockImplementation(
     (fn) =>
       ({
-        abortSignal: () =>
-          fn === "server_now"
+        abortSignal: (signal: AbortSignal) =>
+          fn === "room_projection" && holdRoom
+            ? new Promise(resolve => {
+                interrupted = signal;
+                signal.addEventListener("abort", () => resolve({data:null,error:{message:"aborted"}}),{once:true});
+              })
+            : fn === "server_now"
             ? new Promise(() => {})
             : Promise.resolve({
                 data: { room, pool: [], revision: 1, capabilities: {} },
@@ -82,6 +89,15 @@ it("opens while the clock is stalled, retries an initial participant failure and
     expect(hook.result.current.connection).toBe("connected");
     act(() => callbacks[0]!("CLOSED"));
     expect(hook.result.current.connection).toBe("connected");
+    holdRoom = true;
+    await act(async () => {
+      void hook.result.current.reload("rooms");
+      await vi.advanceTimersByTimeAsync(0);
+      window.dispatchEvent(new Event("pagehide"));
+      await vi.advanceTimersByTimeAsync(0);
+    });
+    expect(interrupted?.aborted).toBe(true);
+    holdRoom = false;
     const roomReads = () => rpc.mock.calls.filter(([name]) => name === "room_projection").length;
     const hidden = vi.spyOn(document,"visibilityState","get").mockReturnValue("hidden");
     try {

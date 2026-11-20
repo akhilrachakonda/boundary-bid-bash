@@ -12,3 +12,11 @@ Validation on 13 November 2026:
 - TypeScript and production build passed.
 - Production migration applied transactionally with before/after fingerprints preserving every pre-existing room, participant and vote field.
 - Real-browser visual validation is not complete: local Chromium failed to launch because its process-singleton socket was not permitted. No hosted gameplay fixtures were created; real-phone layout/audio behavior still needs testing.
+
+## Mobile room checks, 20 November 2026
+
+The live bid controls now keep the player name, remaining time and bid amount together as the player scrolls. Career statistics can be expanded on small screens. Returning to the room refreshes the clock and current lot. A tab that reloads before receiving a bid confirmation restores the original request and offers to check it.
+
+Chromium and WebKit rendered the auction components with the production CSS at 320 × 568, 390 × 844, 412 × 915 and 844 × 390 CSS pixels. At all four sizes the bid button remained reachable after scrolling, measured at least 48 pixels high, and passed the tap hit test. The budget popover opened on tap, and the page had no horizontal overflow.
+
+The two-page browser fixture used a simulated room service. At 390 × 844 both engines handled going offline, returning online, and reloading after a lost bid acknowledgement. Checking the stored request showed one bid submission. A returning page also displayed the next player and the other participant’s bid. Chromium used a frozen page for the return test. WebKit used page lifecycle events. Physical devices and hosted multiplayer latency remain untested.

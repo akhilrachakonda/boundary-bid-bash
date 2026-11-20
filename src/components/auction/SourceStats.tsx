@@ -13,13 +13,19 @@ const labels: Record<string, string> = {
   bb: "Best bowling",
 };
 
-export function SourceStats({ player }: { player: Player }) {
+export function SourceStats({
+  player,
+  collapsible = false,
+}: {
+  player: Player;
+  collapsible?: boolean;
+}) {
   const classic = classicProfile(player);
   const entries = Object.entries(classic?.stats ?? player.source_stats ?? {}).filter(
     ([key, value]) => key in labels && value != null,
   );
   if (!entries.length) return null;
-  return (
+  const panel = (
     <section aria-label={`${player.name} statistics`} className="mt-4 space-y-2">
       <dl className="grid grid-cols-3 gap-x-4 gap-y-3 rounded-xl border border-border/60 bg-background/40 p-3 sm:grid-cols-4">
         {entries.map(([key, value]) => (
@@ -54,5 +60,13 @@ export function SourceStats({ player }: { player: Player }) {
         )}
       </p>
     </section>
+  );
+  return collapsible ? (
+    <details className="px-3 pb-2 sm:hidden">
+      <summary className="cursor-pointer text-sm">View statistics</summary>
+      {panel}
+    </details>
+  ) : (
+    panel
   );
 }

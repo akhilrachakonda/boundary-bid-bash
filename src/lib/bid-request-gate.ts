@@ -4,7 +4,10 @@ export type BidReply = "accepted" | "rejected" | "uncertain";
 export class BidRequestGate<T> {
   state: BidRequestState = "idle";
   private request: T | undefined;
-  constructor(private send: (request: T) => Promise<BidReply>, private reconcile: (request: T) => Promise<"accepted" | "absent" | "unknown">, private changed: (state: BidRequestState, accepted: boolean) => void) {}
+  constructor(private send: (request: T) => Promise<BidReply>, private reconcile: (request: T) => Promise<"accepted" | "absent" | "unknown">, private changed: (state: BidRequestState, accepted: boolean) => void, restored?: T) {
+    this.request = restored;
+    if (restored !== undefined) this.state = "uncertain";
+  }
   async submit(request: T) {
     if (this.state !== "idle") return;
     this.request = request;
