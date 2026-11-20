@@ -232,6 +232,13 @@
       "when": 1795104000000,
       "tag": "0032_classic_catalogue_and_stage_reopen",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1795190400000,
+      "tag": "0033_room_recovery_and_bid_updates",
+      "breakpoints": true
     }
   ]
 }

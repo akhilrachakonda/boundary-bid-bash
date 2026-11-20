@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AppHeader } from "@/components/AppHeader";
+import { rpc } from "@/components/room/rpc";
+import { transportFailure } from "@/lib/connection-recovery";
+import { ReclaimSeat } from "@/components/room/GuestSeat";
 import {IplTeamPicker} from "@/components/IplTeamPicker";
 import { ColorPicker, TEAM_COLORS } from "@/components/TeamPicker";
 import { supabase } from "@/integrations/supabase/client";
@@ -33,13 +36,13 @@ function JoinPage() {
   const [color, setColor] = useState<string>(TEAM_COLORS[1]!);
   const [busy, setBusy] = useState(false);
   const [franchise,setFranchise]=useState('');
-  const [entry,setEntry]=useState<{name:string;format:string;status:string;ipl_franchises:boolean;taken:string[];is_member:boolean;my_team:string|null;full:boolean}|null>(null);
+  const [entry,setEntry]=useState<{name:string;format:string;status:string;ipl_franchises:boolean;taken:string[];is_member:boolean;my_team:string|null;full:boolean;seat_recovery?:boolean}|null>(null);
   const [entryError,setEntryError]=useState(''),[refresh,setRefresh]=useState(0);
   useEffect(()=>{
     let alive=true;setEntry(null);setEntryError('');setFranchise('');
     if(code.trim().length!==6)return;
     const load=async()=>{const {data,error}=await supabase.rpc('room_entry' as never,{p_code:code} as never);if(!alive)return;
-      if(error||!data){setEntryError('Room unavailable. Check the code and try again.');setEntry(null);return;}
+      if(error||!data){setEntryError(error && transportFailure(error) ? 'Connection interrupted. Retrying the room lookup.' : 'Room unavailable. Check the code and try again.');setEntry(null);return;}
       const next=data as unknown as NonNullable<typeof entry>;setEntry(next);setEntryError('');
       setFranchise(current=>next.my_team??(next.taken.includes(current)?'':current));
     };
@@ -57,9 +60,9 @@ function JoinPage() {
       p_team: team || `${nick || "Player"} XI`,
       p_color: color,
     };
-    const { data, error } = await supabase.rpc((entry?.ipl_franchises?'join_franchise_room':'join_room') as never,args as never);
+    const data = await rpc<string | null>(entry?.ipl_franchises?'join_franchise_room':'join_room',args,{timeoutMs:15000,preserveNull:true});
     setBusy(false);
-    if (error) { toast.error(error.message); setRefresh(n=>n+1); return; }
+    if (data === undefined) { setRefresh(n=>n+1); return; }
     if (!data) { toast.error('Unable to join. Check the code or try again later.'); return; }
     navigate({ to: "/room/$roomId", params: { roomId: data as string } });
   };
@@ -91,6 +94,7 @@ function JoinPage() {
           <Button className="h-14 w-full bg-gold text-lg font-bold text-primary-foreground" onClick={join} disabled={busy||!entry||(!entry.is_member&&(entry.full||entry.status!=='lobby'||(entry.ipl_franchises&&!franchise)))}>
             {busy ? 'Joining…' : entry?.is_member ? 'Return to your room' : 'Join auction'}
           </Button>
+          {entry?.seat_recovery && !entry.is_member && <ReclaimSeat roomCode={code} onRecovered={id=>navigate({to:"/room/$roomId",params:{roomId:id}})}/>}
         </div>
       </main>
     </div>

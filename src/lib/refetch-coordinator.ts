@@ -1,5 +1,5 @@
 /** Fixed-window invalidation batching with at most one read and one dirty bit per key. */
-export function createRefetchCoordinator<K extends string>(read: (key: K) => Promise<unknown>, delay = 80) {
+export function createRefetchCoordinator<K extends string>(read: (key: K) => Promise<unknown>, delay = 80, available: () => boolean = () => true) {
   const pending = new Set<K>();
   const running = new Map<K, Promise<unknown>>();
   const dirty = new Set<K>();
@@ -8,7 +8,7 @@ export function createRefetchCoordinator<K extends string>(read: (key: K) => Pro
   let timer: ReturnType<typeof setTimeout> | undefined;
   let disposed = false;
   const refresh = (key: K): Promise<unknown> => {
-    if (disposed) return Promise.resolve();
+    if (disposed || !available()) return Promise.resolve();
     const active = running.get(key);
     if (active) { dirty.add(key); return active; }
     const task = Promise.resolve().then(() => read(key)).then(value => {
@@ -26,11 +26,12 @@ export function createRefetchCoordinator<K extends string>(read: (key: K) => Pro
     return task;
   };
   const schedule = (key: K) => {
-    if (disposed) return;
+    if (disposed || !available()) return;
     pending.add(key);
     if (timer) return;
     timer = setTimeout(() => {
       timer = undefined;
+      if (!available()) { pending.clear(); return; }
       const keys = [...pending]; pending.clear();
       keys.forEach(key => {
         const wait = (retryAt.get(key) ?? 0) - Date.now();
@@ -41,5 +42,14 @@ export function createRefetchCoordinator<K extends string>(read: (key: K) => Pro
       if (!next.done) schedule(next.value);
     }, delay);
   };
-  return { refresh, schedule, dispose: () => { disposed = true; clearTimeout(timer); pending.clear(); dirty.clear(); failures.clear(); retryAt.clear(); } };
+  const resume = (keys: readonly K[]) => {
+    if (disposed || !available()) return;
+    for (const key of keys) {
+      retryAt.delete(key);
+      failures.delete(key);
+      pending.delete(key);
+      void refresh(key).catch(() => schedule(key));
+    }
+  };
+  return { refresh, schedule, resume, dispose: () => { disposed = true; clearTimeout(timer); pending.clear(); dirty.clear(); failures.clear(); retryAt.clear(); } };
 }

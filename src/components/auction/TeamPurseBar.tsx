@@ -1,3 +1,4 @@
+import { ONLINE_WINDOW_MS } from "@/lib/connection-recovery";
 import { cn } from "@/lib/utils";
 import { formatMoney, type Settings } from "@/lib/auction-rules";
 import type { Participant } from "@/hooks/use-room";
@@ -9,6 +10,7 @@ export function TeamDot({ color, className }: { color: string; className?: strin
 }
 
 export function TeamPurseBar({
+  lastSeen = p => Date.parse(p.last_seen),
   participants,
   squadCount,
   settings,
@@ -16,6 +18,7 @@ export function TeamPurseBar({
   now,
   onSelect,
 }: {
+  lastSeen?: (p: Participant) => number;
   participants: Participant[];
   squadCount: (id: string) => number;
   settings: Settings;
@@ -26,7 +29,7 @@ export function TeamPurseBar({
   return (
     <div className="team-rail flex min-w-0 snap-x gap-2 overflow-x-auto pb-1">
       {participants.map((p) => {
-        const online = now - new Date(p.last_seen).getTime() < 30000;
+        const online = now - lastSeen(p) < ONLINE_WINDOW_MS;
         return (
           <Button variant="ghost" onClick={()=>onSelect?.(p.id)} aria-label={`View ${p.team_name} squad`}
             key={p.id}

@@ -26,7 +26,7 @@ import { PostLaunchDesk } from './PostLaunchDesk';
 export const Auction = memo(function Auction({ data, d, sound }: { data: RoomData; d: Derived; sound: boolean }) {
   const room = data.room;
   const me = d.me;
-  const bidRequest = useBidRequest(async () => { await data.reload('rooms'); if (data.capabilities.action_sync !== 1) await data.reload('bids'); }, {enabled:data.capabilities.action_sync===1,apply:data.applyLive});
+  const bidRequest = useBidRequest(async () => { await data.reload('rooms'); if (data.capabilities.action_sync !== 1) await data.reload('bids'); }, {enabled:data.capabilities.action_sync===1,compact:data.capabilities.compact_sync===1,poolRevision:data.poolRevision,apply:data.applyLive});
   const [hostBusy, setHostBusy] = useState<string | null>(null);
   const hostPending = useRef(false);
   const [strategy,setStrategy] = useState(false);
@@ -89,7 +89,7 @@ export const Auction = memo(function Auction({ data, d, sound }: { data: RoomDat
   const block=player ? bidBlockReason(s,Number(me.purse),d.myCounts,player,amount,room.current_bidder===me.id) : "Waiting for a player";
   const bid=()=>{
     const remaining = room.lot_ends_at ? new Date(room.lot_ends_at).getTime() - Date.now() - data.offset : 0;
-    if(block || paused || remaining<=0 || data.connection!=="connected")return;
+    if(block || paused || remaining<=0 || data.connection==="offline")return;
     void bidRequest.submit(bidArgs(room,amount,crypto.randomUUID()));
   };
   const hostAction=async(action:string, saleId?:string)=>{
@@ -143,7 +143,7 @@ function LiveBidButton({ data, paused, block, amount, state, accepted, onBid, on
   if(!room)return null;
   const expired=!room.lot_ends_at || new Date(room.lot_ends_at).getTime()<=now;
   const uncertain=state==='uncertain';
-  return <Button onClick={uncertain?onRetry:onBid} disabled={state==='pending'||(!uncertain&&(!!block||paused||expired||data.connection!=="connected"))} className={cn("bid-action h-16 w-full flex-1 bg-gold font-display text-2xl font-bold uppercase text-primary-foreground",accepted&&"bid-accepted")} aria-busy={state==='pending'}>{state==='pending'?<><Loader2 className="h-5 w-5 animate-spin"/>Confirming bid…</>:uncertain?"Check & retry same bid":accepted?<><Check className="h-5 w-5"/>Bid accepted</>:paused?"Auction paused":data.connection!=="connected"?"Reconnecting…":expired?"Hammer falling…":block??`Bid ${formatMoney(amount,room.settings.currency)}`}</Button>;
+  return <Button onClick={uncertain?onRetry:onBid} disabled={state==='pending'||(!uncertain&&(!!block||paused||expired||data.connection==="offline"))} className={cn("bid-action h-16 w-full flex-1 bg-gold font-display text-2xl font-bold uppercase text-primary-foreground",accepted&&"bid-accepted")} aria-busy={state==='pending'}>{state==='pending'?<><Loader2 className="h-5 w-5 animate-spin"/>Confirming bid…</>:uncertain?"Check & retry same bid":accepted?<><Check className="h-5 w-5"/>Bid accepted</>:paused?"Auction paused":data.connection==="offline"?"Offline":expired?"Hammer falling…":block??`Bid ${formatMoney(amount,room.settings.currency)}`}</Button>;
 }
 
 function Confirm({ label, icon, desc, onYes, disabled }: { label: string; icon: React.ReactNode; desc: string; onYes: () => void; disabled?:boolean }) {

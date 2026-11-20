@@ -54,3 +54,12 @@ describe('atomic live replies', () => {
     expect(sold[0]!.player).toBe(pool[0]!.player);
   });
 });
+
+it('applies bid-only replies only to the matching pool version',()=>{
+  const room={id:'room',evaluation_snapshot:'frozen'} as Room;
+  const pool=[{id:'current'}] as RoomPlayer[];
+  const live={room,states:null,revision:18,pool_revision:8};
+  expect(mergeLiveProjection(room,pool,live,17,8)).toBe(pool);
+  expect(mergeLiveProjection(room,pool,live,17,7)).toBeNull();
+  expect(mergeLiveProjection(room,pool,live,19,8)).toBeNull();
+});

@@ -13,11 +13,11 @@ vi.mock('@/components/room/PrivatePanel',()=>({PrivatePanel:()=>null}));
 afterEach(()=>{cleanup();vi.useRealTimers();vi.clearAllMocks();});
 function fixture(): RoomData {
  const player:Player={id:'player-1',name:'Jasprit Bumrah',country:'India',format:'IPL',role:'BOWL',sub_role:'Pace',batting_hand:'Right',bowling_style:'Pace',rating:98,base_price:2,nationality_type:'Indian',tier:'Marquee'};
- return {applyLive:vi.fn(()=>true),capabilities:{},room:{id:'room-1',code:'TEST',name:'LOCAL MOCK ONLY',host_id:'user-1',format:'IPL',settings:DEFAULT_SETTINGS,status:'auction',review_ends_at:null,current_rp:'lot-1',lot_version:7,current_bid:null,current_bidder:null,lot_ends_at:new Date(Date.now()+20000).toISOString(),paused_remaining_ms:null,accel_done:false,trade_ends_at:null},participants:[{id:'team-1',user_id:'user-1',nickname:'Mock',team_name:'Mock team',color:'var(--primary)',purse:100,is_ready:true,last_seen:new Date().toISOString()}],pool:[{id:'lot-1',player_id:player.id,player,set_name:'Marquee',lot_order:0,round:1,status:'live',sold_to:null,sold_price:null}],bids:[],squads:[],sales:[],trades:[],events:[],notes:{notes:'',targets:{},xi:{order:[],overs:{}}},saveNotes:vi.fn(),error:null,loaded:true,offset:0,connection:'connected',reload:vi.fn(async()=>null)};
+ return {lastSeen:p=>Date.parse(p.last_seen),retryConnection:vi.fn(),poolRevision:{current:null},applyLive:vi.fn(()=>true),capabilities:{},room:{id:'room-1',code:'TEST',name:'LOCAL MOCK ONLY',host_id:'user-1',format:'IPL',settings:DEFAULT_SETTINGS,status:'auction',review_ends_at:null,current_rp:'lot-1',lot_version:7,current_bid:null,current_bidder:null,lot_ends_at:new Date(Date.now()+20000).toISOString(),paused_remaining_ms:null,accel_done:false,trade_ends_at:null},participants:[{id:'team-1',user_id:'user-1',nickname:'Mock',team_name:'Mock team',color:'var(--primary)',purse:100,is_ready:true,last_seen:new Date().toISOString()}],pool:[{id:'lot-1',player_id:player.id,player,set_name:'Marquee',lot_order:0,round:1,status:'live',sold_to:null,sold_price:null}],bids:[],squads:[],sales:[],trades:[],events:[],notes:{notes:'',targets:{},xi:{order:[],overs:{}}},saveNotes:vi.fn(),error:null,loaded:true,offset:0,connection:'connected',reload:vi.fn(async()=>null)};
 }
 describe('local mocked auction UI (no live backend)',()=>{
- it('applies the accepted live response without extra round trips',async()=>{
-  const data=fixture();data.capabilities.action_sync=1;
+ it('allows a guarded bid while reconnecting and applies the accepted reply without extra reads',async()=>{
+  const data=fixture();data.capabilities.action_sync=1;data.connection="reconnecting";
   const live={room:{...data.room,current_bid:2,current_bidder:'team-1'},states:[{id:'lot-1',status:'live'}],revision:2,bids:[]};
   network.rpc.mockImplementation(()=>({abortSignal:()=>Promise.resolve({data:{amount:2,live},error:null})}));
   render(<Auction data={data} d={derive(data,'user-1')} sound={false}/>);

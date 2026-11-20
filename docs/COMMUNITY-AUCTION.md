@@ -24,6 +24,14 @@ Room changes are batched over a fixed 240 ms window. Clients use the room revisi
 
 Existing lot/version/request-ID checks, server deadlines and unknown-outcome retry handling remain in place. These changes address observable request amplification and latency spikes; they are not proof that all hosted outages have been eliminated. Production multiplayer load and real-device browser/audio behavior require observation in actual use.
 
+## Returning to a room
+
+Guests can open **Save your guest seat** to link an email or generate a private, single-use recovery code. Save the code before leaving the original browser. On another device, enter the room code on the join page, choose **Recover my guest team**, and enter the private code. Recovery preserves the team, purse, squad and host role. Generating another code replaces the previous one. After linking an email, use that email to sign back in.
+
+A visible tab refreshes immediately when it regains focus or connectivity. During a socket reconnect, online players can still submit a bid against the displayed lot. The server checks the lot, price and deadline. Members can confirm a host takeover two minutes after the host’s last heartbeat.
+
+Migration `0033_room_recovery_and_bid_updates` enables seat codes, enforces the host grace period, and adds compact bid responses. Each response carries a pool revision. A client with that revision receives room data and current-lot bids. A client that missed a pool change receives updated pool states.
+
 ## Verification
 
 `npm test`, `npx tsc --noEmit`, and `npm run build` cover the app. `scripts/test-community-local.mjs` uses isolated embedded PostgreSQL to test the migration, legacy frozen projections, custom stage timers, unbalanced trades, private lineups, deadlines, self-vote rejection, duplicate/updatable ratings, averages, missing votes, and repeated stale-price/duplicate-ID bids. Embedded PostgreSQL serializes connections, so this is a correctness burst test, not a hosted concurrent-capacity benchmark.

@@ -12,7 +12,7 @@ const ids=[randomUUID(),randomUUID(),randomUUID()],host=ids[0],stranger=randomUU
 const call=(uid,fn,args,casts)=>user(uid,`SELECT public.${fn}(${args.map((_,i)=>'$'+(i+1)+(casts?.[i]?'::'+casts[i]:'')).join(',')}) AS value`,args);
 const projection=(uid,r)=>call(uid,'room_projection',[r]);
 try{
- await db.exec(`CREATE ROLE anon;CREATE ROLE authenticated;CREATE ROLE service_role;CREATE SCHEMA auth;CREATE TABLE auth.users(id uuid PRIMARY KEY);CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS $$ SELECT nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;GRANT USAGE ON SCHEMA auth TO authenticated;GRANT EXECUTE ON FUNCTION auth.uid() TO authenticated;CREATE SCHEMA extensions;CREATE EXTENSION pgcrypto WITH SCHEMA extensions;CREATE PUBLICATION supabase_realtime;CREATE SCHEMA storage;CREATE TABLE storage.objects(id uuid,bucket_id text);`);
+ await db.exec(`CREATE ROLE anon;CREATE ROLE authenticated;CREATE ROLE service_role;CREATE SCHEMA auth;CREATE TABLE auth.users(id uuid PRIMARY KEY,is_anonymous boolean DEFAULT true);CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS $$ SELECT nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;GRANT USAGE ON SCHEMA auth TO authenticated;GRANT EXECUTE ON FUNCTION auth.uid() TO authenticated;CREATE SCHEMA extensions;CREATE EXTENSION pgcrypto WITH SCHEMA extensions;CREATE PUBLICATION supabase_realtime;CREATE SCHEMA storage;CREATE TABLE storage.objects(id uuid,bucket_id text);`);
  for(const f of readdirSync('drizzle/migrations').filter(f=>f.endsWith('.sql')&&Number(f.slice(0,4))<29).sort()){
   await db.exec(file('drizzle/migrations/'+f));if(f.startsWith('0000'))await db.exec('GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO authenticated');
  }
@@ -27,6 +27,7 @@ try{
  await db.exec(file('drizzle/migrations/0030_ipl_teams_and_rating_comments.sql'));
  await db.exec(file('drizzle/migrations/0031_scope_catalogue_entry_reads.sql'));
  await db.exec(file('drizzle/migrations/0032_classic_catalogue_and_stage_reopen.sql'));
+ await db.exec(file('drizzle/migrations/0033_room_recovery_and_bid_updates.sql'));
  await db.exec(file('scripts/ipl-classics-import.sql'));
  await db.exec(file('scripts/ipl-classics-import.sql'));
  assert.deepEqual(await call(host,'room_catalogue',[old.room_id]),oldCat);
@@ -42,6 +43,9 @@ try{
  await call(host,'set_pool',[rid,selected.players.map(p=>p.id)]);
  await call(host,'start_review',[rid]);await db.query("UPDATE public.rooms SET review_ends_at=clock_timestamp()-interval '1 second' WHERE id=$1",[rid]);await call(host,'tick',[rid]);
  let p=await projection(host,rid),r=p.room;assert.equal(r.community_mode,true);assert.ok(p.pool.some(row=>row.player.source_stats));
+ const poolRevision=p.pool_revision;
+ assert.equal(p.capabilities.compact_sync,1);
+ assert.equal(await call(host,'room_poll_changes',[rid,p.revision,poolRevision]),null);
  const parts=(await db.query('SELECT * FROM public.participants WHERE room_id=$1 ORDER BY nickname',[rid])).rows;
  const partOf=uid=>parts.find(p=>p.user_id===uid).id;
  const lot=p.pool.find(x=>x.id===r.current_rp);let amount=Number(lot.player.base_price),accepted=0;
@@ -56,8 +60,23 @@ try{
   amount=Number(r.current_bid)+(Number(r.current_bid)<2?.1:Number(r.current_bid)<5?.25:.5);amount=Math.round(amount*100)/100;
  }
  await assert.rejects(()=>call(stranger,'place_bid_and_sync',[rid,amount,r.current_rp,r.lot_version,randomUUID()]));
+ const compact=await call(ids[1],'room_poll_changes',[rid,p.revision,poolRevision]);
+ assert.equal(compact.states,null);
+ assert.equal(compact.bids.length,30);
+ const full=await call(host,'room_poll_changes',[rid,p.revision,-1]);
+ assert.equal(full.states.length,100);
+ assert.ok(!('first_round_order' in compact.room));
+ assert.deepEqual(compact.room,full.room);
+ const nextBidder=ids.find(uid=>partOf(uid)!==r.current_bidder);
+ const acceptedCompact=await call(nextBidder,'place_bid_with_changes',[rid,amount,r.current_rp,r.lot_version,randomUUID(),poolRevision]);
+ assert.equal(acceptedCompact.live.states,null);
+ assert.equal(acceptedCompact.live.room.current_bidder,partOf(nextBidder));
+ console.log('100-player pool, 30 bids, uncompressed JSON bytes:',JSON.stringify(full).length,'full,',JSON.stringify(compact).length,'compact');
  const command=async(action,payload={})=>{r=(await projection(host,rid)).room;return call(host,'auction_command_and_sync',[rid,action,r.current_rp,r.lot_version,r.status,r.control_revision,randomUUID(),JSON.stringify({...payload,observed_bid_revision:r.bid_revision})],[null,null,null,null,null,null,null,'jsonb']);};
- await command('final_call');await command('close_trades',{pending:[],minutes:7});r=(await projection(host,rid)).room;assert.equal(r.status,'trade');assert.ok(new Date(r.trade_ends_at).getTime()-Date.now()>410000);
+ await command('final_call');
+ const catchup=await call(host,'room_poll_changes',[rid,p.revision,poolRevision]);
+ assert.ok(catchup.pool_revision!==poolRevision && catchup.states.length===100);
+ await command('close_trades',{pending:[],minutes:7});r=(await projection(host,rid)).room;assert.equal(r.status,'trade');assert.ok(new Date(r.trade_ends_at).getTime()-Date.now()>410000);
  await assert.rejects(()=>call(ids[1],'community_control',[rid,'timers','trade',null,'{"trade_minutes":2,"lineup_minutes":3}'],[null,null,null,null,'jsonb']));
  await assert.rejects(()=>call(host,'community_control',[rid,'timers','trade',null,'{"trade_minutes":0,"lineup_minutes":3}'],[null,null,null,null,'jsonb']));
  await call(host,'community_control',[rid,'timers','trade',null,JSON.stringify({trade_minutes:2,lineup_minutes:3})],[null,null,null,null,'jsonb']);
@@ -140,6 +159,30 @@ try{
  await assert.rejects(()=>call(host,'claim_ipl_team',[old.room_id,'CSK']));
  await assert.rejects(()=>user(host,"SELECT public._ipl_team('CSK')"));
  assert.equal((await db.query("SELECT has_function_privilege('anon','public.claim_ipl_team(uuid,text)','EXECUTE') AS allowed")).rows[0].allowed,false);
+ // Reclaim a started host seat, preserve its notes/identity, and consume the code once.
+ for (const uid of [...ids,stranger]) await db.query('INSERT INTO auth.users(id) VALUES($1) ON CONFLICT DO NOTHING',[uid]);
+ assert.equal((await call(stranger,'room_entry',[franchise.code])).seat_recovery,true);
+ const oldCode=await call(host,'issue_seat_code',[fr]);
+ const seatCode=await call(host,'issue_seat_code',[fr]);
+ assert.equal(await call(stranger,'reclaim_guest_seat',[franchise.code,oldCode]),null);
+ assert.equal(await call(stranger,'reclaim_guest_seat',[second.code,seatCode]),null);
+ await user(host,"INSERT INTO public.private_notes(room_id,user_id,notes) VALUES($1,$2,'my XI')",[fr,host]);
+ assert.equal(await call(stranger,'reclaim_guest_seat',[franchise.code,seatCode]),fr);
+ assert.equal((await projection(stranger,fr)).room.host_id,stranger);
+ await assert.rejects(()=>projection(host,fr));
+ assert.equal(await call(host,'reclaim_guest_seat',[franchise.code,seatCode]),null);
+ assert.equal((await db.query('SELECT user_id,notes FROM public.private_notes WHERE room_id=$1',[fr])).rows[0].user_id,stranger);
+ assert.equal((await call(stranger,'room_entry',[franchise.code])).my_team,'RR');
+ const linkedCode=await call(stranger,'issue_seat_code',[fr]);
+ await db.query('UPDATE auth.users SET is_anonymous=false WHERE id=$1',[stranger]);
+ assert.equal(await call(host,'reclaim_guest_seat',[franchise.code,linkedCode]),null);
+ const target=(await db.query('SELECT id FROM public.participants WHERE room_id=$1 AND user_id=$2',[fr,winner])).rows[0].id;
+ await db.query("UPDATE public.participants SET last_seen=now()-interval '75 seconds' WHERE room_id=$1 AND user_id=$2",[fr,stranger]);
+ await assert.rejects(()=>call(winner,'transfer_host',[fr,target]),/still connected/);
+ await db.query("UPDATE public.participants SET last_seen=now()-interval '125 seconds' WHERE room_id=$1 AND user_id=$2",[fr,stranger]);
+ await call(winner,'transfer_host',[fr,target]);
+ assert.equal((await projection(winner,fr)).room.host_id,winner);
+ console.log('PASS: guest recovery, account linking, two-minute host grace and compact bid updates');
  console.log('PASS: IPL duplicate claims, rollback, release/reclaim, locked identities, received rating comments and visibility');
  console.log('PASS: rapid/retry bids, private plans, unrestricted trades, custom deadlines, self-vote rejection, averages, missing votes, legacy compatibility and revision polling');
 }finally{await db.close();}

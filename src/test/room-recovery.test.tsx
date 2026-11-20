@@ -15,7 +15,7 @@ afterEach(() => {
 it("opens while the clock is stalled, retries an initial participant failure and replaces a closed channel", async () => {
   vi.useFakeTimers();
   const room = { id: "room", status: "lobby" };
-  const member = { id: "participant", user_id: "user" };
+  const member = { id: "participant", user_id: "user", last_seen: new Date().toISOString() };
   const rpc = vi.mocked(supabase.rpc);
   rpc.mockImplementation(
     (fn) =>
@@ -47,10 +47,11 @@ it("opens while the clock is stalled, retries an initial participant failure and
     };
     return query as never;
   });
+  const events = new Map<string,(payload:unknown)=>void>();
   const callbacks: ((status: string) => void)[] = [];
   vi.mocked(supabase.channel).mockImplementation(() => {
     const channel = {
-      on: () => channel,
+      on: (_type: string, filter: {table:string}, fn:(payload:unknown)=>void) => {events.set(filter.table,fn);return channel;},
       subscribe: (fn: (s: string) => void) => {
         callbacks.push(fn);
         return channel;
@@ -81,7 +82,78 @@ it("opens while the clock is stalled, retries an initial participant failure and
     expect(hook.result.current.connection).toBe("connected");
     act(() => callbacks[0]!("CLOSED"));
     expect(hook.result.current.connection).toBe("connected");
+    const roomReads = () => rpc.mock.calls.filter(([name]) => name === "room_projection").length;
+    const hidden = vi.spyOn(document,"visibilityState","get").mockReturnValue("hidden");
+    try {
+      const before = roomReads();
+      await act(async () => {
+        events.get("room_updates")!({new:{revision:12}});
+        await vi.advanceTimersByTimeAsync(34000);
+      });
+      expect(roomReads()).toBe(before);
+      hidden.mockReturnValue("visible");
+      await act(async () => {
+        document.dispatchEvent(new Event("visibilitychange"));
+        await vi.advanceTimersByTimeAsync(0);
+      });
+      expect(roomReads()).toBe(before + 1);
+      const list = hook.result.current.participants;
+      const lastRead = reads;
+      const stamp = new Date(Date.now()+1000).toISOString();
+      await act(async () => {
+        events.get("participants")!({eventType:"UPDATE",new:{...member,last_seen:stamp}});
+        await vi.advanceTimersByTimeAsync(300);
+      });
+      expect(reads).toBe(lastRead);
+      expect(hook.result.current.participants).toBe(list);
+      expect(hook.result.current.lastSeen(list[0]!)).toBe(Date.parse(stamp));
+    } finally {hidden.mockRestore();}
   } finally {
     hook.unmount();
   }
+});
+
+it("skips reads while hidden and refreshes immediately on return despite a previous failure", async () => {
+  vi.useFakeTimers();
+  const {createRefetchCoordinator}=await import("@/lib/refetch-coordinator");
+  let visible=true;
+  const read=vi.fn().mockRejectedValueOnce(new Error("network")).mockResolvedValue("current lot");
+  const queue=createRefetchCoordinator(read,240,()=>visible);
+  try {
+    queue.schedule("rooms");
+    await vi.advanceTimersByTimeAsync(240);
+    visible=false;
+    for (let i=0;i<20;i++) {
+      queue.schedule("rooms");
+      await vi.advanceTimersByTimeAsync(1000);
+    }
+    expect(read).toHaveBeenCalledTimes(1);
+    visible=true;
+    queue.resume(["rooms"]);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(read).toHaveBeenCalledTimes(2);
+    // Even with a fresh network backoff, a manual retry reads immediately.
+    read.mockRejectedValueOnce(new Error("network"));
+    await expect(queue.refresh("rooms")).rejects.toThrow("network");
+    queue.resume(["rooms"]);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(read).toHaveBeenCalledTimes(4);
+  } finally { queue.dispose(); }
+});
+
+it("recognizes heartbeat-only events and preserves team changes",async()=>{
+  const {onlyPresenceChanged}=await import("@/lib/room-presence");
+  const member={id:"team",user_id:"one",team_name:"CSK",purse:80,last_seen:"2026-11-20T10:00:00Z"} as import("@/hooks/use-room").Participant;
+  const heartbeat={...member,last_seen:"2026-11-20T10:00:25Z"};
+  expect(onlyPresenceChanged(member,heartbeat)).toBe(true);
+  expect(onlyPresenceChanged(member,{...heartbeat,purse:75})).toBe(false);
+  expect(onlyPresenceChanged(member,{...heartbeat,user_id:"two"})).toBe(false);
+  expect(onlyPresenceChanged(member,{id:"team",last_seen:heartbeat.last_seen})).toBe(false);
+});
+
+it("explains transport failures while preserving a server bid rejection",async()=>{
+  const {actionError}=await import("@/lib/connection-recovery");
+  expect(actionError({message:"TypeError: Failed to fetch",code:""})).toMatch(/Connection interrupted/);
+  expect(actionError({message:"signal timed out"})).toMatch(/Connection interrupted/);
+  expect(actionError({message:"Player changed; refresh before bidding",code:"P0001"})).toBe("Player changed; refresh before bidding");
 });

@@ -6,7 +6,7 @@ import { bidArgs } from "@/lib/room-actions";
 import type { LiveProjection } from '@/lib/live-projection';
 
 type Args = ReturnType<typeof bidArgs>;
-export function useBidRequest(reload: () => Promise<unknown>, live?: { enabled: boolean; apply: (projection: LiveProjection) => boolean }) {
+export function useBidRequest(reload: () => Promise<unknown>, live?: { enabled: boolean; compact?: boolean; poolRevision?: {current:number|null}; apply: (projection: LiveProjection) => boolean }) {
   const [state, setState] = useState<BidRequestState>("idle");
   const [accepted, setAccepted] = useState(false);
   const alive = useRef(true);
@@ -15,7 +15,10 @@ export function useBidRequest(reload: () => Promise<unknown>, live?: { enabled: 
   const liveRef = useRef(live); liveRef.current = live;
   const [gate] = useState(() => new BidRequestGate<Args>(async args => {
     const synced = liveRef.current?.enabled;
-    const { data, error } = await supabase.rpc((synced ? "place_bid_and_sync" : "place_bid") as never, args as never).abortSignal(AbortSignal.timeout(8000));
+    const compact = synced && liveRef.current?.compact;
+    const method = compact ? "place_bid_with_changes" : synced ? "place_bid_and_sync" : "place_bid";
+    const request = compact ? {...args, p_pool_revision:liveRef.current?.poolRevision?.current ?? null} : args;
+    const { data, error } = await supabase.rpc(method as never, request as never).abortSignal(AbortSignal.timeout(8000));
     if (!error && data != null) {
       const reply = data as unknown as {live?: LiveProjection};
       if (!synced || !reply.live || !liveRef.current?.apply(reply.live)) void refresh.current().catch(() => {});

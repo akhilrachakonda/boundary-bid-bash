@@ -5,7 +5,9 @@ import { withCanonicalPhoto } from "@/lib/player-photos";
 import { createRefetchCoordinator } from "@/lib/refetch-coordinator";
 import { repairsEnabled, type RepairCapabilities } from "@/lib/post-launch-controls";
 import { mergeLiveProjection, type LiveProjection } from '@/lib/live-projection';
-import { membershipFailure, recoveryDelay, connectionDiagnostics } from '@/lib/connection-recovery';
+import { membershipFailure, recoveryDelay, connectionDiagnostics, roomReadsAvailable, HEARTBEAT_MS, ONLINE_WINDOW_MS } from '@/lib/connection-recovery';
+
+import { onlyPresenceChanged } from "@/lib/room-presence";
 
 export interface Room {
   id: string;
@@ -129,15 +131,19 @@ export function useRoom(roomId: string, userId: string | undefined) {
   const generation = useRef(0);
   const projectionRef = useRef("");
   const revisionRef = useRef(0);
+  const poolRevision = useRef<number | null>(null);
+  const presence = useRef(new Map<string, number>());
+  const lastSeen = useCallback((p: Participant) => Math.max(Date.parse(p.last_seen), presence.current.get(p.id) ?? 0), []);
   const readVersions = useRef({participants:0,bids:0,squads:0,sales:0});
   roomRef.current = room;
 
   const applyLive = useCallback((live: LiveProjection) => {
     if (!roomRef.current || live.room.id !== roomId) return false;
-    const merged = mergeLiveProjection(roomRef.current, poolRef.current, live, revisionRef.current);
+    const merged = mergeLiveProjection(roomRef.current, poolRef.current, live, revisionRef.current, poolRevision.current);
     if (!merged) return false;
+    poolRevision.current = live.pool_revision ?? null;
     revisionRef.current = live.revision ?? revisionRef.current;
-    if (merged.some((player,index) => player !== poolRef.current[index])) {
+    if (merged !== poolRef.current && merged.some((player,index) => player !== poolRef.current[index])) {
       poolRef.current = merged;
       setPool(merged);
     }
@@ -155,7 +161,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
 
   const load = useCallback(
     async (t: Table) => {
-      if (!userId || !navigator.onLine || document.visibilityState === 'hidden') throw new Error('Connection paused');
+      if (!userId || !roomReadsAvailable()) return null;
       const started = performance.now();
       connectionDiagnostics.reads++;
       const epoch = generation.current;
@@ -164,11 +170,15 @@ export function useRoom(roomId: string, userId: string | undefined) {
       const current = () => epoch === generation.current && readVersions.current[collection] === readVersion;
       switch (t) {
         case "rooms": {
-          if(repairsEnabled(roomRef.current,capabilitiesRef.current) && poolRef.current.length && roomRef.current?.status!=="lobby") {
+          if((capabilitiesRef.current.compact_sync === 1 || repairsEnabled(roomRef.current,capabilitiesRef.current)) && poolRef.current.length && roomRef.current?.status!=="lobby") {
             {
               const sync = capabilitiesRef.current.action_sync === 1;
               const bounded=capabilitiesRef.current.bounded_poll===1;
-              const {data,error}=await supabase.rpc((bounded?"room_poll":sync ? "room_sync" : "room_live_projection") as never,(bounded?{p_room:roomId,p_revision:revisionRef.current}:{p_room:roomId}) as never).abortSignal(AbortSignal.timeout(5000));
+              const compact = capabilitiesRef.current.compact_sync === 1;
+              const method = compact ? "room_poll_changes" : bounded ? "room_poll" : sync ? "room_sync" : "room_live_projection";
+              const args = {p_room:roomId, ...(bounded ? {p_revision:revisionRef.current} : {}),
+                ...(compact ? {p_pool_revision:poolRevision.current} : {})};
+              const {data,error}=await supabase.rpc(method as never,args as never).abortSignal(AbortSignal.timeout(8000));
               if(!current())return null;
               if (error && !['PGRST202','42883'].includes(error.code) && !membershipFailure(error)) {
                 setConnection('reconnecting');
@@ -180,8 +190,8 @@ export function useRoom(roomId: string, userId: string | undefined) {
               if(!error && live && applyLive(live)) return live.room;
             }
           }
-          const { data, error } = await supabase.rpc("room_projection", { p_room: roomId }).abortSignal(AbortSignal.timeout(5000));
-          const projection = data as unknown as { room: Room; pool: RoomPlayer[]; revision?: number; capabilities?: RepairCapabilities } | null;
+          const { data, error } = await supabase.rpc("room_projection", { p_room: roomId }).abortSignal(AbortSignal.timeout(15000));
+          const projection = data as unknown as { room: Room; pool: RoomPlayer[]; pool_revision?: number; revision?: number; capabilities?: RepairCapabilities } | null;
           if (!current()) return null;
           if (projection && (projection.revision ?? 0) < revisionRef.current) return roomRef.current;
           if (error) {
@@ -195,6 +205,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
             connectionDiagnostics.recoveries++;
             setLoaded(true);
             if(channelHealthy.current)setConnection("connected");
+            poolRevision.current = projection.pool_revision ?? null;
             revisionRef.current = projection.revision ?? revisionRef.current;
             capabilitiesRef.current=projection.capabilities??{};setCapabilities(capabilitiesRef.current);
             setError(null); setRoom(projection.room); roomRef.current=projection.room;
@@ -270,17 +281,26 @@ export function useRoom(roomId: string, userId: string | undefined) {
   );
 
   const coordinator = useRef<ReturnType<typeof createRefetchCoordinator<Table>> | null>(null);
+  const reconnectSocket = useRef<(() => void) | null>(null);
+  const refreshAfterResume = useCallback(() => {
+    coordinator.current?.resume(["rooms", "participants", "squads", "sales", "trades", "bids", "room_events"]);
+  }, []);
+  const retryConnection = useCallback(() => {
+    if (!roomReadsAvailable()) return;
+    reconnectSocket.current?.();
+    refreshAfterResume();
+  }, [refreshAfterResume]);
   const reload = useCallback((t: Table) => coordinator.current?.refresh(t) ?? Promise.resolve(null), []);
   useEffect(() => {
     generation.current++;
     projectionRef.current = "";
-    revisionRef.current = 0;
+    revisionRef.current = 0; poolRevision.current = null; presence.current.clear();
     readVersions.current = {participants:0,bids:0,squads:0,sales:0};
     capabilitiesRef.current={};setCapabilities({});poolRef.current=[];roomRef.current=null;setRoom(null);setLoaded(false);
     setError(null); setConnection(navigator.onLine ? 'connecting' : 'offline');
     setParticipants([]); setPool([]); setSquads([]); setTrades([]); setBids([]); setEvents([]); setSales([]);
     setNotes({targets:{},xi:{order:[],overs:{}},notes:''});
-    const queue = createRefetchCoordinator(load,240);
+    const queue = createRefetchCoordinator(load,240,roomReadsAvailable);
     coordinator.current = queue;
     return () => { generation.current++; queue.dispose(); if (coordinator.current === queue) coordinator.current = null; };
   }, [load]);
@@ -345,16 +365,29 @@ export function useRoom(roomId: string, userId: string | undefined) {
     let channel: ReturnType<typeof supabase.channel> | undefined;
     let retryTimer: ReturnType<typeof setTimeout> | undefined;
     let failures = 0;
+    let connecting = false;
     function connect() {
+      if (!alive || connecting || !roomReadsAvailable()) return;
       clearTimeout(retryTimer);
-      if (!alive || !navigator.onLine || document.visibilityState === 'hidden') return;
+      connecting = true;
       const previous = channel;
       const next = supabase.channel(`room-${roomId}-${Math.random().toString(36).slice(2)}`);
       channel = next;
       if (previous) void supabase.removeChannel(previous);
       for (const table of tables) {
         next.on('postgres_changes', {event:'*',schema:'public',table,filter:`room_id=eq.${roomId}`},
-          () => { if (alive && channel === next) queue(table); });
+          payload => {
+            if (!alive || channel !== next || !roomReadsAvailable()) return;
+            if (table === "participants" && payload.eventType === "UPDATE") {
+              const row = payload.new as Record<string, unknown>;
+              const member = participantsRef.current.find(p => p.id === row["id"]);
+              if (member && onlyPresenceChanged(member, row)) {
+                presence.current.set(member.id, Math.max(lastSeen(member), Date.parse(row["last_seen"] as string)));
+                return;
+              }
+            }
+            queue(table);
+          });
       }
       next.on('postgres_changes', {event:'*',schema:'public',table:'room_updates',filter:`room_id=eq.${roomId}`}, payload => {
         if (!alive || channel !== next) return;
@@ -367,13 +400,11 @@ export function useRoom(roomId: string, userId: string | undefined) {
       next.subscribe(status => {
         if (!alive || channel !== next) return;
         clearTimeout(retryTimer);
+        connecting = false;
         channelHealthy.current = status === 'SUBSCRIBED';
         if (channelHealthy.current) {
           failures = 0;
-          queue('rooms');
-          // A closed socket may have missed table changes while this tab was asleep.
-          tables.forEach(queue);
-          queue('bids');
+          refreshAfterResume();
         } else {
           setConnection(navigator.onLine ? 'reconnecting' : 'offline');
           retryTimer = setTimeout(connect, recoveryDelay(++failures));
@@ -381,18 +412,16 @@ export function useRoom(roomId: string, userId: string | undefined) {
       });
     }
     const resume = () => { if (!channelHealthy.current) connect(); };
+    reconnectSocket.current = resume;
     connect();
-    window.addEventListener('online', resume);
-    document.addEventListener('visibilitychange', resume);
     return () => {
       alive = false;
       channelHealthy.current = false;
       clearTimeout(retryTimer);
-      window.removeEventListener('online', resume);
-      document.removeEventListener('visibilitychange', resume);
+      reconnectSocket.current = null;
       if (channel) void supabase.removeChannel(channel);
     };
-  }, [roomId, load, userId]);
+  }, [roomId, load, userId, refreshAfterResume, lastSeen]);
 
   // heartbeat + server tick driver
   useEffect(() => {
@@ -405,7 +434,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
       catch { /* Presence is advisory; never replace identity on failure. */ }
       finally { heartbeating = false; }
     };
-    const hb = setInterval(() => { void heartbeat(); }, 10000);
+    const hb = setInterval(() => { void heartbeat(); }, HEARTBEAT_MS);
     void heartbeat();
     let inflight = false;
     let nextAttempt = 0;
@@ -414,7 +443,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
       if (!r || inflight || Date.now() < nextAttempt || !navigator.onLine || document.visibilityState === 'hidden') return;
       const now = Date.now() + offset;
       const deadline = r.status==='review'?r.review_ends_at:r.status==='auction'?r.lot_ends_at:r.status==='trade'?r.trade_ends_at:r.community_mode&&r.post_phase==='lineup'?r.phase_ends_at:null;
-      const active=participantsRef.current.filter(p=>now-new Date(p.last_seen).getTime()<30000).sort((a,b)=>Number(b.user_id===r.host_id)-Number(a.user_id===r.host_id)||a.id.localeCompare(b.id));
+      const active=participantsRef.current.filter(p=>now-lastSeen(p)<ONLINE_WINDOW_MS).sort((a,b)=>Number(b.user_id===r.host_id)-Number(a.user_id===r.host_id)||a.id.localeCompare(b.id));
       const rank=Math.max(0,active.findIndex(p=>p.user_id===userId));
       const due=deadline && now>=new Date(deadline).getTime()+(rank?800+rank*250:0);
       if (!due) return;
@@ -432,8 +461,9 @@ export function useRoom(roomId: string, userId: string | undefined) {
     },5000);
     const onFocus = () => {
       if (!navigator.onLine || document.visibilityState === 'hidden') return;
+      setConnection(previous => previous === "offline" ? "reconnecting" : previous);
       void heartbeat();
-      (["rooms", "participants", "squads", "sales", "trades", "bids", "room_events"] as Table[]).forEach(t => coordinator.current?.schedule(t));
+      retryConnection();
       void loadNotes().catch(() => {});
     };
     const onOffline = () => setConnection('offline');
@@ -452,10 +482,10 @@ export function useRoom(roomId: string, userId: string | undefined) {
       window.removeEventListener('pageshow',onFocus);
       document.removeEventListener('visibilitychange',onFocus);
     };
-  }, [roomId, offset, load, userId, loadNotes]);
+  }, [roomId, offset, load, userId, loadNotes, retryConnection, lastSeen]);
 
-  return useMemo(() => ({ room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload, applyLive }),
-    [room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, reload, applyLive]);
+  return useMemo(() => ({ room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, poolRevision, lastSeen, retryConnection, reload, applyLive }),
+    [room, participants, pool, bids, squads, sales, trades, events, notes, saveNotes, error, loaded, offset, connection, capabilities, poolRevision, lastSeen, retryConnection, reload, applyLive]);
 }
 
 export function useNow(offset: number, ms = 100) {

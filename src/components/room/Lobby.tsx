@@ -1,3 +1,4 @@
+import { ONLINE_WINDOW_MS } from "@/lib/connection-recovery";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Check, Copy, Crown, RefreshCw, Share2 } from "lucide-react";
@@ -84,7 +85,7 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
           <h3 className="mb-3 text-2xl font-bold uppercase">Teams {data.participants.length}/{s.max_teams}</h3>
           <ul className="grid gap-2 sm:grid-cols-2">
             {data.participants.map((p) => {
-              const online = now - new Date(p.last_seen).getTime() < 30000;
+              const online = now - data.lastSeen(p) < ONLINE_WINDOW_MS;
               return (
                 <li key={p.id} className="flex flex-wrap items-center gap-3 rounded-lg border bg-secondary/40 p-3">
                   <TeamDot color={p.color} className="h-5 w-5" />

@@ -46,12 +46,14 @@ function AuthPage() {
   const { redirect, mode } = Route.useSearch();
   const navigate = useNavigate();
   const { user, isGuest, loading } = useAuth();
+  const [embedded, setEmbedded] = useState(false);
   const [nick, setNick] = useState("");
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState<string | null>(null);
 
   useEffect(() => {
+    setEmbedded(/FBAN|FBAV|Instagram|WhatsApp|Line\/|; wv\)/i.test(navigator.userAgent));
     setNick(localStorage.getItem("auction-nick") ?? "");
   }, []);
 
@@ -91,12 +93,13 @@ function AuthPage() {
         {mode !== "link" && (
           <div className="panel space-y-3 p-5">
             <div className="flex items-center gap-2 font-semibold"><UserRound className="h-4 w-4 text-primary" /> Play as guest</div>
+            {embedded && <p role="status" className="rounded-md border p-2 text-sm">This looks like an in-app browser. Open the invite in your regular browser before joining to keep your guest seat there.</p>}
             <Label htmlFor="nick">Nickname</Label>
             <Input id="nick" value={nick} maxLength={24} onChange={(e) => setNick(e.target.value)} placeholder="e.g. Captain Cool" onKeyDown={(e) => e.key === "Enter" && guest()} />
             <Button className="h-12 w-full bg-gold text-base font-bold text-primary-foreground" onClick={guest} disabled={busy}>
               Continue as guest
             </Button>
-            <p className="text-xs text-muted-foreground">Your guest account stays on this device. Add an email later to keep it.</p>
+            <p className="text-xs text-muted-foreground">Your guest seat stays in this browser. Save it with email or a recovery code before switching browsers.</p>
           </div>
         )}
         <div className="panel space-y-3 p-5">

@@ -25,6 +25,8 @@ import {EvaluationLineup} from '@/components/auction/EvaluationLineup';
 import { hostActionArgs } from '@/lib/room-actions';
 import { repairsEnabled } from '@/lib/post-launch-controls';
 
+import { GuestSeat } from "@/components/room/GuestSeat";
+import { HOST_GRACE_MS } from "@/lib/connection-recovery";
 import { ReopenStage } from "@/components/room/ReopenStage";
 import {CommunityStage} from '@/components/room/CommunityStage';
 import {CommunityContext} from '@/components/auction/CommunityContext';
@@ -46,7 +48,7 @@ export const Route = createFileRoute("/_authenticated/room/$roomId")({
 
 function RoomPage() {
   const { roomId } = Route.useParams();
-  const { user } = useAuth();
+  const { user, isGuest } = useAuth();
   const data = useRoom(roomId, user?.id);
   // Presence/review need only seconds; the live lot clock lives inside TimerRing.
   const now = useNow(data.offset, 1000);
@@ -57,7 +59,7 @@ function RoomPage() {
 
   const room = data.room;
   const hostPart = room ? data.participants.find((p) => p.user_id === room.host_id) : null;
-  const hostAway = hostPart ? now - new Date(hostPart.last_seen).getTime() > 30000 : false;
+  const hostAway = hostPart ? now - data.lastSeen(hostPart) > HOST_GRACE_MS : false;
 
   const starred = useMemo(() => new Set(Object.keys(data.notes.targets)), [data.notes.targets]);
   const toggleStar = (id: string) => {
@@ -90,7 +92,7 @@ function RoomPage() {
         <div className="mx-auto max-w-md px-4 py-20 text-center">
           <h1 className="text-4xl font-bold uppercase">Room unavailable</h1>
           <p className="mt-2 text-muted-foreground">{data.error}</p>
-          <Button asChild className="mt-4"><Link to="/join" search={{ code: "" }}>Join with a code</Link></Button>
+          <Button asChild className="mt-4"><Link to="/join" search={{ code: "" }}>Join or recover your team</Link></Button>
         </div>
       </div>
     );
@@ -100,7 +102,7 @@ function RoomPage() {
         <AppHeader />
         <div className="mx-auto grid max-w-sm gap-4 px-4 py-20 text-center" role="status">
           <p>{data.connection === 'offline' ? 'You’re offline. This room will reconnect when your connection returns.' : data.connection === 'reconnecting' ? 'Reconnecting to your room…' : 'Loading room…'}</p>
-          {(data.connection === 'reconnecting' || data.loaded) && <Button variant="outline" onClick={() => void Promise.allSettled([data.reload('rooms'),data.reload('participants')])}>Retry room connection</Button>}
+          {(data.connection === 'reconnecting' || data.loaded) && <Button variant="outline" onClick={data.retryConnection}>Retry room connection</Button>}
         </div>
       </div>
     );
@@ -157,16 +159,17 @@ function RoomPage() {
       </AppHeader>
       <main className="room-main mx-auto min-w-0 max-w-7xl space-y-3 px-3 py-3 sm:space-y-4 sm:px-6 sm:py-5">
         {!room.community_mode&&room.evaluation_version==='v2.1'&&<p className="text-xs text-muted-foreground">V2.1 · 35 combination/position + 30 established + 20 recent + 10 bench + 5 leadership · {room.status==='lobby'?'Evidence and leadership freeze before review':'Frozen evidence and leadership rubric'} · <Link to="/scoring" className="text-electric underline">Rules and data coverage</Link></p>}
-        {data.connection !== 'connected' && <p role="status" className="rounded-md border px-3 py-2 text-sm">{data.connection === 'offline' ? 'Offline. Showing the last room update.' : 'Reconnecting to live updates…'}</p>}
+        {data.connection !== 'connected' && <p role="status" className="rounded-md border px-3 py-2 text-sm">{data.connection === 'offline' ? 'Offline. Showing the last room update.' : 'Reconnecting to live updates…'} <Button size="sm" variant="outline" disabled={data.connection==='offline'} onClick={data.retryConnection}>Retry now</Button></p>}
+        {isGuest && <GuestSeat key={room.id + user?.id} roomId={room.id} enabled={data.capabilities.seat_recovery===1}/>}
         {d.isHost && data.capabilities.stage_reopen === 1 && room.community_mode && room.repair_flow && (room.status === 'results' || room.status === 'trade') && <ReopenStage data={data}/>}
         {hostAway && !d.isHost && (
           <div className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 p-3 text-sm">
             <Crown className="h-4 w-4 text-primary" /> The host seems to have disconnected.
-            <Button size="sm" className="ml-auto" onClick={() => { if (d.me) rpc("transfer_host", { p_room: room.id, p_participant: d.me.id }); }}>Become host</Button>
+            <Button size="sm" className="ml-auto" onClick={() => { if (d.me && window.confirm("Take over as host? You will manage the auction until you transfer it back.")) rpc("transfer_host", { p_room: room.id, p_participant: d.me.id }); }}>Become host</Button>
           </div>
         )}
         {room.status !== "lobby" && (
-          <TeamPurseBar participants={data.participants} squadCount={(id) => data.squads.filter((x) => x.participant_id === id).length} settings={s} highlight={room.current_bidder} now={now} onSelect={setSelectedTeam}/>
+          <TeamPurseBar lastSeen={data.lastSeen} participants={data.participants} squadCount={(id) => data.squads.filter((x) => x.participant_id === id).length} settings={s} highlight={room.current_bidder} now={now} onSelect={setSelectedTeam}/>
         )}
         {room.status === "lobby" ? (
           main
