@@ -20,8 +20,8 @@ describe('mobile and desktop room controls',()=>{
   render(<Editor/>);fireEvent.click(screen.getAllByRole('checkbox')[1]!);expect(screen.getByText(/2 selected/)).toBeInTheDocument();fireEvent.click(screen.getAllByRole('checkbox')[0]!);expect(screen.getByText(/1 selected/)).toBeInTheDocument();
  });
 });
-describe('star-first pool',()=>{
- it('always includes all 52 stars and uses 80/20 for the remaining 48 places',()=>{
+describe('tiered pool',()=>{
+ it('fills missing top slots from the middle tier when only 52 stars are available',()=>{
   const stars=players.filter(p=>qualityBand(p)==='top').map(p=>p.id).sort();expect(stars).toHaveLength(52);
   const picks=[];
   for(const seed of [1,2,3,66,999]){
@@ -29,7 +29,12 @@ describe('star-first pool',()=>{
    expect(r.players.filter(p=>qualityBand(p)==='top').map(p=>p.id).sort()).toEqual(stars);expect(r.players.filter(p=>qualityBand(p)==='middle')).toHaveLength(38);expect(r.players.filter(p=>qualityBand(p)==='low')).toHaveLength(10);picks.push(r.players.map(p=>p.id).join(','));
   }expect(new Set(picks).size).toBe(5);
  });
- it('raises undersized pools and explains supply or role adjustments',()=>{const r=generateQualityPool(players,{...DEFAULT_SETTINGS,pool_size:40},42);expect(r.players.length).toBeGreaterThanOrEqual(52);expect(r.notes.some(n=>n.includes('raised'))).toBe(true);expect(generateQualityPool(players,{...DEFAULT_SETTINGS,pool_size:'all'}).players).toHaveLength(273);expect(inspectPool([],DEFAULT_SETTINGS).feasible).toBe(false);});
+ it('selects exactly 70/20/10 when the catalogue supplies every band',()=>{
+  const extra=players.filter(p=>qualityBand(p)==='top').map(p=>({...p,id:'extra-'+p.id}));
+  const result=generateQualityPool([...players,...extra],{...DEFAULT_SETTINGS,pool_size:100},342);
+  expect(['top','middle','low'].map(b=>result.players.filter(p=>qualityBand(p)===b).length)).toEqual([70,20,10]);
+ });
+ it('raises undersized pools and explains supply or role adjustments',()=>{const r=generateQualityPool(players,{...DEFAULT_SETTINGS,pool_size:40},42);expect(r.players.length).toBeGreaterThanOrEqual(44);expect(r.notes.some(n=>n.includes('raised'))).toBe(true);expect(generateQualityPool(players,{...DEFAULT_SETTINGS,pool_size:'all'}).players).toHaveLength(273);expect(inspectPool([],DEFAULT_SETTINGS).feasible).toBe(false);});
 });
 describe('match plans',()=>{
  it('validates ownership, duplicate selections, overs and batting ranges',()=>{

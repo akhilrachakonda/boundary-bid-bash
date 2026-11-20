@@ -37,7 +37,8 @@ export function createRefetchCoordinator<K extends string>(read: (key: K) => Pro
         if (wait > 0) { pending.add(key); return; }
         void refresh(key).catch(() => { schedule(key); });
       });
-      if (pending.size) schedule([...pending][0]);
+      const next = pending.values().next();
+      if (!next.done) schedule(next.value);
     }, delay);
   };
   return { refresh, schedule, dispose: () => { disposed = true; clearTimeout(timer); pending.clear(); dirty.clear(); failures.clear(); retryAt.clear(); } };

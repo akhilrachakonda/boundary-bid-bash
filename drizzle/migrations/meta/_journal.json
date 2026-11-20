@@ -225,6 +225,13 @@
       "when": 1795010844775,
       "tag": "0031_scope_catalogue_entry_reads",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1795104000000,
+      "tag": "0032_classic_catalogue_and_stage_reopen",
+      "breakpoints": true
     }
   ]
 }

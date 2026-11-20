@@ -25,6 +25,7 @@ import {EvaluationLineup} from '@/components/auction/EvaluationLineup';
 import { hostActionArgs } from '@/lib/room-actions';
 import { repairsEnabled } from '@/lib/post-launch-controls';
 
+import { ReopenStage } from "@/components/room/ReopenStage";
 import {CommunityStage} from '@/components/room/CommunityStage';
 import {CommunityContext} from '@/components/auction/CommunityContext';
 
@@ -97,7 +98,10 @@ function RoomPage() {
     return (
       <div className="min-h-screen">
         <AppHeader />
-        <div className="grid h-[60vh] place-items-center text-muted-foreground">Loading room…</div>
+        <div className="mx-auto grid max-w-sm gap-4 px-4 py-20 text-center" role="status">
+          <p>{data.connection === 'offline' ? 'You’re offline. This room will reconnect when your connection returns.' : data.connection === 'reconnecting' ? 'Reconnecting to your room…' : 'Loading room…'}</p>
+          {(data.connection === 'reconnecting' || data.loaded) && <Button variant="outline" onClick={() => void Promise.allSettled([data.reload('rooms'),data.reload('participants')])}>Retry room connection</Button>}
+        </div>
       </div>
     );
 
@@ -131,7 +135,7 @@ function RoomPage() {
     ) : room.status === "completed" || room.status === "trade" ? (
       <Trades data={data} d={d} now={now} />
     ) : (
-      room.community_mode ? <CommunityStage data={data} d={d} now={now}/> : <Results data={data} d={d} />
+      room.community_mode ? <CommunityStage key={room.id + ':' + room.post_phase} data={data} d={d} now={now}/> : <Results data={data} d={d} />
     );
 
   return (
@@ -153,6 +157,8 @@ function RoomPage() {
       </AppHeader>
       <main className="room-main mx-auto min-w-0 max-w-7xl space-y-3 px-3 py-3 sm:space-y-4 sm:px-6 sm:py-5">
         {!room.community_mode&&room.evaluation_version==='v2.1'&&<p className="text-xs text-muted-foreground">V2.1 · 35 combination/position + 30 established + 20 recent + 10 bench + 5 leadership · {room.status==='lobby'?'Evidence and leadership freeze before review':'Frozen evidence and leadership rubric'} · <Link to="/scoring" className="text-electric underline">Rules and data coverage</Link></p>}
+        {data.connection !== 'connected' && <p role="status" className="rounded-md border px-3 py-2 text-sm">{data.connection === 'offline' ? 'Offline. Showing the last room update.' : 'Reconnecting to live updates…'}</p>}
+        {d.isHost && data.capabilities.stage_reopen === 1 && room.community_mode && room.repair_flow && (room.status === 'results' || room.status === 'trade') && <ReopenStage data={data}/>}
         {hostAway && !d.isHost && (
           <div className="flex flex-wrap items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 p-3 text-sm">
             <Crown className="h-4 w-4 text-primary" /> The host seems to have disconnected.

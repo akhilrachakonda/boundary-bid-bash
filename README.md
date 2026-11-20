@@ -11,8 +11,8 @@ Real-time IPL-style auction for friends: create a room, share the 6-character co
 - **Server authority.** Every state change (create/join room, set pool, bid, tick, host controls, trades) is a `SECURITY DEFINER` Postgres function that locks the room row (`FOR UPDATE`). Two simultaneous bids at the same amount serialise; the second gets "Someone bid first". Timer expiry is decided by `now()` in the database, never by the browser.
 - **Tick driver.** Connected clients call `tick(room)` once the server deadline passes. If nobody was connected when a lot expired (deadline passed by >15 s), the lot timer restarts instead of resolving, so the auction effectively pauses when everyone leaves.
 - **RLS.** Room tables are readable only by room members; direct writes are not granted (all writes go through functions). `private_notes` (targets, max prices, XI, notes) is readable and writable only by its owner. Players are readable by all signed-in users and editable only by admins.
-- **Pool selection** (`src/lib/auction-rules.ts`): proportional quotas per sub-role, auto-raised to cover `teams × min squad` and per-role/spin/pace minimums, top-rated picks plus a tier spread, seeded random tie-breaks for "Regenerate". The database re-validates the pool in `set_pool`.
-- **Team Rating**: Playing XI 50%, role balance 20%, combinations 15%, bench 10%, budget efficiency 5% (auto-picked XI for fairness).
+- **Pool selection.** The host generates a seeded 70% top, 20% middle and 10% low pool, reviews any adjustments for catalogue supply or room rules, and can add or remove players before confirming.
+- **Community rooms.** After trades, each team submits a private Playing XI. Opponents rate top order, middle/finishing and bowling, and may add comments. Hosts can reopen unsold bidding, trading or XI selection. See [community auction rules and database setup](docs/COMMUNITY-AUCTION.md).
 
 ## Owner admin setup
 Only users with the `admin` role can edit the player database (no auto-grant). After you sign in with your email once, ask Lovable to run:

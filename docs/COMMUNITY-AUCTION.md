@@ -4,9 +4,9 @@ New rooms use `create_social_room`. Existing rooms retain their scoring/trade ru
 
 ## Pool selection
 
-Every Marquee/A player in the room catalogue is included in generated pools. The imported IPL catalogue has 52 such identities. Remaining slots target 80% B and 20% C/Uncapped: 100 players normally means 52 top + 38 middle + 10 low. Integer allocations round the middle count, with the balance going to low. Within those groups, weighted seeded sampling favours higher setup ratings while retaining variety. This is a game selection rule, not a claim about current professional ability.
+Random pools target 70% Marquee/A, 20% B and 10% C/Uncapped. Sampling is seeded and considers the configured role minimums. For the original 273-entry catalogue, 52 available top players give a 52/38/10 split for 100 selections. The classic IPL extension adds 18 top-tier picks, making 70/20/10 possible.
 
-A too-small request is raised to fit mandatory stars and room squad requirements. Catalogue shortages and unusual role requirements are disclosed with actual counts. Hosts can override the generated selection by searching the full room catalogue and adding/removing players before confirmation. Manual edits still need to meet the room's pool requirements and can change the tier mix. Server membership and pool validation remain authoritative.
+A too-small request is raised to fit room squad requirements. Catalogue shortages and unusual role requirements are disclosed with actual counts. Hosts can override the generated selection by searching the full room catalogue and adding/removing players before confirmation. Manual edits still need to meet the room's pool requirements and can change the tier mix. Server membership and pool validation remain authoritative.
 
 ## Trade, XI, ratings
 
@@ -14,7 +14,7 @@ The host sets trade and XI-selection durations, each 1–120 minutes, and can re
 
 Each team submits an ordered XI, expected batting-over ranges (overlap allowed), and whole bowling overs. IPL/T20 use 20 total and at most 4 per player; ODI uses 50 and at most 10. There are no role/overseas restrictions on the XI. A squad with fewer than 11 players submits all available players and is visibly incomplete; if it has fewer than 5 players its bowling capacity is also shown as incomplete. No nonexistent or unowned players are silently added.
 
-Only the owning participant can read their saved plan until every team confirms, the timer ends, or the host reveals early. Saved unconfirmed drafts are then shown explicitly as drafts. Unsaved edits are not submitted. Teams rate every other team in three 1–10 categories: top order, middle/finishing, and bowling. The database rejects self-votes and nonmembers, allows one updatable vote per rater/target, and hides individual votes and aggregate results until voting ends. All votes submitted ends voting automatically; the host can explicitly finish with missing votes.
+Only the owning participant can read their saved plan until every team confirms, the timer ends, or the host reveals early. Saved unconfirmed drafts are then shown explicitly as drafts. Unsaved edits are not submitted. Teams rate every other team in three 1–10 categories: top order, middle/finishing, and bowling. The database rejects self-votes and nonmembers, allows one updatable vote per rater/target, and shows received votes and comments to their target. Voting must finish before everyone can see the full breakdown and overall results. All votes submitted ends voting automatically; the host can explicitly finish with missing votes.
 
 Each category is the mean of submitted opponent votes. Overall is the equal-weight mean of those three categories. Missing votes are excluded; a team with no votes is unrated. Results show voter counts, and equal scores are ties. Existing automatic evaluation is not invoked for community rooms.
 
@@ -31,3 +31,9 @@ Existing lot/version/request-ID checks, server deadlines and unknown-outcome ret
 Apply migration 0029 through the existing managed journal; no player-data import is needed for this release.
 
 Release verification on 12 November 2026: 84 application tests, TypeScript, production build, catalogue regression tests and the isolated community-flow tests passed. Migration 0029 was applied transactionally and recorded in the managed journal. A before/after fingerprint check verified that existing room rows were unchanged apart from the new defaulted columns. Member API access and denial of anonymous/raw-draft access were checked live. No hosted gameplay fixtures were created.
+
+## Classic IPL catalogue and stage reopening
+
+Apply journal migration 0032, then run `scripts/ipl-classics-import.sql` after the base Crick Auction import is present. The classic edition adds 18 retired players to the 273-entry IPL catalogue. Names were checked against [IPL 2013 squads](https://www.iplt20.com/news/article/teams-announce-squads-for-ipl-2013), [2012 captain appearances](https://www.iplt20.com/news/article/quick-stats-match-64-dd-v-kxip) and [2012 opening night captains](https://www.iplt20.com/news/article/white-to-represent-dc-on-opening-nite). The classic entries share a game rating of 85, tier A and an opening price of 2 crore. They carry no invented career totals. Existing rooms keep their pinned catalogue.
+
+Hosts in community rooms can reopen unsold nominations during or after trading, return from results to trading, or reopen XI selection after voting starts. Accepted trades stand. Returning to trading or unsold nominations expires pending offers and clears team plans and ratings. Reopening XI selection retains plans as private, unconfirmed drafts and clears votes.

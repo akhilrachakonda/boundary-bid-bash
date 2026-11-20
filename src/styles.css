@@ -281,3 +281,10 @@
   .room-main [aria-label="Auction control desk"] > .flex { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
   .room-main [aria-label="Auction control desk"] button { white-space: normal; height: auto; padding: 10px 8px; }
 }
+
+@media (max-width: 639px) {
+  .room-main [role="tablist"] { display: flex; width: 100%; height: auto; overflow-x: auto; justify-content: flex-start; }
+  .room-main [role="tab"] { flex: 1 0 auto; min-height: 44px; padding-inline: 12px; }
+  .room-main summary { min-height: 44px; align-content: center; }
+  .room-main .bid-bar { padding-right: max(12px,env(safe-area-inset-right)); }
+}

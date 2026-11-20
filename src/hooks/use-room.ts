@@ -5,7 +5,7 @@ import { withCanonicalPhoto } from "@/lib/player-photos";
 import { createRefetchCoordinator } from "@/lib/refetch-coordinator";
 import { repairsEnabled, type RepairCapabilities } from "@/lib/post-launch-controls";
 import { mergeLiveProjection, type LiveProjection } from '@/lib/live-projection';
-import { membershipFailure, connectionDiagnostics } from '@/lib/connection-recovery';
+import { membershipFailure, recoveryDelay, connectionDiagnostics } from '@/lib/connection-recovery';
 
 export interface Room {
   id: string;
@@ -165,16 +165,20 @@ export function useRoom(roomId: string, userId: string | undefined) {
       switch (t) {
         case "rooms": {
           if(repairsEnabled(roomRef.current,capabilitiesRef.current) && poolRef.current.length && roomRef.current?.status!=="lobby") {
-            try {
+            {
               const sync = capabilitiesRef.current.action_sync === 1;
               const bounded=capabilitiesRef.current.bounded_poll===1;
               const {data,error}=await supabase.rpc((bounded?"room_poll":sync ? "room_sync" : "room_live_projection") as never,(bounded?{p_room:roomId,p_revision:revisionRef.current}:{p_room:roomId}) as never).abortSignal(AbortSignal.timeout(5000));
               if(!current())return null;
+              if (error && !['PGRST202','42883'].includes(error.code) && !membershipFailure(error)) {
+                setConnection('reconnecting');
+                throw new Error('Room refresh unavailable');
+              }
               if(!error && bounded && data===null){if(channelHealthy.current)setConnection("connected");return roomRef.current;}
               const live=data as unknown as LiveProjection | null;
               if (!error && live && (live.revision ?? 0) < revisionRef.current) return roomRef.current;
               if(!error && live && applyLive(live)) return live.room;
-            } catch { if(!current())return null; /* Fall back to the full bounded projection. */ }
+            }
           }
           const { data, error } = await supabase.rpc("room_projection", { p_room: roomId }).abortSignal(AbortSignal.timeout(5000));
           const projection = data as unknown as { room: Room; pool: RoomPlayer[]; revision?: number; capabilities?: RepairCapabilities } | null;
@@ -273,6 +277,9 @@ export function useRoom(roomId: string, userId: string | undefined) {
     revisionRef.current = 0;
     readVersions.current = {participants:0,bids:0,squads:0,sales:0};
     capabilitiesRef.current={};setCapabilities({});poolRef.current=[];roomRef.current=null;setRoom(null);setLoaded(false);
+    setError(null); setConnection(navigator.onLine ? 'connecting' : 'offline');
+    setParticipants([]); setPool([]); setSquads([]); setTrades([]); setBids([]); setEvents([]); setSales([]);
+    setNotes({targets:{},xi:{order:[],overs:{}},notes:''});
     const queue = createRefetchCoordinator(load,240);
     coordinator.current = queue;
     return () => { generation.current++; queue.dispose(); if (coordinator.current === queue) coordinator.current = null; };
@@ -280,13 +287,14 @@ export function useRoom(roomId: string, userId: string | undefined) {
 
   const loadNotes = useCallback(async () => {
     if (!userId) return;
+    const epoch = generation.current;
     const { data } = await supabase
       .from("private_notes")
       .select("*")
       .eq("room_id", roomId)
       .eq("user_id", userId)
-      .maybeSingle();
-    if (data) setNotes({ targets: data.targets as Notes["targets"], xi: data.xi as Notes["xi"], notes: data.notes });
+      .abortSignal(AbortSignal.timeout(5000)).maybeSingle();
+    if (epoch === generation.current && data) setNotes({ targets: data.targets as Notes["targets"], xi: data.xi as Notes["xi"], notes: data.notes });
   }, [roomId, userId]);
 
   const saveNotes = useCallback(
@@ -306,26 +314,20 @@ export function useRoom(roomId: string, userId: string | undefined) {
   useEffect(() => {
     if (!userId) return;
     let alive = true;
-    (async () => {
-      const t0 = Date.now();
-      const { data: now } = await supabase.rpc("server_now").abortSignal(AbortSignal.timeout(5000));
-      const t1 = Date.now();
-      if (!alive) return;
-      if (alive && now) setOffset(new Date(now as string).getTime() - (t0 + t1) / 2);
-      await Promise.allSettled([
-        reload("rooms"),
-        reload("participants"),
-        reload("squads"),
-        reload("sales"),
-        reload("trades"),
-        reload("room_events"),
-        loadNotes(),
-      ]);
-      if (alive) setLoaded(true);
-    })().catch(() => { if (alive) { setConnection('reconnecting'); coordinator.current?.schedule('rooms'); } });
-    return () => {
-      alive = false;
-    };
+    const queue = coordinator.current;
+    const initial: Table[] = ['rooms','participants','squads','sales','trades','room_events'];
+    for (const table of initial) {
+      void reload(table).catch(() => {
+        if (alive) { setConnection(navigator.onLine ? 'reconnecting' : 'offline'); queue?.schedule(table); }
+      });
+    }
+    void loadNotes().catch(() => {});
+    const start = Date.now();
+    void Promise.resolve(supabase.rpc('server_now').abortSignal(AbortSignal.timeout(5000)))
+      .then(({ data }) => {
+        if (alive && data) setOffset(new Date(data as string).getTime() - (start + Date.now()) / 2);
+      }).catch(() => {});
+    return () => { alive = false; };
   }, [load, reload, loadNotes, userId]);
 
   // reload bids when lot changes
@@ -336,29 +338,59 @@ export function useRoom(roomId: string, userId: string | undefined) {
 
   // realtime
   useEffect(() => {
+    if (!userId) return;
+    let alive = true;
     const queue = (t: Table) => coordinator.current?.schedule(t);
     const tables: Table[] = ["participants", "squads", "trades", "sales"];
-    let ch = supabase.channel(`room-${roomId}-${Math.random().toString(36).slice(2)}`);
-    for (const t of tables) {
-      ch = ch.on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: t, filter: `room_id=eq.${roomId}` },
-        () => {
-          if (t === 'bids' && capabilitiesRef.current.action_sync === 1) return; // The room revision carries the accepted bid.
-          else queue(t);
-        },
-      );
+    let channel: ReturnType<typeof supabase.channel> | undefined;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
+    let failures = 0;
+    function connect() {
+      clearTimeout(retryTimer);
+      if (!alive || !navigator.onLine || document.visibilityState === 'hidden') return;
+      const previous = channel;
+      const next = supabase.channel(`room-${roomId}-${Math.random().toString(36).slice(2)}`);
+      channel = next;
+      if (previous) void supabase.removeChannel(previous);
+      for (const table of tables) {
+        next.on('postgres_changes', {event:'*',schema:'public',table,filter:`room_id=eq.${roomId}`},
+          () => { if (alive && channel === next) queue(table); });
+      }
+      next.on('postgres_changes', {event:'*',schema:'public',table:'room_updates',filter:`room_id=eq.${roomId}`}, payload => {
+        if (!alive || channel !== next) return;
+        const revision = (payload.new as {revision?:number}).revision;
+        if (revision == null || revision > revisionRef.current) {
+          queue('rooms');
+          if (capabilitiesRef.current.action_sync !== 1) queue('bids');
+        }
+      });
+      next.subscribe(status => {
+        if (!alive || channel !== next) return;
+        clearTimeout(retryTimer);
+        channelHealthy.current = status === 'SUBSCRIBED';
+        if (channelHealthy.current) {
+          failures = 0;
+          queue('rooms');
+          // A closed socket may have missed table changes while this tab was asleep.
+          tables.forEach(queue);
+          queue('bids');
+        } else {
+          setConnection(navigator.onLine ? 'reconnecting' : 'offline');
+          retryTimer = setTimeout(connect, recoveryDelay(++failures));
+        }
+      });
     }
-    ch=ch.on("postgres_changes",{event:"*",schema:"public",table:"room_updates",filter:`room_id=eq.${roomId}`},(payload)=>{const revision=(payload.new as {revision?:number}).revision;if(revision==null||revision>revisionRef.current){queue("rooms");if(capabilitiesRef.current.action_sync!==1)queue("bids");}});
-    ch.subscribe((status) => {
-      channelHealthy.current=status === "SUBSCRIBED";
-      setConnection(channelHealthy.current ? "connected" : "reconnecting");
-      // on (re)connect, resync everything so reconnects restore state
-      if (status === "SUBSCRIBED") { tables.forEach(queue);queue("rooms"); }
-    });
+    const resume = () => { if (!channelHealthy.current) connect(); };
+    connect();
+    window.addEventListener('online', resume);
+    document.addEventListener('visibilitychange', resume);
     return () => {
-      channelHealthy.current=false;
-      void supabase.removeChannel(ch);
+      alive = false;
+      channelHealthy.current = false;
+      clearTimeout(retryTimer);
+      window.removeEventListener('online', resume);
+      document.removeEventListener('visibilitychange', resume);
+      if (channel) void supabase.removeChannel(channel);
     };
   }, [roomId, load, userId]);
 
@@ -396,7 +428,7 @@ export function useRoom(roomId: string, userId: string | undefined) {
       if (!navigator.onLine || document.visibilityState === 'hidden') return;
       coordinator.current?.schedule('rooms');
       coordinator.current?.schedule('room_events');
-      if(!channelHealthy.current)(['participants','squads','sales'] as Table[]).forEach(t=>coordinator.current?.schedule(t));
+      if(!channelHealthy.current)(['participants','squads','sales','bids','trades'] as Table[]).forEach(t=>coordinator.current?.schedule(t));
     },5000);
     const onFocus = () => {
       if (!navigator.onLine || document.visibilityState === 'hidden') return;

@@ -94,7 +94,7 @@ function CreatePage() {
           </div></>}
         </div>
         <div className="panel p-5">
-          <SettingsForm s={s} onChange={setS} available={format === 'IPL' ? 273 : 150} />
+          <SettingsForm s={s} onChange={setS} available={format === 'IPL' ? 291 : 150} />
         </div>
         <Button className="h-14 w-full bg-gold text-lg font-bold text-primary-foreground shadow-glow" onClick={create} disabled={busy||(format==='IPL'&&!franchise)}>
           {busy ? "Creating…" : "Create room & open lobby"}

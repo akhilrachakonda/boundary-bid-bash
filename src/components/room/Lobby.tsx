@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { poolRequirements, squadCounts, type Player, type Settings } from "@/lib/auction-rules";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { SettingsForm } from "@/components/SettingsForm";
 import {IplTeamPicker} from "@/components/IplTeamPicker";
 import { ColorPicker } from "@/components/TeamPicker";
@@ -21,6 +22,8 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
   const s = room.settings;
   const me = d.me!;
   const [team, setTeam] = useState(me.team_name);
+  const mobile = useIsMobile();
+  const [choosingTeam, setChoosingTeam] = useState(false);
   const [claiming,setClaiming]=useState(false);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<Settings>(s);
@@ -28,17 +31,20 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
   const [seed, setSeed] = useState(1);
   const [preview, setPreview] = useState<ReturnType<typeof generateQualityPool> | null>(null);
 
+  const [catalogueAttempt, retryCatalogue] = useState(0);
+  const [catalogueError, setCatalogueError] = useState(false);
   useEffect(() => setDraft(s), [s]);
   useEffect(() => {
     if (!d.isHost) return;
     let alive = true;
-    supabase.rpc("room_catalogue" as never, { p_room: room.id } as never).then(({ data, error }) => {
+    setCatalogueError(false);
+    supabase.rpc("room_catalogue" as never, { p_room: room.id } as never).abortSignal(AbortSignal.timeout(10000)).then(({ data, error }) => {
       if (!alive) return;
-      if (error) { toast.error("Could not load the player catalogue"); return; }
+      if (error) { setCatalogueError(true); return; }
       setAll((data ?? []) as unknown as Player[]);
     });
     return () => { alive = false; };
-  }, [d.isHost, room.id, room.format]);
+  }, [d.isHost, room.id, room.format, catalogueAttempt]);
 
   const link = typeof window !== "undefined" ? `${window.location.origin}/join?code=${room.code}` : "";
   const share = async () => {
@@ -129,8 +135,9 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
           <div className="panel space-y-3 p-5">
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="mr-auto text-2xl font-bold uppercase">Player pool</h3>
+              {catalogueError && <Button variant="outline" onClick={() => retryCatalogue(n => n+1)}>Retry catalogue</Button>}
               <Button variant="outline" onClick={() => gen(Math.floor(Math.random() * 1e9))} disabled={!all.length}>
-                <RefreshCw className="h-4 w-4" /> {preview ? "Regenerate" : "Generate star-first pool"}
+                <RefreshCw className="h-4 w-4" /> {preview ? "Regenerate" : "Generate player pool"}
               </Button>
               {!preview && data.pool.length>0 && <Button variant="outline" onClick={()=>setPreview(inspectPool(data.pool.map(p=>p.player),s))}>Edit confirmed pool</Button>}
               {preview && (
@@ -167,7 +174,8 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
       <aside className="order-1 min-w-0 space-y-4 lg:order-2">
         <div className="panel space-y-3 p-5">
           <h3 className="text-xl font-bold uppercase">Your team</h3>
-          {room.ipl_franchises?<IplTeamPicker value={me.ipl_team??''} taken={data.participants.filter(p=>p.id!==me.id).flatMap(p=>p.ipl_team?[p.ipl_team]:[])} disabled={claiming} onChange={async code=>{if(claiming)return;setClaiming(true);try{await rpc('claim_ipl_team',{p_room:room.id,p_team:code});}finally{await data.reload('participants');setClaiming(false);}}}/>:<><Input value={team} onChange={(e) => setTeam(e.target.value)} onBlur={() => team !== me.team_name && rpc("update_my_team", { p_room: room.id, p_team: team, p_color: null, p_ready: null })} maxLength={30} />
+          {room.ipl_franchises && me.ipl_team && mobile && <Button variant="outline" className="min-h-11 w-full justify-between" aria-expanded={choosingTeam} onClick={()=>setChoosingTeam(!choosingTeam)}>{me.team_name}<span className="text-xs">{choosingTeam?'Close':'Change team'}</span></Button>}
+          {room.ipl_franchises?(!mobile || !me.ipl_team || choosingTeam) && <IplTeamPicker value={me.ipl_team??''} taken={data.participants.filter(p=>p.id!==me.id).flatMap(p=>p.ipl_team?[p.ipl_team]:[])} disabled={claiming} onChange={async code=>{if(claiming)return;setClaiming(true);try { if (await rpc('claim_ipl_team',{p_room:room.id,p_team:code})) setChoosingTeam(false); } finally { await Promise.allSettled([data.reload('participants')]); setClaiming(false); }}}/>:<><Input value={team} onChange={(e) => setTeam(e.target.value)} onBlur={() => team !== me.team_name && rpc("update_my_team", { p_room: room.id, p_team: team, p_color: null, p_ready: null })} maxLength={30} />
           <ColorPicker value={me.color} taken={taken} onChange={(c) => rpc("update_my_team", { p_room: room.id, p_team: null, p_color: c, p_ready: null })} /></>}
           <label className="flex items-center justify-between rounded-lg border p-3">
             <span className="font-semibold">I'm ready</span>
