@@ -34,7 +34,7 @@ export function AuctionStage({ player, currency, price, leader, remaining, total
         </div>
         {onStar && <Button variant="ghost" size="icon" className="absolute right-3 top-12" onClick={onStar} aria-label={starred ? "Remove from targets" : "Add to my targets"}><Star className={cn("h-5 w-5",starred && "fill-primary text-primary")}/></Button>}
       </div>
-      <SourceStats key={player.id} player={player} collapsible/>
+      <SourceStats key={`stats-${player.id}`} player={player} collapsible/>
       <div className={cn("price-desk",pulse && "price-desk-active")}>
         <div className="min-w-0 flex-1"><span className="stat-label">{leader ? "Current highest bid" : "Opening bid"}</span><div className="flex items-center gap-3"><strong ref={priceRef} className="broadcast-price tabular">{formatMoney(price,currency)}</strong>{!!increment && <span className="increment-rise text-sm font-bold text-success"><ArrowUp className="inline h-3 w-3"/>{formatMoney(increment,currency)}</span>}</div>
         <div className={cn("leading-team",pulse && "team-sweep")} style={leader ? {"--team-color":leader.color} as React.CSSProperties : undefined}>{leader ? <><TeamCrest name={leader.name} color={leader.color} className="h-8 w-8"/><span>{leader.name}</span><TrendingUp className="ml-auto h-4 w-4"/></> : <span className="text-sm text-muted-foreground">The floor is open</span>}</div></div>
