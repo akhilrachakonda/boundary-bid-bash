@@ -24,10 +24,14 @@ export function SourceStats({
   const entries = Object.entries(classic?.stats ?? player.source_stats ?? {}).filter(
     ([key, value]) => key in labels && value != null,
   );
-  if (!entries.length) return null;
+  const noMatches = player.stats_status === "no_appearances";
+  const unavailable = !classic && !noMatches && player.source_stats?.['matches'] === 0;
+  if (!entries.length && !noMatches && !player.catalogue_version) return null;
   const panel = (
     <section aria-label={`${player.name} statistics`} className="mt-4 space-y-2">
-      <dl className="grid grid-cols-3 gap-x-4 gap-y-3 rounded-xl border border-border/60 bg-background/40 p-3 sm:grid-cols-4">
+      {noMatches || unavailable || !entries.length ? <p className="text-sm text-muted-foreground">
+        {noMatches ? "No IPL appearances through the cutoff." : "Stats unavailable."}
+      </p> : <dl className="grid grid-cols-3 gap-x-4 gap-y-3 rounded-xl border border-border/60 bg-background/40 p-3 sm:grid-cols-4">
         {entries.map(([key, value]) => (
           <div key={key}>
             <dt className="text-[10px] uppercase tracking-wide text-muted-foreground">
@@ -36,7 +40,7 @@ export function SourceStats({
             <dd className="font-display text-xl font-bold tabular text-foreground">{value}</dd>
           </div>
         ))}
-      </dl>
+      </dl>}
       <p className="text-[10px] text-muted-foreground">
         {classic ? (
           <>
@@ -45,6 +49,8 @@ export function SourceStats({
               Cricbuzz player profile
             </a>
           </>
+        ) : player.stats_cutoff ? (
+          <>IPL through {player.stats_cutoff} · <a className="underline" href={player.stats_reference} target="_blank" rel="noreferrer">Cricsheet match records</a></>
         ) : (
           <>
             Crick Auction stats · imported {player.stats_imported} · source cutoff unspecified.{" "}

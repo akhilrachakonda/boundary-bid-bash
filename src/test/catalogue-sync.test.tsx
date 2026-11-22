@@ -23,11 +23,11 @@ describe('imported IPL catalogue and presentation', () => {
     expect(new Set(first.players.map(p=>p.id)).size).toBe(first.players.length);
     expect(first.players.map(p=>p.id)).not.toEqual(second.players.map(p=>p.id));
   });
-  it('shows explicit zero statistics and source provenance', () => {
+  it('labels unverified zero-match imports as unavailable', () => {
     const player = {...players[0]!,source_stats:{matches:0,runs:0},stats_imported:'2026-11-12'};
     render(<SourceStats player={player}/>);
-    expect(screen.getByText('Matches')).toBeInTheDocument();
-    expect(screen.getAllByText('0')).toHaveLength(2);
+    expect(screen.getByText('Stats unavailable.')).toBeInTheDocument();
+    expect(screen.queryByText('0')).not.toBeInTheDocument();
     expect(screen.getByText(/source cutoff unspecified/)).toBeInTheDocument();
   });
   it('uses franchise tracks for matching teams and a generic hammer for custom teams', () => {

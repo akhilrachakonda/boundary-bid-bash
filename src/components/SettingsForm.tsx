@@ -14,7 +14,7 @@ function Num({ label, value, onChange, step = 1, min = 0, max }: { label: string
   );
 }
 
-export function SettingsForm({ s, onChange, available }: { s: Settings; onChange: (s: Settings) => void; available?: number }) {
+export function SettingsForm({ s, onChange, available, community = true }: { s: Settings; onChange: (s: Settings) => void; available?: number | undefined; community?: boolean }) {
   const set = <K extends keyof Settings>(k: K, v: Settings[K]) => onChange({ ...s, [k]: v });
   const req = poolRequirements(s);
   const poolN = s.pool_size === "all" ? available ?? 150 : s.pool_size;
@@ -71,9 +71,9 @@ export function SettingsForm({ s, onChange, available }: { s: Settings; onChange
           <Input
             type="number"
             className="w-28"
-            placeholder="Custom"
-            value={typeof s.pool_size === "number" && !presets.includes(s.pool_size) ? s.pool_size : ""}
-            onChange={(e) => set("pool_size", e.target.value ? Number(e.target.value) : 70)}
+            aria-label="Custom player pool size" min={1} max={available} placeholder="Custom"
+            value={typeof s.pool_size === "number" && s.pool_size > 0 ? s.pool_size : ""}
+            onChange={(e) => set("pool_size", Number(e.target.value))}
           />
         </div>
         {poolN < req.total && (
@@ -82,6 +82,10 @@ export function SettingsForm({ s, onChange, available }: { s: Settings; onChange
           </p>
         )}
       </section>
+      {community && <label className="flex items-center justify-between gap-4 rounded-md border p-3">
+        <span><strong className="block">Competitive XI</strong><span className="text-xs text-muted-foreground">Only a confirmed eleven can rank. Short squads can trade for players. Casual rooms allow short lineups.</span></span>
+        <Switch checked={s.competitive_xi === true} onCheckedChange={v => set("competitive_xi", v)} />
+      </label>}
       <section><h4 className="mb-2 text-lg font-bold uppercase">After the auction</h4><div className="grid grid-cols-2 gap-3"><Num label="Trade minutes" value={s.trade_minutes??10} min={1} max={120} onChange={n=>set('trade_minutes',n)}/><Num label="Playing XI minutes" value={s.lineup_minutes??5} min={1} max={120} onChange={n=>set('lineup_minutes',n)}/></div><p className="mt-2 text-xs text-muted-foreground">Trading → private Playing XI and match plans → opponent ratings. The host can change remaining time during the timed stages.</p></section>
       <section>
         <h4 className="mb-2 text-lg font-bold uppercase">Bid increments</h4>

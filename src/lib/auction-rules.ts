@@ -23,6 +23,9 @@ export interface Player {
   photo_credit?: string | null;
   source_stats?: Record<string, number | string>;
   stats_source?: string;
+  stats_status?: "verified" | "no_appearances";
+  stats_cutoff?: string;
+  stats_reference?: string;
   stats_imported?: string;
   stats_source_role?: string;
   catalogue_version?: string;
@@ -52,6 +55,7 @@ export interface Settings {
   review_seconds: number;
   min_base: number;
   currency: "cr" | "lakh" | "coins";
+  competitive_xi?: boolean;
   trade_minutes?: number;
   lineup_minutes?: number;
   sound?: boolean;

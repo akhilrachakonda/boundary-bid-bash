@@ -239,6 +239,13 @@
       "when": 1795190400000,
       "tag": "0033_room_recovery_and_bid_updates",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1795276800000,
+      "tag": "0034_lobby_trades_and_competitive_xi",
+      "breakpoints": true
     }
   ]
 }

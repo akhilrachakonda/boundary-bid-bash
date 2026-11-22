@@ -36,7 +36,7 @@ function AdminPage() {
   const [format, setFormat] = useState("IPL");
   const [rows, setRows] = useState<Player[]>([]);
   const [q, setQ] = useState("");
-  const [dirty, setDirty] = useState<Record<string, Partial<Omit<Player, 'source_stats'|'stats_source'|'stats_imported'|'stats_source_role'|'catalogue_version'>>>>({});
+  const [dirty, setDirty] = useState<Record<string, Partial<Omit<Player, 'source_stats'|'stats_source'|'stats_imported'|'stats_source_role'|'stats_status'|'stats_cutoff'|'stats_reference'|'catalogue_version'>>>>({});
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("players").select("*").eq("format", format).order("role").order("rating", { ascending: false });

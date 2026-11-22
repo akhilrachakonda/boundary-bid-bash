@@ -1,5 +1,6 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { Lobby } from '@/components/room/Lobby';
 import { Auction } from '@/components/room/Auction';
 import { derive, type RoomData } from '@/components/auction/derive';
 import { DEFAULT_SETTINGS, type Player } from '@/lib/auction-rules';
@@ -16,6 +17,26 @@ function fixture(): RoomData {
  return {lastSeen:p=>Date.parse(p.last_seen),retryConnection:vi.fn(),poolRevision:{current:null},applyLive:vi.fn(()=>true),capabilities:{},room:{id:'room-1',code:'TEST',name:'LOCAL MOCK ONLY',host_id:'user-1',format:'IPL',settings:DEFAULT_SETTINGS,status:'auction',review_ends_at:null,current_rp:'lot-1',lot_version:7,current_bid:null,current_bidder:null,lot_ends_at:new Date(Date.now()+20000).toISOString(),paused_remaining_ms:null,accel_done:false,trade_ends_at:null},participants:[{id:'team-1',user_id:'user-1',nickname:'Mock',team_name:'Mock team',color:'var(--primary)',purse:100,is_ready:true,last_seen:new Date().toISOString()}],pool:[{id:'lot-1',player_id:player.id,player,set_name:'Marquee',lot_order:0,round:1,status:'live',sold_to:null,sold_price:null}],bids:[],squads:[],sales:[],trades:[],events:[],notes:{notes:'',targets:{},xi:{order:[],overs:{}}},saveNotes:vi.fn(),error:null,loaded:true,offset:0,connection:'connected',reload:vi.fn(async()=>null)};
 }
 describe('local mocked auction UI (no live backend)',()=>{
+ it('keeps team and pool edits through a lobby refresh and saves the edited settings',async()=>{
+  const data=fixture();
+  data.room={...data.room!,status:'lobby'};
+  data.pool=[];
+  network.rpc.mockImplementation((method:string)=>method==='room_catalogue'
+    ? {abortSignal:()=>Promise.resolve({data:[],error:null})}
+    : Promise.resolve({data:true,error:null}));
+  const lobby=(current:RoomData)=><Lobby data={current} d={derive(current,'user-1')} now={Date.now()}/>;
+  const view=render(lobby(data));
+  await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Edit room settings'})));
+  fireEvent.change(screen.getByLabelText('Teams (2–10)'),{target:{value:'8'}});
+  fireEvent.change(screen.getByLabelText('Custom player pool size'),{target:{value:'165'}});
+  view.rerender(lobby({...data,room:{...data.room,settings:{...data.room.settings}}}));
+  expect(screen.getByLabelText('Teams (2–10)')).toHaveValue('8');
+  expect(screen.getByLabelText('Custom player pool size')).toHaveValue(165);
+  await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Save settings'})));
+  expect(network.rpc).toHaveBeenCalledWith('save_lobby_settings',expect.objectContaining({
+    p_settings:expect.objectContaining({max_teams:8,pool_size:165})
+  }));
+ });
  it('replaces the previous player on every lot change', () => {
   const data = fixture();
   const mounted = render(<Auction data={data} d={derive(data,'user-1')} sound={false}/>);

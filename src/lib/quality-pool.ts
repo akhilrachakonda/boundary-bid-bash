@@ -21,7 +21,7 @@ export function inspectPool(players: Player[], s: Settings): PoolResult {
   };
 }
 /** Fill quality quotas using seeded picks, giving priority to unfilled squad roles. */
-export function generateQualityPool(all: Player[], s: Settings, seed = 1): PoolResult {
+export function generateQualityPool(all: Player[], s: Settings, seed = 1, retained: Player[] = []): PoolResult {
   const random = rng(seed);
   const req = poolRequirements(s);
   const requested = s.pool_size === "all" ? all.length : s.pool_size;
@@ -30,7 +30,8 @@ export function generateQualityPool(all: Player[], s: Settings, seed = 1): PoolR
   const low = Math.round(size * 0.1);
   const target = { top, middle: size - top - low, low };
   const counts = { top: 0, middle: 0, low: 0 };
-  const remaining = all
+  const kept = new Set(retained.map(player => player.id));
+  const remaining = all.filter(player => !kept.has(player.id))
     .map((player) => ({
       player,
       band: qualityBand(player),
@@ -40,7 +41,10 @@ export function generateQualityPool(all: Player[], s: Settings, seed = 1): PoolR
     .sort((a, b) => a.weight - b.weight);
   const roles = Object.keys(req) as (keyof typeof req)[];
   const need = { ...req };
-  const chosen: Player[] = [];
+  const chosen = [...retained];
+  const existing = squadCounts(retained);
+  for (const role of roles) need[role] -= existing[role];
+  for (const player of retained) counts[qualityBand(player)]++;
   while (remaining.length) {
     let best = -1;
     let bestScore = -Infinity;

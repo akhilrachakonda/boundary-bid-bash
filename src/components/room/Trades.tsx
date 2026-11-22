@@ -33,6 +33,7 @@ export function TradeCard({ t, d, currency, actions }: { t: Trade; d: Derived; c
         <div><span className="text-xs text-muted-foreground">Gets: </span>{names(t.request_players)}{Number(t.cash) < 0 && ` + ${formatMoney(-Number(t.cash), currency)}`}</div>
       </div>
       <div className="mt-3 flex flex-wrap gap-2">{[...t.offer_players,...t.request_players].map(id=>{const player=d.playerById.get(id);return player ? <PlayerProfile key={id} player={player} currency={currency}><PlayerPortrait player={player} className="h-14 w-12 rounded"/></PlayerProfile> : null;})}</div>
+      {t.status === "pending" && <p className="mt-2">Squads after acceptance: {from?.team_name} {d.squadOf(t.from_participant).length - t.offer_players.length + t.request_players.length} players · {to?.team_name} {d.squadOf(t.to_participant).length + t.offer_players.length - t.request_players.length} players</p>}
       {actions && <div className="mt-2 flex flex-wrap gap-2">{actions}</div>}
     </div>
   );
@@ -90,10 +91,7 @@ export function Trades({ data, d, now }: { data: RoomData; d: Derived; now: numb
   const pending = data.trades.filter((t) => t.status === "pending");
   const history = data.trades.filter((t) => t.status !== "pending");
   const propose = async () => {
-    if (parent) {
-      const ok = await rpc("respond_trade", { p_trade: parent, p_action: "counter" });
-      if (!ok) return;
-    }
+    // The server replaces the parent and creates its reply in one transaction.
     const id = await rpc("propose_trade", { p_room: room.id, p_to: to, p_offer: offer, p_request: req, p_cash: cash, p_parent: parent });
     if (id) {
       toast.success("Trade proposed");
@@ -114,7 +112,7 @@ export function Trades({ data, d, now }: { data: RoomData; d: Derived; now: numb
           <h3 className="text-xl font-bold uppercase">{parent ? "Counter-offer" : "Propose a trade"}</h3>
           <div className="flex flex-wrap gap-2">
             {others.map((o) => (
-              <button key={o.id} onClick={() => { setTo(o.id); setReq([]); }} className={cn("flex min-h-11 max-w-full items-center gap-2 rounded-xl border px-3 py-1.5 text-sm", to === o.id && "border-primary")}>
+              <button key={o.id} disabled={!!parent} onClick={() => { setTo(o.id); setReq([]); }} className={cn("flex min-h-11 max-w-full items-center gap-2 rounded-xl border px-3 py-1.5 text-sm", to === o.id && "border-primary")}>
                 <TeamDot color={o.color} /> {o.team_name}
               </button>
             ))}

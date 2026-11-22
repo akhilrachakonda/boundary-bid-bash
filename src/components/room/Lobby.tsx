@@ -34,7 +34,39 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
 
   const [catalogueAttempt, retryCatalogue] = useState(0);
   const [catalogueError, setCatalogueError] = useState(false);
-  useEffect(() => setDraft(s), [s]);
+  const [saving, setSaving] = useState(false);
+  const [original, setOriginal] = useState(s);
+  const [originalPool, setOriginalPool] = useState<string[]>([]);
+  function openSettings() {
+    setDraft(s);
+    setOriginal(s);
+    setOriginalPool(data.pool.map(row => row.player_id));
+    setEditing(true);
+  }
+  async function saveSettings() {
+    if (saving) return;
+    const current = data.pool.map(row => row.player);
+    const resize = current.length > 0 && (draft.pool_size !== original.pool_size || !inspectPool(current, draft).feasible);
+    const target = draft.pool_size === "all" ? all.length : Math.max(draft.pool_size, poolRequirements(draft).total);
+    if (resize && !all.length) { toast.error("Wait for the player catalogue or retry loading it."); return; }
+    if (draft.pool_size !== "all" && (draft.pool_size < 1 || (all.length && draft.pool_size > all.length))) {
+      toast.error("Choose a pool size within the available catalogue."); return;
+    }
+    const pool = resize ? generateQualityPool(all, draft, seed, target >= current.length ? current : []) : null;
+    if (pool && !pool.feasible) { toast.error(pool.notes.join(" ")); return; }
+    if (pool && target < current.length && !window.confirm(`Replace the confirmed pool of ${current.length} with ${pool.size} players?`)) return;
+    setSaving(true);
+    try {
+      const saved = await rpc<boolean>("save_lobby_settings", {
+        p_room: room.id, p_expected: original, p_settings: draft, p_previous_pool: originalPool,
+        p_pool: pool?.players.map(p => p.id) ?? null,
+      });
+      if (!saved) return;
+      setEditing(false); setPreview(null);
+      await data.reload("rooms");
+      toast.success(pool ? `Settings saved · ${pool.size} players in the pool` : "Settings saved");
+    } finally { setSaving(false); }
+  }
   useEffect(() => {
     if (!d.isHost) return;
     let alive = true;
@@ -107,18 +139,18 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
         </div>
 
         {d.isHost && (
-          <div className="panel space-y-4 p-5">
+          <div id="lobby-settings" className="panel scroll-mt-24 space-y-4 p-5">
             <div className="flex items-center justify-between">
               <h3 className="text-2xl font-bold uppercase">Room settings · {room.format}</h3>
-              <Button variant="outline" size="sm" onClick={() => setEditing(!editing)}>{editing ? "Close" : "Edit"}</Button>
+              <Button variant="outline" className="min-h-11" disabled={saving} onClick={() => editing ? setEditing(false) : openSettings()}>{editing ? "Cancel" : "Edit room settings"}</Button>
             </div>
             {room.format==='IPL'&&!room.ipl_franchises&&<Button variant="outline" onClick={async()=>{if(await rpc('enable_ipl_teams',{p_room:room.id}))await data.reload('rooms');}}>Use unique IPL teams & sounds</Button>}
             {!room.community_mode&&<Button variant="outline" onClick={async()=>{if(await rpc("community_control",{p_room:room.id,p_action:"enable",p_status:room.status,p_phase:room.post_phase??null,p_payload:{}}))await data.reload("rooms");}}>Use Playing XI & team voting</Button>}
             {room.community_mode&&<p className="text-sm text-electric">After trading: private Playing XI and match plans, then opponent ratings.</p>}
             {editing ? (
               <>
-                <SettingsForm s={draft} onChange={setDraft} available={all.length} />
-                <Button onClick={async () => { if (await rpc("update_room_settings", { p_room: room.id, p_settings: draft })) { toast.success("Settings saved"); setEditing(false); setPreview(null); } }}>Save settings</Button>
+                <SettingsForm s={draft} onChange={setDraft} available={all.length || undefined} community={!!room.community_mode} />
+                <Button disabled={saving} onClick={saveSettings}>{saving ? "Saving…" : "Save settings"}</Button>
               </>
             ) : (
               <SettingsSummary s={s} />
@@ -185,9 +217,13 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
         </div>
         {d.isHost ? (
           <div className="panel space-y-2 p-5">
+            <Button className="min-h-11 w-full" variant="outline" onClick={() => {
+              if (!editing) openSettings();
+              document.getElementById("lobby-settings")?.scrollIntoView({block:"start"});
+            }}>Room settings · teams and pool</Button>
             <Button
               className="h-14 w-full bg-gold text-lg font-bold text-primary-foreground shadow-glow"
-              disabled={!enoughTeams || !poolReady || (!!room.ipl_franchises&&data.participants.some(p=>!p.ipl_team))}
+              disabled={editing || saving || !enoughTeams || !poolReady || (!!room.ipl_franchises&&data.participants.some(p=>!p.ipl_team))}
               onClick={() => rpc("start_review", { p_room: room.id })}
             >
               Start auction
@@ -207,6 +243,7 @@ export function Lobby({ data, d, now }: { data: RoomData; d: Derived; now: numbe
 
 function SettingsSummary({ s }: { s: Settings }) {
   const items = [
+    ["Team limit", s.max_teams],
     ["Purse", `${s.purse} Cr`],
     ["Squad", `${s.min_squad}-${s.max_squad}`],
     ["Overseas max", s.max_overseas],
